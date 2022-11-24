@@ -11,5 +11,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //aggiunto commento da locale
+        //aggiunto commento da remoto 2
     }
 }
