@@ -3,7 +3,7 @@ package com.example.foodalchemy;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-
+//commento 1
 public class MainActivity extends AppCompatActivity {
 
     @Override
