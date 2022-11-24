@@ -3,15 +3,15 @@ plugins {
 }
 
 android {
-    namespace 'com.example.foodalchemy'
-    compileSdk 32
+    namespace 'com.example.foodalchemy'     //id univoco su play store, se lo si cambia diventano due app distinte
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.example.foodalchemy"
-        minSdk 24
-        targetSdk 32
-        versionCode 1
-        versionName "1.0"
+        minSdk 24       //versione minima compatibilità API
+        targetSdk 33
+        versionCode 1       //num versione interno all'app
+        versionName "1.0"       //num versione "pubblico" che vedono gli utenti che scaricano l'app; può essere gestito in modo diverso da quello sopra
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -29,7 +29,7 @@ android {
 }
 
 dependencies {
-
+    //librerie utilizzate
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'com.google.android.material:material:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
