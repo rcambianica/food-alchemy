@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">food-alchemy</string>
+    <!-- LOGIN -->
+    <string name="login_textview">Login</string>
+    <string name="email_hint">E-mail</string>
+    <string name="password_hint">Password</string>
+    <string name="forgot_password">FORGET PASSWORD?</string>
+    <string name="login_textview2">Not registered?</string>
+    <string name="signup_button">SIGN UP</string>
+    <string name="login_button">LOGIN</string>
+    <string name="txt_or">OR</string>
+    <string name="google_login">GOOGLE</string>
+    <string name="error_email">Insert a valid email address</string>
+    <string name="error_password">Password cannot be empty</string>
+    <string name="check_login_data_message">Check the data you inserted</string>
+    <!-- SIGNUP -->
+    <string name="register_textview">Register</string>
+    <string name="name_hint">Name</string>
+    <string name="register_button">REGISTER</string>
+    <string name="register_textview2">Already registered?</string>
+    <string name="signin_button">SIGN IN</string>
+    <!-- PASSWORD FORGOTTEN -->
+    <string name="forgotpassword_textview">Forgot your password?</string>
+    <string name="forgotpassword_email">Email</string>
+    <string name="reset_button">RESET</string>
+    <string name="return_button">RETURN TO LOGIN</string>
+
+
+</resources>
