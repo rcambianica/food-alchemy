@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">food-alchemy</string>
+    <string name="app_name">Food Alchemy</string>
     <!-- LOGIN -->
     <string name="login_image">Login Image</string>
     <string name="login_textview">Login</string>
