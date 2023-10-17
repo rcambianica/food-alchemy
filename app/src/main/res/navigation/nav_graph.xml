@@ -11,18 +11,18 @@
         android:label="LoginFragment"
         tools:layout="@layout/fragment_login" >
         <action
-            android:id="@+id/action_loginFragment_to_registrazioneFragment"
-            app:destination="@id/registrazioneFragment" />
+            android:id="@+id/action_loginFragment_to_registrationFragment"
+            app:destination="@id/registrationFragment" />
         <action
             android:id="@+id/action_loginFragment_to_forgotPasswordFragment"
             app:destination="@id/forgotPasswordFragment" />
     </fragment>
     <fragment
-        android:id="@+id/registrazioneFragment"
-        android:name="it.unimib.food_alchemy.ui.RegistrazioneFragment"
-        android:label="RegistrazioneFragment" >
+        android:id="@+id/registrationFragment"
+        android:name="it.unimib.food_alchemy.ui.RegistrationFragment"
+        android:label="RegistrationFragment">
         <action
-            android:id="@+id/action_registrazioneFragment_to_loginFragment"
+            android:id="@+id/action_registrationFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
     </fragment>
     <fragment

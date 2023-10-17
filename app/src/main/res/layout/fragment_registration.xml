@@ -12,13 +12,14 @@
         android:layout_height="250dp"
         android:layout_marginTop="32dp"
         android:src="@drawable/undraw_login_re_4vu2"
-        app:layout_constraintBottom_toTopOf="@+id/textView3"
+        app:layout_constraintBottom_toTopOf="@+id/textview_register"
         app:layout_constraintEnd_toStartOf="@+id/guideline6"
         app:layout_constraintStart_toStartOf="@+id/guideline5"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/sign_up_image"/>
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/textview_register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/register_textview"
@@ -45,19 +46,21 @@
         app:layout_constraintGuide_begin="376dp" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/email_input_layout"
+        android:id="@+id/text_input_layout_email"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/password_input_layout"
+        app:layout_constraintBottom_toTopOf="@+id/text_input_layout_password"
         app:layout_constraintEnd_toStartOf="@+id/guideline6"
         app:layout_constraintStart_toStartOf="@+id/guideline5"
-        app:layout_constraintTop_toBottomOf="@+id/nameInputLayout"
+        app:layout_constraintTop_toBottomOf="@+id/text_input_layout_name"
         app:startIconDrawable="@drawable/baseline_email_24"
-        app:endIconMode="clear_text">
+        app:endIconMode="clear_text"
+        app:errorEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/text_input_edit_text_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/email_hint"
@@ -65,36 +68,39 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/password_input_layout"
+        android:id="@+id/text_input_layout_password"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         app:layout_constraintEnd_toStartOf="@+id/guideline6"
         app:layout_constraintStart_toStartOf="@+id/guideline5"
-        app:layout_constraintTop_toBottomOf="@+id/email_input_layout"
+        app:layout_constraintTop_toBottomOf="@+id/text_input_layout_email"
         app:passwordToggleEnabled="true"
-        app:startIconDrawable="@drawable/baseline_lock_24">
+        app:startIconDrawable="@drawable/baseline_lock_24"
+        app:errorEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/text_input_edit_text_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/password_hint"
-            android:inputType="textPassword"
-            android:password="true" />
+            android:inputType="textPassword"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/nameInputLayout"
+        android:id="@+id/text_input_layout_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         app:layout_constraintEnd_toStartOf="@+id/guideline6"
         app:layout_constraintStart_toStartOf="@+id/guideline5"
-        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        app:layout_constraintTop_toBottomOf="@+id/textview_register"
         app:startIconDrawable="@drawable/baseline_account_circle_24"
-        app:endIconMode="clear_text">
+        app:endIconMode="clear_text"
+        app:errorEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/text_input_edit_text_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/name_hint" />
@@ -110,7 +116,7 @@
         android:textSize="14sp"
         app:layout_constraintEnd_toStartOf="@+id/guideline9"
         app:layout_constraintStart_toStartOf="@+id/guideline8"
-        app:layout_constraintTop_toBottomOf="@+id/password_input_layout" />
+        app:layout_constraintTop_toBottomOf="@+id/text_input_layout_password" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline8"
@@ -127,13 +133,16 @@
         app:layout_constraintGuide_begin="314dp" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/textview_already_register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
+        android:layout_marginBottom="8dp"
         android:text="@string/register_textview2"
         android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/button_signin"
         app:layout_constraintEnd_toStartOf="@+id/guideline9"
+        app:layout_constraintHorizontal_bias="0.505"
         app:layout_constraintStart_toStartOf="@+id/guideline8"
         app:layout_constraintTop_toBottomOf="@+id/button_register" />
 
@@ -141,14 +150,13 @@
         android:id="@+id/button_signin"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="176dp"
-        android:text="@string/signin_button"
+        android:layout_height="48dp"
+        android:layout_marginBottom="88dp"
+        android:text="@string/sign_in_button"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline9"
         app:layout_constraintStart_toStartOf="@+id/guideline8"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintTop_toBottomOf="@+id/textview_already_register" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

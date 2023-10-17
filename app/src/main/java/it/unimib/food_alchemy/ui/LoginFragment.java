@@ -73,8 +73,8 @@ public class LoginFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        emailInputLayout = view.findViewById(R.id.email_input_layout);
-        passwordInputLayout = view.findViewById(R.id.password_input_layout);
+        emailInputLayout = view.findViewById(R.id.text_input_layout_email);
+        passwordInputLayout = view.findViewById(R.id.text_input_layout_password);
         final Button buttonLogin = view.findViewById(R.id.button_login);
         final Button buttonForgetPassword = view.findViewById(R.id.button_forgot_password);
         final Button buttonSignUp = view.findViewById(R.id.button_signup);
@@ -114,7 +114,7 @@ public class LoginFragment extends Fragment {
 
         //listener bottone registrazione
         buttonSignUp.setOnClickListener(view12 -> {
-            Navigation.findNavController(requireView()).navigate(R.id.action_loginFragment_to_registrazioneFragment);
+            Navigation.findNavController(requireView()).navigate(R.id.action_loginFragment_to_registrationFragment);
         });
     }
 

@@ -16,7 +16,8 @@
         android:src="@drawable/undraw_breakfast_psiw"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintStart_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:contentDescription="@string/login_image"/>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
@@ -44,7 +45,7 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/email_input_layout"
+        android:id="@+id/text_input_layout_email"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
@@ -52,9 +53,11 @@
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/textView"
         app:startIconDrawable="@drawable/baseline_email_24"
-        app:endIconMode="clear_text">
+        app:endIconMode="clear_text"
+        app:errorEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/text_input_edit_text_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/email_hint"
@@ -62,22 +65,23 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/password_input_layout"
+        android:id="@+id/text_input_layout_password"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintStart_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toBottomOf="@+id/email_input_layout"
+        app:layout_constraintTop_toBottomOf="@+id/text_input_layout_email"
         app:passwordToggleEnabled="true"
-        app:startIconDrawable="@drawable/baseline_lock_24">
+        app:startIconDrawable="@drawable/baseline_lock_24"
+        app:errorEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/text_input_edit_text_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/password_hint"
-            android:inputType="textPassword"
-            android:password="true" />
+            android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
@@ -92,14 +96,14 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toBottomOf="@+id/password_input_layout" />
+        app:layout_constraintTop_toBottomOf="@+id/text_input_layout_password" />
 
     <Button
         android:id="@+id/button_signup"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/signup_button"
+        android:text="@string/sign_up_button"
         android:textColor="@color/primary"
         android:textStyle="bold"
         app:layout_constraintBaseline_toBaselineOf="@+id/textView2"
