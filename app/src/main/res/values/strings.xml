@@ -21,6 +21,7 @@
     <string name="register_button">REGISTER</string>
     <string name="register_textview2">Already registered?</string>
     <string name="sign_in_button">SIGN IN</string>
+    <string name="error_name">Name cannot be empty</string>
     <!-- PASSWORD FORGOTTEN -->
     <string name="forgot_password_image">Forgot Password Image</string>
     <string name="forgot_password_textview">Forgot your password?</string>
