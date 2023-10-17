@@ -90,6 +90,7 @@
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="@string/forgot_password"
         android:textAllCaps="false"
         android:textColor="@color/primary"
@@ -213,7 +214,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="42dp"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.0"
+        app:layout_constraintGuide_percent="0.02"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.Guideline
