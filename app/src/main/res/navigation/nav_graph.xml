@@ -9,5 +9,17 @@
         android:id="@+id/loginFragment"
         android:name="it.unimib.food_alchemy.ui.LoginFragment"
         android:label="LoginFragment"
-        tools:layout="@layout/fragment_login" />
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_registrazioneFragment"
+            app:destination="@id/registrazioneFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registrazioneFragment"
+        android:name="it.unimib.food_alchemy.ui.RegistrazioneFragment"
+        android:label="RegistrazioneFragment" >
+        <action
+            android:id="@+id/action_registrazioneFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
 </navigation>

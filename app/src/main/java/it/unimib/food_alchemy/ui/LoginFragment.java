@@ -76,7 +76,8 @@ public class LoginFragment extends Fragment {
         emailInputLayout = view.findViewById(R.id.email_input_layout);
         passwordInputLayout = view.findViewById(R.id.password_input_layout);
         final Button buttonLogin = view.findViewById(R.id.button_login);
-
+        final Button buttonForgetPassword = view.findViewById(R.id.button_forgot_password);
+        final Button buttonSignUp = view.findViewById(R.id.button_signup);
         dataEncryptionUtil = new DataEncryptionUtil(requireContext());
 
         try {
@@ -104,6 +105,16 @@ public class LoginFragment extends Fragment {
                 Snackbar.make(requireActivity().findViewById(android.R.id.content),
                         R.string.check_login_data_message, Snackbar.LENGTH_SHORT).show();
             }
+        });
+
+        //listener bottone password dimenticata
+        buttonForgetPassword.setOnClickListener(view1 -> {
+
+        });
+
+        //listener bottone registrazione
+        buttonSignUp.setOnClickListener(view12 -> {
+            Navigation.findNavController(requireView()).navigate(R.id.action_loginFragment_to_registrazioneFragment);
         });
     }
 
