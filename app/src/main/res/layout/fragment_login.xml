@@ -68,7 +68,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/text_input_layout_password"
         android:layout_width="0dp"
-        android:layout_height="81dp"
+        android:layout_height="wrap_content"
         app:errorEnabled="true"
         app:layout_constraintBottom_toTopOf="@+id/button_forgot_password"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
@@ -80,7 +80,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/text_input_edit_text_password"
             android:layout_width="match_parent"
-            android:layout_height="63dp"
+            android:layout_height="wrap_content"
             android:hint="@string/password_hint"
             android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -128,7 +128,7 @@
         style="@style/Widget.Material3.Button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:text="@string/login_button"
         android:textSize="14sp"
@@ -213,7 +213,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="42dp"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.02"
+        app:layout_constraintGuide_percent="0.0"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.Guideline
