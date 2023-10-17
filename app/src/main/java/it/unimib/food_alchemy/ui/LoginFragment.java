@@ -109,7 +109,7 @@ public class LoginFragment extends Fragment {
 
         //listener bottone password dimenticata
         buttonForgetPassword.setOnClickListener(view1 -> {
-
+            Navigation.findNavController(requireView()).navigate(R.id.action_loginFragment_to_forgotPasswordFragment);
         });
 
         //listener bottone registrazione
