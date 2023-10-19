@@ -28,4 +28,8 @@
     <string name="forgot_password_email">Email</string>
     <string name="reset_button">RESET</string>
     <string name="return_button">RETURN TO LOGIN</string>
+
+    <!--SEARCH-->
+    <string name="search">Search Here</string>
+
  </resources>
