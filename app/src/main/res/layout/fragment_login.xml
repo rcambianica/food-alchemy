@@ -90,11 +90,9 @@
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:text="@string/forgot_password"
-        android:textAllCaps="false"
         android:textColor="@color/primary"
-        android:textSize="12sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/button_login"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintHorizontal_bias="1.0"
@@ -111,7 +109,6 @@
         android:textStyle="bold"
         app:layout_constraintBaseline_toBaselineOf="@+id/textView2"
         app:layout_constraintEnd_toStartOf="@+id/guideline4"
-        app:layout_constraintHorizontal_bias="0.735"
         app:layout_constraintStart_toEndOf="@+id/textView2" />
 
     <TextView
@@ -121,6 +118,7 @@
         android:layout_marginTop="8dp"
         android:text="@string/login_textview2"
         app:layout_constraintBottom_toTopOf="@+id/guideline14"
+        app:layout_constraintEnd_toStartOf="@+id/button_signup"
         app:layout_constraintStart_toStartOf="@+id/guideline3"
         app:layout_constraintTop_toBottomOf="@+id/button_google_login" />
 
@@ -132,6 +130,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:text="@string/login_button"
+        android:backgroundTint="@color/primary"
         android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@+id/relative_layout"
         app:layout_constraintEnd_toStartOf="@+id/guideline4"
@@ -143,14 +142,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.25" />
+        app:layout_constraintGuide_percent="0.3" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.75" />
+        app:layout_constraintGuide_percent="0.7" />
 
     <RelativeLayout
         android:id="@+id/relative_layout"
