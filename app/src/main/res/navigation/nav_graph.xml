@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="it.unimib.food_alchemy.ui.LoginFragment"
+        android:name="it.unimib.food_alchemy.ui.auth.LoginFragment"
         android:label="LoginFragment"
         tools:layout="@layout/fragment_login" >
         <action
@@ -19,7 +19,7 @@
     </fragment>
     <fragment
         android:id="@+id/registrationFragment"
-        android:name="it.unimib.food_alchemy.ui.RegistrationFragment"
+        android:name="it.unimib.food_alchemy.ui.auth.RegistrationFragment"
         android:label="RegistrationFragment">
         <action
             android:id="@+id/action_registrationFragment_to_loginFragment"
@@ -27,7 +27,7 @@
     </fragment>
     <fragment
         android:id="@+id/forgotPasswordFragment"
-        android:name="it.unimib.food_alchemy.ui.ForgotPasswordFragment"
+        android:name="it.unimib.food_alchemy.ui.auth.ForgotPasswordFragment"
         android:label="ForgotPasswordFragment" >
         <action
             android:id="@+id/action_forgotPasswordFragment_to_loginFragment"

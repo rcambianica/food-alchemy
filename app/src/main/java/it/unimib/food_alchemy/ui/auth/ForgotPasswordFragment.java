@@ -1,4 +1,4 @@
-package it.unimib.food_alchemy.ui;
+package it.unimib.food_alchemy.ui.auth;
 
 import android.os.Bundle;
 

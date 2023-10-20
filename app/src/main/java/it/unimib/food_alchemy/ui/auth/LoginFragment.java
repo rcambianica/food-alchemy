@@ -1,4 +1,4 @@
-package it.unimib.food_alchemy.ui;
+package it.unimib.food_alchemy.ui.auth;
 
 import static it.unimib.food_alchemy.util.Constants.EMAIL_ADDRESS;
 import static it.unimib.food_alchemy.util.Constants.ENCRYPTED_DATA_FILE_NAME;

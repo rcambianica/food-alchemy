@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Food Alchemy</string>
+    <!--ACTIVITY AUTH-->
+    <string name="title_activity_auth">AuthActivity</string>
     <!-- LOGIN -->
     <string name="login_image">Login Image</string>
     <string name="login_textview">Login</string>
@@ -37,4 +39,7 @@
     <string name="favorites">Favorites</string>
     <string name="fridge">Fridge</string>
     <string name="account">Account</string>
- </resources>
+
+    <!--ACTIVITY MAIN-->
+    <string name="title_activity_main">MainActivity</string>
+</resources>

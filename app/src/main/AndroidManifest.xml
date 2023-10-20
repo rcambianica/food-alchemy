@@ -13,14 +13,23 @@
         android:theme="@style/Theme.Foodalchemy"
         tools:targetApi="31">
         <activity
-            android:name="it.unimib.food_alchemy.ui.AuthActivity"
+            android:name=".ui.main.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.Foodalchemy">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.auth.AuthActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Foodalchemy">
+
+        </activity>
     </application>
+
 </manifest>
