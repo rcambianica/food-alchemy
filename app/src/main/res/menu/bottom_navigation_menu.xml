@@ -4,20 +4,20 @@
         android:id="@+id/page_1"
         android:enabled="true"
         android:icon="@drawable/baseline_home_24"
-        android:title="Home"/>
+        android:title="@string/home"/>
     <item
         android:id="@+id/page_2"
         android:enabled="true"
         android:icon="@drawable/baseline_star_24"
-        android:title="Preferiti"/>
+        android:title="@string/favorites"/>
     <item
         android:id="@+id/page_3"
         android:enabled="true"
         android:icon="@drawable/baseline_food_bank_24"
-        android:title="Frigo"/>
+        android:title="@string/fridge"/>
     <item
         android:id="@+id/page_4"
         android:enabled="true"
         android:icon="@drawable/baseline_account_circle_24"
-        android:title="Account"/>
+        android:title="@string/account"/>
 </menu>

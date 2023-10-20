@@ -32,4 +32,9 @@
     <!--SEARCH-->
     <string name="search">Search Here</string>
 
+    <!--MENU-->
+    <string name="home">Home</string>
+    <string name="favorites">Favorites</string>
+    <string name="fridge">Fridge</string>
+    <string name="account">Account</string>
  </resources>
