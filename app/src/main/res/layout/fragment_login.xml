@@ -14,9 +14,10 @@
         android:backgroundTint="#00000000"
         android:src="@drawable/undraw_breakfast_psiw"
         app:contentDescription="@string/login_image"
+        app:layout_constraintBottom_toTopOf="@+id/textView"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintStart_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toTopOf="@+id/guideline13" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
@@ -52,6 +53,7 @@
         android:layout_marginTop="8dp"
         app:endIconMode="clear_text"
         app:errorEnabled="true"
+        app:layout_constraintBottom_toTopOf="@+id/text_input_layout_password"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/textView"
@@ -69,6 +71,7 @@
         android:id="@+id/text_input_layout_password"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:gravity="bottom"
         app:errorEnabled="true"
         app:layout_constraintBottom_toTopOf="@+id/button_forgot_password"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
@@ -90,8 +93,10 @@
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="top"
         android:padding="0dp"
         android:text="@string/forgot_password"
+        android:textAllCaps="false"
         android:textColor="@color/primary"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/button_login"
@@ -105,26 +110,26 @@
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
         android:padding="0dp"
         android:text="@string/sign_up_button"
         android:textAlignment="center"
         android:textColor="@color/primary"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/guideline14"
-        app:layout_constraintEnd_toStartOf="@+id/guideline4"
-        app:layout_constraintStart_toStartOf="@+id/guideline3"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/textView2"
+        app:layout_constraintTop_toBottomOf="@+id/button_google_login" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="30dp"
         android:padding="0dp"
         android:text="@string/login_textview2"
         android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@+id/button_signup"
-        app:layout_constraintEnd_toStartOf="@+id/guideline4"
         app:layout_constraintStart_toStartOf="@+id/guideline3"
         app:layout_constraintTop_toBottomOf="@+id/button_google_login" />
 
@@ -134,7 +139,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:backgroundTint="@color/primary"
         android:text="@string/login_button"
         android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@+id/relative_layout"
@@ -161,7 +165,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toTopOf="@+id/button_google_login"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintStart_toStartOf="@+id/guideline"
@@ -199,11 +202,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
         android:text="@string/google_login"
         android:textColor="@color/white"
         android:textSize="14sp"
-        app:backgroundTint="@color/primary"
         app:icon="@drawable/googleg_standard_color_18"
         app:iconGravity="textStart"
         app:iconTint="@null"
@@ -211,15 +212,6 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline4"
         app:layout_constraintStart_toStartOf="@+id/guideline3"
         app:layout_constraintTop_toBottomOf="@+id/relative_layout" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline13"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="42dp"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.02"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline14"

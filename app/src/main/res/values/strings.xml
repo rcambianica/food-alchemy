@@ -7,7 +7,7 @@
     <string name="login_textview">Login</string>
     <string name="email_hint">E-mail</string>
     <string name="password_hint">Password</string>
-    <string name="forgot_password">FORGOT PASSWORD?</string>
+    <string name="forgot_password">Forgot password?</string>
     <string name="login_textview2">Not registered?</string>
     <string name="sign_up_button">SIGN UP</string>
     <string name="login_button">LOGIN</string>
