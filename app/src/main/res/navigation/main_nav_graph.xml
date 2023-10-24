@@ -7,21 +7,22 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="it.unimib.food_alchemy.ui.main.HomeFragment"
-        android:label="fragment_home"
+        android:label="@string/home"
         tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/favoritesFragment"
         android:name="it.unimib.food_alchemy.ui.main.FavoritesFragment"
-        android:label="fragment_favorites"
+        android:label="@string/favorites"
         tools:layout="@layout/fragment_favorites" />
     <fragment
         android:id="@+id/fridgeFragment"
         android:name="it.unimib.food_alchemy.ui.main.FridgeFragment"
-        android:label="fragment_fridge"
+        android:label="@string/fridge"
         tools:layout="@layout/fragment_fridge" />
     <fragment
         android:id="@+id/accountFragment"
         android:name="it.unimib.food_alchemy.ui.main.AccountFragment"
-        android:label="fragment_account"
+        android:label="@string/account"
         tools:layout="@layout/fragment_account" />
+    <include app:graph="@navigation/auth_nav_graph" />
 </navigation>

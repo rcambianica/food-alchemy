@@ -127,7 +127,7 @@ public class LoginFragment extends Fragment {
     /**
      * Starts another Activity using Intent or NavigationComponent.
      * @param destinationActivity The class of Activity to start.
-     * @param destination The ID associated with the action defined in welcome_nav_graph.xml.
+     * @param destination The ID associated with the action defined in auth_nav_graph.xml.
      */
     private void startActivityBasedOnCondition(Class<?> destinationActivity, int destination) {
         if (USE_NAVIGATION_COMPONENT) {
