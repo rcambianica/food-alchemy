@@ -5,6 +5,7 @@ import static it.unimib.food_alchemy.util.Constants.ENCRYPTED_DATA_FILE_NAME;
 import static it.unimib.food_alchemy.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.food_alchemy.util.Constants.PASSWORD;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -27,6 +28,7 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 
 import it.unimib.food_alchemy.R;
+import it.unimib.food_alchemy.ui.main.MainActivity;
 import it.unimib.food_alchemy.util.DataEncryptionUtil;
 
 /**
@@ -36,6 +38,7 @@ import it.unimib.food_alchemy.util.DataEncryptionUtil;
  */
 public class LoginFragment extends Fragment {
     private static final String TAG = LoginFragment.class.getSimpleName();
+    private static final boolean USE_NAVIGATION_COMPONENT = true;
     private TextInputLayout emailInputLayout;
     private TextInputLayout passwordInputLayout;
 
@@ -51,10 +54,8 @@ public class LoginFragment extends Fragment {
      *
      * @return A new instance of fragment LoginFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static LoginFragment newInstance() {
-        LoginFragment fragment = new LoginFragment();
-        return fragment;
+        return new LoginFragment();
     }
 
     @Override
@@ -78,6 +79,7 @@ public class LoginFragment extends Fragment {
         final Button buttonLogin = view.findViewById(R.id.button_login);
         final Button buttonForgetPassword = view.findViewById(R.id.button_forgot_password);
         final Button buttonSignUp = view.findViewById(R.id.button_signup);
+
         dataEncryptionUtil = new DataEncryptionUtil(requireContext());
 
         try {
@@ -94,6 +96,7 @@ public class LoginFragment extends Fragment {
         }
 
         buttonLogin.setOnClickListener(v -> {
+
             String email = emailInputLayout.getEditText().getText().toString();
             String password = passwordInputLayout.getEditText().getText().toString();
 
@@ -101,6 +104,9 @@ public class LoginFragment extends Fragment {
             if(isEmailOk(email) & isPasswordOk(password))   {
                 Log.d(TAG, "Email and password are ok");
                 saveLoginData(email, password);
+
+                startActivityBasedOnCondition(MainActivity.class,
+                        R.id.action_loginFragment_to_mainActivity);
             } else {
                 Snackbar.make(requireActivity().findViewById(android.R.id.content),
                         R.string.check_login_data_message, Snackbar.LENGTH_SHORT).show();
@@ -116,6 +122,21 @@ public class LoginFragment extends Fragment {
         buttonSignUp.setOnClickListener(view12 -> {
             Navigation.findNavController(requireView()).navigate(R.id.action_loginFragment_to_registrationFragment);
         });
+    }
+
+    /**
+     * Starts another Activity using Intent or NavigationComponent.
+     * @param destinationActivity The class of Activity to start.
+     * @param destination The ID associated with the action defined in welcome_nav_graph.xml.
+     */
+    private void startActivityBasedOnCondition(Class<?> destinationActivity, int destination) {
+        if (USE_NAVIGATION_COMPONENT) {
+            Navigation.findNavController(requireView()).navigate(destination);
+        } else {
+            Intent intent = new Intent(requireContext(), destinationActivity);
+            startActivity(intent);
+        }
+        requireActivity().finish();
     }
 
     /**
