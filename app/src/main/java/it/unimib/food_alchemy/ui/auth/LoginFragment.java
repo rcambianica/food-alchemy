@@ -21,6 +21,7 @@ import android.widget.Button;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
 
 import org.apache.commons.validator.routines.EmailValidator;
 
@@ -41,7 +42,6 @@ public class LoginFragment extends Fragment {
     private static final boolean USE_NAVIGATION_COMPONENT = true;
     private TextInputLayout emailInputLayout;
     private TextInputLayout passwordInputLayout;
-
     private DataEncryptionUtil dataEncryptionUtil;
 
     public LoginFragment() {

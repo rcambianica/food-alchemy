@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "408703966058",
+    "project_id": "food-alchemy-736ed",
+    "storage_bucket": "food-alchemy-736ed.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:408703966058:android:e498212953f1a5374ae313",
+        "android_client_info": {
+          "package_name": "it.unimib.food_alchemy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADGPi8IoW0WH4AHZr4xKv-1pvmlPAzDuQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

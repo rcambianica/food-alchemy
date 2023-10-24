@@ -9,10 +9,10 @@
     <string name="password_hint">Password</string>
     <string name="forgot_password">Forgot password?</string>
     <string name="login_textview2">Not registered?</string>
-    <string name="sign_up_button">SIGN UP</string>
-    <string name="login_button">LOGIN</string>
+    <string name="sign_up_button">Sign up</string>
+    <string name="login_button">Login</string>
     <string name="txt_or">OR</string>
-    <string name="google_login">GOOGLE</string>
+    <string name="google_login">Google</string>
     <string name="error_email">Insert a valid email address</string>
     <string name="error_password">Password cannot be empty</string>
     <string name="check_login_data_message">Check the data you inserted</string>
@@ -20,16 +20,16 @@
     <string name="sign_up_image">Signup Image</string>
     <string name="register_textview">Register</string>
     <string name="name_hint">Name</string>
-    <string name="register_button">REGISTER</string>
+    <string name="register_button">Register</string>
     <string name="register_textview2">Already registered?</string>
-    <string name="sign_in_button">SIGN IN</string>
+    <string name="sign_in_button">Sign in </string>
     <string name="error_name">Name cannot be empty</string>
     <!-- PASSWORD FORGOTTEN -->
     <string name="forgot_password_image">Forgot Password Image</string>
     <string name="forgot_password_textview">Forgot your password?</string>
     <string name="forgot_password_email">Email</string>
-    <string name="reset_button">RESET</string>
-    <string name="return_button">RETURN TO LOGIN</string>
+    <string name="reset_button">Reset</string>
+    <string name="return_button">Return to login</string>
 
     <!--SEARCH-->
     <string name="search">Search Here</string>
