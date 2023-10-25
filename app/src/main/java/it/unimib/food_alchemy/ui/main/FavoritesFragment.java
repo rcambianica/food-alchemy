@@ -1,14 +1,30 @@
 package it.unimib.food_alchemy.ui.main;
 
+import android.app.Activity;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.snackbar.Snackbar;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import it.unimib.food_alchemy.FavoritesRecyclerViewAdapter;
 import it.unimib.food_alchemy.R;
+import it.unimib.food_alchemy.models.Favorites;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -42,4 +58,35 @@ public class FavoritesFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_favorites, container, false);
     }
+
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        RecyclerView recyclerViewFavorites = view.findViewById(R.id.favorites_recyclerView);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(requireContext());
+        recyclerViewFavorites.setLayoutManager(layoutManager);
+
+        List<Favorites> favArray = new ArrayList<>();
+        for(int i=0; i<100; i++){
+            favArray.add(new Favorites("Titolo"+ i, "decription"+i, null));
+        }
+
+        FavoritesRecyclerViewAdapter adapter= new FavoritesRecyclerViewAdapter(favArray, new FavoritesRecyclerViewAdapter.OnItemClickListener() {
+            @Override
+            public void onFavClick(Favorites favorites) {
+                Snackbar.make(view,favorites.getTitle(),Snackbar.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onDeleteButtonPressed(int position) {
+                Snackbar.make(view,"Size"+favArray.size(),Snackbar.LENGTH_SHORT).show();
+            }
+        });
+        recyclerViewFavorites.setAdapter(adapter);
+
+    }
+
+
+
+
 }
