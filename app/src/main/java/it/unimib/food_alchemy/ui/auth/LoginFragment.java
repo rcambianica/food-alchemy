@@ -106,7 +106,7 @@ public class LoginFragment extends Fragment {
                 saveLoginData(email, password);
 
                 startActivityBasedOnCondition(MainActivity.class,
-                        R.id.action_loginFragment_to_mainActivity);
+                        R.id.action_loginFragment_to_preferencesActivity);
             } else {
                 Snackbar.make(requireActivity().findViewById(android.R.id.content),
                         R.string.check_login_data_message, Snackbar.LENGTH_SHORT).show();

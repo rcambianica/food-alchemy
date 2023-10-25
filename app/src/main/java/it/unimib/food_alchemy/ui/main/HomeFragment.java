@@ -16,7 +16,6 @@ import it.unimib.food_alchemy.R;
  * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment {
-
     public HomeFragment() {
         // Required empty public constructor
     }

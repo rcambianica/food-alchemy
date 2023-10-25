@@ -17,14 +17,20 @@
             android:id="@+id/action_loginFragment_to_forgotPasswordFragment"
             app:destination="@id/forgotPasswordFragment" />
         <action
-            android:id="@+id/action_loginFragment_to_mainActivity"
-            app:destination="@id/mainActivity"  />
+            android:id="@+id/action_loginFragment_to_preferencesActivity"
+            app:destination="@id/PreferencesActivity"  />
     </fragment>
     <activity
         android:id="@+id/mainActivity"
         android:name="it.unimib.food_alchemy.ui.main.MainActivity"
         android:label="MainActivity"
         tools:layout="@layout/activity_main">
+    </activity>
+    <activity
+        android:id="@+id/PreferencesActivity"
+        android:name="it.unimib.food_alchemy.ui.preferences.PreferencesActivity"
+        android:label="PreferencesActivity"
+        tools:layout="@layout/activity_preferences">
     </activity>
     <fragment
         android:id="@+id/registrationFragment"
