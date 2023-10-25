@@ -41,6 +41,7 @@
     <string name="appetizer">Appetizer</string>
 
     <string name="diet">Diet</string>
+    <string name="none">None</string>
     <string name="gluten_free">Gluten Free</string>
     <string name="vegetarian">Vegetarian</string>
     <string name="vegan">Vegan</string>
@@ -65,14 +66,16 @@
     <string name="account">Account</string>
 
     <!--ACTIVITY PREFERENCES-->
-    <!--DIET-->
     <string name="preferences_textview">Let\'s start by adding some preferences</string>
-    <string name="diet_textview">Diet</string>
+    <string-array name="diet_array">
+        <item>@string/none</item>
+        <item>@string/gluten_free</item>
+        <item>@string/vegan</item>
+        <item>@string/vegetarian</item>
+    </string-array>
     <string name="button_next">Next</string>
-    <!--INTOLLERANCES-->
-    <string name="intolerances_textview">Intolerances</string>
-    <string name="button_back">Back</string>
-    <!--EXCLUDE INGREDIENTS-->
+    <string name="alert_text_diet">Select only one diet type</string>
+    <string name="alert_text_intolerances">Select at least one intolerance</string>
     <string name="exclude_incredients_textview">Any ingredients to exclude?</string>
     <!--ACTIVITY MAIN-->
     <string name="title_activity_main">MainActivity</string>
