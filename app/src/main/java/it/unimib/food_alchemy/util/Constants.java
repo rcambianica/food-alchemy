@@ -4,9 +4,10 @@ public class Constants {
     public static final String APP_DATA_FILE = "app_data.txt";
 
     //Constants for Spooncular.org
-    public static final String GLUTEN_FREE = "gluten_free";
-    public static final String VEGETARIAN = "vegetarian";
-    public static final String VEGAN = "vegan";
+    public static final String NONE = "None";
+    public static final String GLUTEN_FREE = "Gluten Free";
+    public static final String VEGETARIAN = "Vegetarian";
+    public static final String VEGAN = "Vegan";
 
     public static final String DAIRY = "dairy";
     public static final String GRAIN = "grain";
