@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="auth_type">apiKeyScheme</string>
+    <!-- TODO(PROD): storing the api key here is unsafe. If this project will ever go into production, we must resolve this security issue -->
+    <string name="auth_key">3c67fc3e561f49f08029c42492710d1b</string>
+</resources>

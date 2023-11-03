@@ -31,4 +31,6 @@
             android:theme="@style/Theme.Food_alchemy"></activity>
     </application>
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
 </manifest>
