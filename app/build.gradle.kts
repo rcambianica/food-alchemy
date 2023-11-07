@@ -1,3 +1,7 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+val spoonacular_api_key: String = gradleLocalProperties(rootDir).getProperty("spoonacular_api_key")
+val debug_mode: String = gradleLocalProperties(rootDir).getProperty("spoonacular_api_key")
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -19,6 +23,8 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        resValue ("String", "spoonacular_api_key", spoonacular_api_key)
+        resValue("bool","debug_mode",debug_mode)
     }
 
     buildTypes {
