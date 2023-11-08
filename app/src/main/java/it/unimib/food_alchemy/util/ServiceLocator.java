@@ -1,9 +1,7 @@
 package it.unimib.food_alchemy.util;
 
-import android.app.Application;
-
 //import it.unimib.worldnews.database.NewsRoomDatabase;
-import it.unimib.food_alchemy.service.SpoonacularApiService;
+import it.unimib.food_alchemy.data.service.SpoonacularApiService;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 

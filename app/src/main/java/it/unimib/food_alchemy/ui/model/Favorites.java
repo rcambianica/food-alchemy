@@ -1,4 +1,4 @@
-package it.unimib.food_alchemy.model;
+package it.unimib.food_alchemy.ui.model;
 
 public class Favorites {
 

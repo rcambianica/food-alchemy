@@ -1,9 +1,8 @@
-package it.unimib.food_alchemy.model;
+package it.unimib.food_alchemy.ui.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 

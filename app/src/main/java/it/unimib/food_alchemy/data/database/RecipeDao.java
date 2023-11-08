@@ -1,4 +1,4 @@
-package it.unimib.food_alchemy.database;
+package it.unimib.food_alchemy.data.database;
 
 import androidx.room.Dao;
 

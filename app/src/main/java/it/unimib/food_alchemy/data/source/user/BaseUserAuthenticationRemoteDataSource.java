@@ -1,0 +1,17 @@
+package it.unimib.food_alchemy.data.source.user;
+
+import it.unimib.food_alchemy.data.repository.user.UserResponseCallback;
+import it.unimib.food_alchemy.ui.model.User;
+
+public abstract class BaseUserAuthenticationRemoteDataSource {
+    protected UserResponseCallback userResponseCallback;
+
+    public void setUserResponseCallback(UserResponseCallback userResponseCallback)  {
+        this.userResponseCallback = userResponseCallback;
+    }
+    public abstract User getLoggedUser();
+    public abstract void logout();
+    public abstract void signUp(String email, String password);
+    public abstract void signIn(String email, String password);
+    public abstract void signInWithGoogle(String idToken);
+}

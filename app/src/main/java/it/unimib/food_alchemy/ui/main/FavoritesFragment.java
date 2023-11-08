@@ -19,7 +19,7 @@ import java.util.List;
 
 import it.unimib.food_alchemy.adapter.FavoritesRecyclerViewAdapter;
 import it.unimib.food_alchemy.R;
-import it.unimib.food_alchemy.model.Favorites;
+import it.unimib.food_alchemy.ui.model.Favorites;
 
 /**
  * A simple {@link Fragment} subclass.

@@ -1,4 +1,4 @@
-package it.unimib.food_alchemy.database;
+package it.unimib.food_alchemy.data.database;
 
 import static it.unimib.food_alchemy.util.Constants.DATABASE_VERSION;
 import static it.unimib.food_alchemy.util.Constants.RECIPES_DATABASE_NAME;
@@ -9,11 +9,10 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import it.unimib.food_alchemy.model.Recipe;
+import it.unimib.food_alchemy.ui.model.Recipe;
 
 @Database(entities = {Recipe.class}, version = DATABASE_VERSION)
 public abstract class RecipeRoomDatabase extends RoomDatabase{
