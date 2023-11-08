@@ -32,4 +32,14 @@ public class Constants {
     public static final String PASSWORD = "password";
     // Constants for encrypted files
     public static final String ENCRYPTED_DATA_FILE_NAME = "it.unimib.food_alchemy.encrypted_file.txt";
+
+    //Constants for Spoonacular (https://api.spoonacular.com)
+    public static final String SPOONACULAR_API_BASE_URL = "https://api.spoonacular.com/";
+    public static final String RECIPES_ENDPOINT = "recipes/complexSearch";
+    public static final String RECIPES_QUERY_PARAMETER = "query";
+    public static final int RECIPES_NUMBER_PARAMETER = 100;
+
+    // Constants for Room database
+    public static final String RECIPES_DATABASE_NAME = "recipes_db";
+    public static final int DATABASE_VERSION = 1;
 }

@@ -1,4 +1,4 @@
-package it.unimib.food_alchemy;
+package it.unimib.food_alchemy.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import it.unimib.food_alchemy.models.Favorites;
+import it.unimib.food_alchemy.R;
+import it.unimib.food_alchemy.model.Favorites;
 
 public class FavoritesRecyclerViewAdapter extends RecyclerView.Adapter<FavoritesRecyclerViewAdapter.Holder>{
 

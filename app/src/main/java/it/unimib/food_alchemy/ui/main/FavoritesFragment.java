@@ -1,19 +1,14 @@
 package it.unimib.food_alchemy.ui.main;
 
-import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -22,9 +17,9 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.unimib.food_alchemy.FavoritesRecyclerViewAdapter;
+import it.unimib.food_alchemy.adapter.FavoritesRecyclerViewAdapter;
 import it.unimib.food_alchemy.R;
-import it.unimib.food_alchemy.models.Favorites;
+import it.unimib.food_alchemy.model.Favorites;
 
 /**
  * A simple {@link Fragment} subclass.
