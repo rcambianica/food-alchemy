@@ -1,6 +1,5 @@
 package it.unimib.food_alchemy.data.source.user;
 
-import static it.unimib.food_alchemy.util.Constants.FIREBASE_REALTIME_DATABASE;
 import static it.unimib.food_alchemy.util.Constants.FIREBASE_USERS_COLLECTION;
 import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_DIET;
 import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_FILE_NAME;
@@ -25,7 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import it.unimib.food_alchemy.ui.model.User;
+import it.unimib.food_alchemy.model.User;
 import it.unimib.food_alchemy.util.SharedPreferencesUtil;
 
 public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource{
@@ -35,7 +34,7 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource{
     private final SharedPreferencesUtil sharedPreferencesUtil;
 
     public UserDataRemoteDataSource(SharedPreferencesUtil sharedPreferencesUtil) {
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance(FIREBASE_REALTIME_DATABASE);
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference().getRef();
         this.sharedPreferencesUtil = sharedPreferencesUtil;
     }

@@ -4,8 +4,8 @@ import androidx.lifecycle.MutableLiveData;
 
 import java.util.Set;
 
-import it.unimib.food_alchemy.ui.model.Result;
-import it.unimib.food_alchemy.ui.model.User;
+import it.unimib.food_alchemy.model.Result;
+import it.unimib.food_alchemy.model.User;
 
 public interface IUserRepository {
     MutableLiveData<Result> getUser(String email, String password, boolean isUserRegistered);

@@ -1,4 +1,4 @@
-package it.unimib.food_alchemy.ui.model;
+package it.unimib.food_alchemy.model;
 
 public abstract class Result {
     private Result() {}

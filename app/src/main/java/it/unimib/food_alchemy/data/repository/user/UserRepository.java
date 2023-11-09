@@ -4,8 +4,8 @@ import androidx.lifecycle.MutableLiveData;
 
 import java.util.Set;
 
-import it.unimib.food_alchemy.ui.model.Result;
-import it.unimib.food_alchemy.ui.model.User;
+import it.unimib.food_alchemy.model.Result;
+import it.unimib.food_alchemy.model.User;
 import it.unimib.food_alchemy.data.source.user.BaseUserAuthenticationRemoteDataSource;
 import it.unimib.food_alchemy.data.source.user.BaseUserDataRemoteDataSource;
 
@@ -18,20 +18,20 @@ public class UserRepository implements IUserRepository, UserResponseCallback/*, 
 
     private final BaseUserAuthenticationRemoteDataSource userRemoteDataSource;
     private final BaseUserDataRemoteDataSource userDataRemoteDataSource;
-    //private final BaseNewsLocalDataSource newsLocalDataSource;
+    //private final BaseRecipesLocalDataSource recipesLocalDataSource;
     private final MutableLiveData<Result> userMutableLiveData;
-    //private final MutableLiveData<Result> userFavoriteNewsMutableLiveData;
+    private final MutableLiveData<Result> userFavoriteRecipesMutableLiveData;
     private final MutableLiveData<Result> userPreferencesMutableLiveData;
 
     public UserRepository(BaseUserAuthenticationRemoteDataSource userRemoteDataSource,
                           BaseUserDataRemoteDataSource userDataRemoteDataSource/*,
-                          BaseNewsLocalDataSource newsLocalDataSource*/) {
+                          BaseRecipesLocalDataSource recipesLocalDataSource*/) {
         this.userRemoteDataSource = userRemoteDataSource;
         this.userDataRemoteDataSource = userDataRemoteDataSource;
         //this.recipesLocalDataSource = recipesLocalDataSource;
         this.userMutableLiveData = new MutableLiveData<>();
         this.userPreferencesMutableLiveData = new MutableLiveData<>();
-        //this.userFavoriteRecipesMutableLiveData = new MutableLiveData<>();
+        this.userFavoriteRecipesMutableLiveData = new MutableLiveData<>();
         this.userRemoteDataSource.setUserResponseCallback(this);
         this.userDataRemoteDataSource.setUserResponseCallback(this);
         //this.recipesLocalDataSource.setRecipesCallback(this);

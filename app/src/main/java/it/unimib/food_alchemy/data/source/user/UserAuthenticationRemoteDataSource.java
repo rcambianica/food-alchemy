@@ -19,7 +19,7 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-import it.unimib.food_alchemy.ui.model.User;
+import it.unimib.food_alchemy.model.User;
 
 public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRemoteDataSource{
 

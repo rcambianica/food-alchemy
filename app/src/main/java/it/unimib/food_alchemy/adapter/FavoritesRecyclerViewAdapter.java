@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import it.unimib.food_alchemy.R;
-import it.unimib.food_alchemy.ui.model.Favorites;
+import it.unimib.food_alchemy.model.Favorites;
 
 public class FavoritesRecyclerViewAdapter extends RecyclerView.Adapter<FavoritesRecyclerViewAdapter.Holder>{
 

@@ -1,4 +1,4 @@
-package it.unimib.food_alchemy.ui.model;
+package it.unimib.food_alchemy.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;

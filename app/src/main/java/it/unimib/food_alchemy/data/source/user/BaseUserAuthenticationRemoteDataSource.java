@@ -1,7 +1,7 @@
 package it.unimib.food_alchemy.data.source.user;
 
 import it.unimib.food_alchemy.data.repository.user.UserResponseCallback;
-import it.unimib.food_alchemy.ui.model.User;
+import it.unimib.food_alchemy.model.User;
 
 public abstract class BaseUserAuthenticationRemoteDataSource {
     protected UserResponseCallback userResponseCallback;

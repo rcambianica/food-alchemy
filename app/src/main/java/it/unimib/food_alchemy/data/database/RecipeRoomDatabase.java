@@ -12,7 +12,7 @@ import androidx.room.RoomDatabase;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import it.unimib.food_alchemy.ui.model.Recipe;
+import it.unimib.food_alchemy.model.Recipe;
 
 @Database(entities = {Recipe.class}, version = DATABASE_VERSION)
 public abstract class RecipeRoomDatabase extends RoomDatabase{

@@ -4,7 +4,7 @@ public class Constants {
     public static final String APP_DATA_FILE = "app_data.txt";
 
     //Constants for Spooncular.org
-    public static final String NONE = "None";
+    public static final String NO_DIET = "No Diet";
     public static final String GLUTEN_FREE = "Gluten Free";
     public static final String VEGETARIAN = "Vegetarian";
     public static final String VEGAN = "Vegan";
@@ -25,11 +25,15 @@ public class Constants {
     public static final String SHARED_PREFERENCES_FILE_NAME = "it.unimib.food_alchemy.preferences";
     public static final String SHARED_PREFERENCES_DIET = "diet";
     public static final String SHARED_PREFERENCES_INTOLERANCES = "intolerances";
+    public static final String SHARED_PREFERENCES_FIRST_LOADING = "first_loading";
 
     // Constants for EncryptedSharedPreferences
     public static final String ENCRYPTED_SHARED_PREFERENCES_FILE_NAME = "it.unimib.food_alchemy.encrypted_preferences";
+    public static final String NAME = "name";
     public static final String EMAIL_ADDRESS = "email_address";
     public static final String PASSWORD = "password";
+    public static final String ID_TOKEN = "google_token";
+
     // Constants for encrypted files
     public static final String ENCRYPTED_DATA_FILE_NAME = "it.unimib.food_alchemy.encrypted_file.txt";
 
@@ -55,7 +59,6 @@ public class Constants {
     public static final int MINIMUM_PASSWORD_LENGTH = 6;
 
     // Constants for Firebase Realtime Database
-    public static final String FIREBASE_REALTIME_DATABASE = "";
     public static final String FIREBASE_USERS_COLLECTION = "users";
     public static final String FIREBASE_FAVORITE_RECIPES_COLLECTION = "favorite_recipes";
 }

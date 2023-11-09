@@ -1,6 +1,6 @@
 package it.unimib.food_alchemy.data.repository.user;
 
-import it.unimib.food_alchemy.ui.model.User;
+import it.unimib.food_alchemy.model.User;
 
 public interface UserResponseCallback {
     void onSuccessFromAuthentication(User user);
