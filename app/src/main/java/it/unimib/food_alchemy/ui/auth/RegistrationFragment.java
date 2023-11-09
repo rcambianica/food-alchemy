@@ -9,6 +9,7 @@ import static it.unimib.food_alchemy.util.Constants.NAME;
 import static it.unimib.food_alchemy.util.Constants.PASSWORD;
 import static it.unimib.food_alchemy.util.Constants.USER_COLLISION_ERROR;
 import static it.unimib.food_alchemy.util.Constants.WEAK_PASSWORD_ERROR;
+import it.unimib.food_alchemy.ui.main.MainActivity;
 
 import android.os.Bundle;
 
@@ -41,6 +42,7 @@ import it.unimib.food_alchemy.R;
 import it.unimib.food_alchemy.databinding.FragmentRegistrationBinding;
 import it.unimib.food_alchemy.model.Result;
 import it.unimib.food_alchemy.model.User;
+import it.unimib.food_alchemy.ui.main.MainActivity;
 import it.unimib.food_alchemy.util.DataEncryptionUtil;
 
 /**
@@ -96,6 +98,7 @@ public class RegistrationFragment extends Fragment {
             }
         }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
 
+
         binding.buttonRegister.setOnClickListener(view12 -> {
             String name = binding.textInputEditTextName.getText().toString().trim();
             String email = binding.textInputEditTextEmail.getText().toString().trim();
@@ -107,11 +110,12 @@ public class RegistrationFragment extends Fragment {
                     userViewModel.getUserMutableLiveData(email, password, false).observe(
                             getViewLifecycleOwner(), result -> {
                                 if (result.isSuccess()) {
+
                                     User user = ((Result.UserResponseSuccess) result).getData();
                                     saveLoginData(name, email, password, user.getIdToken());
                                     userViewModel.setAuthenticationError(false);
-                                    Navigation.findNavController(view).navigate(
-                                            R.id.action_registrationFragment_to_PreferencesActivity);
+                                    Navigation.findNavController(view).navigate(R.id.action_registrationFragment_to_PreferencesActivity);
+                                    Log.d(TAG,"ciao radu");
                                 } else {
                                     userViewModel.setAuthenticationError(true);
                                     Snackbar.make(requireActivity().findViewById(android.R.id.content),
