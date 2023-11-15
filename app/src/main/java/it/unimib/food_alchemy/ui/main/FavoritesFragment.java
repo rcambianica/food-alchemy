@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.unimib.food_alchemy.adapter.FavoritesRecyclerViewAdapter;
-import it.unimib.food_alchemy.R;
+import it.unimib.food_alchemy.databinding.FragmentFavoritesBinding;
 import it.unimib.food_alchemy.model.Favorites;
 
 /**
@@ -27,6 +27,8 @@ import it.unimib.food_alchemy.model.Favorites;
  * create an instance of this fragment.
  */
 public class FavoritesFragment extends Fragment {
+
+    private FragmentFavoritesBinding fragmentFavoritesBinding;
     public FavoritesFragment() {
         // Required empty public constructor
     }
@@ -51,13 +53,14 @@ public class FavoritesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_favorites, container, false);
+        fragmentFavoritesBinding = FragmentFavoritesBinding.inflate(inflater,container,false);
+        return fragmentFavoritesBinding.getRoot();
     }
 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        RecyclerView recyclerViewFavorites = view.findViewById(R.id.favorites_recyclerView);
+        RecyclerView recyclerViewFavorites = fragmentFavoritesBinding.favoritesRecyclerView;
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(requireContext());
         recyclerViewFavorites.setLayoutManager(layoutManager);
 
@@ -81,7 +84,9 @@ public class FavoritesFragment extends Fragment {
 
     }
 
-
-
-
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        fragmentFavoritesBinding = null;
+    }
 }

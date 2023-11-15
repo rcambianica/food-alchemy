@@ -71,6 +71,11 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource{
             }
         });
     }
+
+    @Override
+    public void getUserFavoriteRecipes(String idToken) {
+
+    }
     /*
     @Override
     public void getUserFavoriteNews(String idToken) {

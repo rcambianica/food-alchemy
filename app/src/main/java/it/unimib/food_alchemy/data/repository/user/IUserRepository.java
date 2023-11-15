@@ -10,7 +10,7 @@ import it.unimib.food_alchemy.model.User;
 public interface IUserRepository {
     MutableLiveData<Result> getUser(String email, String password, boolean isUserRegistered);
     MutableLiveData<Result> getGoogleUser(String idToken);
-    //MutableLiveData<Result> getUserFavoriteRecipes(String idToken);
+    MutableLiveData<Result> getUserFavoriteRecipes(String idToken);
     MutableLiveData<Result> getUserPreferences(String idToken);
     MutableLiveData<Result> logout();
     User getLoggedUser();

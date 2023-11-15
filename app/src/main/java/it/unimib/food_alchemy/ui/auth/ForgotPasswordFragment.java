@@ -11,14 +11,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.textfield.TextInputLayout;
 
 import org.apache.commons.validator.routines.EmailValidator;
 
 import it.unimib.food_alchemy.R;
+import it.unimib.food_alchemy.databinding.FragmentForgotPasswordBinding;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,8 +27,7 @@ import it.unimib.food_alchemy.R;
 public class ForgotPasswordFragment extends Fragment {
 
     public static final String TAG = ForgotPasswordFragment.class.getSimpleName();
-
-    private TextInputLayout emailInputLayout;
+    private FragmentForgotPasswordBinding fragmentForgotPasswordBinding;
     public ForgotPasswordFragment() {
         // Required empty public constructor
     }
@@ -55,17 +53,14 @@ public class ForgotPasswordFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_forgot_password, container, false);
+        fragmentForgotPasswordBinding = FragmentForgotPasswordBinding.inflate(inflater,container,false);
+        return fragmentForgotPasswordBinding.getRoot();
     }
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState)  {
         super.onViewCreated(view, savedInstanceState);
 
-        emailInputLayout = view.findViewById(R.id.text_input_layout_email);
-        final Button buttonReset = view.findViewById(R.id.button_reset);
-        final Button buttonReturnLogin = view.findViewById(R.id.button_return_login);
-
-        buttonReset.setOnClickListener(view12 -> {
-            String email = emailInputLayout.getEditText().getText().toString();
+        fragmentForgotPasswordBinding.buttonReset.setOnClickListener(v -> {
+            String email = fragmentForgotPasswordBinding.textInputEditTextEmail.getText().toString();
 
             //start login if email and password are ok
             if(isEmailOk(email))   {
@@ -76,7 +71,7 @@ public class ForgotPasswordFragment extends Fragment {
             }
         });
 
-        buttonReturnLogin.setOnClickListener(view1 -> {
+        fragmentForgotPasswordBinding.buttonReturnLogin.setOnClickListener(v -> {
             Navigation.findNavController(requireView()).navigate(R.id.action_forgotPasswordFragment_to_loginFragment);
         });
     }
@@ -90,11 +85,16 @@ public class ForgotPasswordFragment extends Fragment {
         // Check if the email is valid through the use of this library:
         // https://commons.apache.org/proper/commons-validator/
         if (!EmailValidator.getInstance().isValid((email))) {
-            emailInputLayout.setError(getString(R.string.error_email));
+            fragmentForgotPasswordBinding.textInputLayoutEmail.setError(getString(R.string.error_email));
             return false;
         } else {
-            emailInputLayout.setError(null);
+            fragmentForgotPasswordBinding.textInputLayoutEmail.setError(null);
             return true;
         }
+    }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        fragmentForgotPasswordBinding = null;
     }
 }

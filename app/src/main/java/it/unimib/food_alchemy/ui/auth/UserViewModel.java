@@ -37,14 +37,14 @@ public class UserViewModel extends ViewModel {
         return userMutableLiveData;
     }
 
-    /*
+
     public MutableLiveData<Result> getUserFavoriteRecipesMutableLiveData(String idToken) {
         if (userFavoriteRecipesMutableLiveData == null) {
             getUserFavoriteRecipes(idToken);
         }
         return userFavoriteRecipesMutableLiveData;
     }
-*/
+
     public void saveUserPreferences(String diet, Set<String> intolerances, String idToken) {
         if (idToken != null) {
             userRepository.saveUserPreferences(diet, intolerances, idToken);
@@ -72,11 +72,11 @@ public class UserViewModel extends ViewModel {
         return userMutableLiveData;
     }
 
-    /*
+
     private void getUserFavoriteRecipes(String idToken) {
         userFavoriteRecipesMutableLiveData = userRepository.getUserFavoriteRecipes(idToken);
     }
-    */
+
     public void getUser(String email, String password, boolean isUserRegistered) {
         userRepository.getUser(email, password, isUserRegistered);
     }

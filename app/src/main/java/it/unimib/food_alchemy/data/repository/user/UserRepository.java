@@ -2,8 +2,10 @@ package it.unimib.food_alchemy.data.repository.user;
 
 import androidx.lifecycle.MutableLiveData;
 
+import java.util.List;
 import java.util.Set;
 
+import it.unimib.food_alchemy.model.Recipe;
 import it.unimib.food_alchemy.model.Result;
 import it.unimib.food_alchemy.model.User;
 import it.unimib.food_alchemy.data.source.user.BaseUserAuthenticationRemoteDataSource;
@@ -52,12 +54,12 @@ public class UserRepository implements IUserRepository, UserResponseCallback/*, 
         signInWithGoogle(idToken);
         return userMutableLiveData;
     }
-    /*
+
     @Override
     public MutableLiveData<Result> getUserFavoriteRecipes(String idToken) {
         userDataRemoteDataSource.getUserFavoriteRecipes(idToken);
         return userFavoriteRecipesMutableLiveData;
-    }*/
+    }
 
     @Override
     public MutableLiveData<Result> getUserPreferences(String idToken) {
@@ -108,6 +110,11 @@ public class UserRepository implements IUserRepository, UserResponseCallback/*, 
 
     @Override
     public void onSuccessFromRemoteDatabase(User user) {
+
+    }
+
+    @Override
+    public void onSuccessFromRemoteDatabase(List<Recipe> recipeList) {
 
     }
 

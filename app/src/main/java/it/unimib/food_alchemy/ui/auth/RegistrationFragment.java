@@ -9,7 +9,6 @@ import static it.unimib.food_alchemy.util.Constants.NAME;
 import static it.unimib.food_alchemy.util.Constants.PASSWORD;
 import static it.unimib.food_alchemy.util.Constants.USER_COLLISION_ERROR;
 import static it.unimib.food_alchemy.util.Constants.WEAK_PASSWORD_ERROR;
-import it.unimib.food_alchemy.ui.main.MainActivity;
 
 import android.os.Bundle;
 
@@ -28,10 +27,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.textfield.TextInputLayout;
 
 import org.apache.commons.validator.routines.EmailValidator;
 
@@ -42,7 +39,6 @@ import it.unimib.food_alchemy.R;
 import it.unimib.food_alchemy.databinding.FragmentRegistrationBinding;
 import it.unimib.food_alchemy.model.Result;
 import it.unimib.food_alchemy.model.User;
-import it.unimib.food_alchemy.ui.main.MainActivity;
 import it.unimib.food_alchemy.util.DataEncryptionUtil;
 
 /**
@@ -54,7 +50,7 @@ public class RegistrationFragment extends Fragment {
 
     private static final String TAG = RegistrationFragment.class.getSimpleName();
 
-    private FragmentRegistrationBinding binding;
+    private FragmentRegistrationBinding fragmentRegistrationBinding;
     private UserViewModel userViewModel;
     private DataEncryptionUtil dataEncryptionUtil;
 
@@ -76,8 +72,8 @@ public class RegistrationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        binding = FragmentRegistrationBinding.inflate(inflater,container,false);
-        return binding.getRoot();
+        fragmentRegistrationBinding = FragmentRegistrationBinding.inflate(inflater,container,false);
+        return fragmentRegistrationBinding.getRoot();
     }
 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState)  {
@@ -99,10 +95,10 @@ public class RegistrationFragment extends Fragment {
         }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
 
 
-        binding.buttonRegister.setOnClickListener(view12 -> {
-            String name = binding.textInputEditTextName.getText().toString().trim();
-            String email = binding.textInputEditTextEmail.getText().toString().trim();
-            String password = binding.textInputEditTextPassword.getText().toString().trim();
+        fragmentRegistrationBinding.buttonRegister.setOnClickListener(v -> {
+            String name = fragmentRegistrationBinding.textInputEditTextName.getText().toString().trim();
+            String email = fragmentRegistrationBinding.textInputEditTextEmail.getText().toString().trim();
+            String password = fragmentRegistrationBinding.textInputEditTextPassword.getText().toString().trim();
 
             //start registration if name, email and password are ok
             if(isNameOk(name) & isEmailOk(email) & isPasswordOk(password))   {
@@ -110,7 +106,6 @@ public class RegistrationFragment extends Fragment {
                     userViewModel.getUserMutableLiveData(email, password, false).observe(
                             getViewLifecycleOwner(), result -> {
                                 if (result.isSuccess()) {
-
                                     User user = ((Result.UserResponseSuccess) result).getData();
                                     saveLoginData(name, email, password, user.getIdToken());
                                     userViewModel.setAuthenticationError(false);
@@ -133,7 +128,7 @@ public class RegistrationFragment extends Fragment {
             }
         });
 
-        binding.buttonSignin.setOnClickListener(view12-> {
+        fragmentRegistrationBinding.buttonSignin.setOnClickListener(v-> {
             Navigation.findNavController(view).navigate(
                     R.id.action_registrationFragment_to_loginFragment);
         });
@@ -157,10 +152,10 @@ public class RegistrationFragment extends Fragment {
     private boolean isNameOk(String name) {
         // Check if the name length is correct
         if (name.isEmpty()) {
-            binding.textInputEditTextName.setError(getString(R.string.error_name));
+            fragmentRegistrationBinding.textInputEditTextName.setError(getString(R.string.error_name));
             return false;
         } else {
-            binding.textInputEditTextName.setError(null);
+            fragmentRegistrationBinding.textInputEditTextName.setError(null);
             return true;
         }
     }
@@ -174,10 +169,10 @@ public class RegistrationFragment extends Fragment {
         // Check if the email is valid through the use of this library:
         // https://commons.apache.org/proper/commons-validator/
         if (!EmailValidator.getInstance().isValid((email))) {
-            binding.textInputLayoutEmail.setError(getString(R.string.error_email));
+            fragmentRegistrationBinding.textInputLayoutEmail.setError(getString(R.string.error_email));
             return false;
         } else {
-            binding.textInputLayoutEmail.setError(null);
+            fragmentRegistrationBinding.textInputLayoutEmail.setError(null);
             return true;
         }
     }
@@ -190,10 +185,10 @@ public class RegistrationFragment extends Fragment {
     private boolean isPasswordOk(String password) {
         // Check if the password length is correct
         if (password.isEmpty() || password.length() < MINIMUM_PASSWORD_LENGTH) {
-            binding.textInputLayoutPassword.setError(getString(R.string.error_password));
+            fragmentRegistrationBinding.textInputLayoutPassword.setError(getString(R.string.error_password));
             return false;
         } else {
-            binding.textInputLayoutPassword.setError(null);
+            fragmentRegistrationBinding.textInputLayoutPassword.setError(null);
             return true;
         }
     }
@@ -224,6 +219,6 @@ public class RegistrationFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
+        fragmentRegistrationBinding = null;
     }
 }

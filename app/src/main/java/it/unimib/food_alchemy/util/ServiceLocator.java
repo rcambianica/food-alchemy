@@ -1,6 +1,5 @@
 package it.unimib.food_alchemy.util;
 
-//import it.unimib.worldnews.database.NewsRoomDatabase;
 import android.app.Application;
 
 import it.unimib.food_alchemy.data.database.RecipeRoomDatabase;

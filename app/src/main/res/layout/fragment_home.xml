@@ -62,7 +62,7 @@
                         android:id="@+id/textView3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Piatto del giorno" />
+                        android:text="@string/dish_of_the_day" />
 
                     <ImageView
                         android:id="@+id/imageView"
@@ -86,7 +86,7 @@
                         android:id="@+id/textView4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Discovery" />
+                        android:text="@string/discovery" />
 
 
                     <HorizontalScrollView
@@ -103,46 +103,46 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
-                            
-                            <Button
-                                android:layout_width="125dp"
-                                android:layout_height="125dp"
-                                android:layout_marginRight="10dp"
-                                android:text="Main Dish"
-                                app:iconGravity="textTop"
-                                app:iconSize="35dp"
-                                app:icon="@drawable/baseline_fastfood_24"
-                                android:id="@+id/pirmo"
-                                ></Button>
 
                             <Button
                                 android:layout_width="125dp"
                                 android:layout_height="125dp"
-                                android:text="Side Dish"
+                                android:layout_marginRight="10dp"
+                                android:text="@string/main_dish"
+                                app:iconGravity="textTop"
+                                app:iconSize="35dp"
+                                app:icon="@drawable/baseline_fastfood_24"
+                                android:id="@+id/pirmo" />
+
+                            <Button
+                                android:layout_width="125dp"
+                                android:layout_height="125dp"
+                                android:text="@string/side_dish"
                                 android:layout_marginRight="10dp"
                                 app:iconGravity="textTop"
                                 app:iconSize="35dp"
                                 app:icon="@drawable/baseline_fastfood_24"
-                                android:id="@+id/secondi"></Button>
+                                android:id="@+id/secondi" />
 
                             <Button
                                 android:layout_marginRight="10dp"
                                 android:layout_width="125dp"
                                 android:layout_height="125dp"
-                                android:text="Dessert"
+                                android:text="@string/dessert"
                                 app:iconGravity="textTop"
                                 app:iconSize="35dp"
                                 app:icon="@drawable/baseline_fastfood_24"
-                                android:id="@+id/dolci"></Button>
+                                android:id="@+id/dolci" />
 
                             <Button
                                 android:layout_width="125dp"
                                 android:layout_height="125dp"
-                                android:text="Appetizer"
+                                android:text="@string/appetizer"
                                 app:iconGravity="textTop"
                                 app:iconSize="35dp"
                                 app:icon="@drawable/baseline_fastfood_24"
-                                android:id="@+id/contorni"></Button>
+                                android:id="@+id/contorni"
+                                tools:ignore="HardcodedText" />
                         </LinearLayout>
 
                     </HorizontalScrollView>
