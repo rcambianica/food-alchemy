@@ -1,5 +1,6 @@
 package it.unimib.food_alchemy.data.source.user;
 
+import static it.unimib.food_alchemy.util.Constants.FIREBASE_FAVORITE_RECIPES_COLLECTION;
 import static it.unimib.food_alchemy.util.Constants.FIREBASE_USERS_COLLECTION;
 import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_DIET;
 import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_FILE_NAME;
@@ -24,6 +25,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import it.unimib.food_alchemy.model.Recipe;
 import it.unimib.food_alchemy.model.User;
 import it.unimib.food_alchemy.util.SharedPreferencesUtil;
 
@@ -74,11 +76,6 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource{
 
     @Override
     public void getUserFavoriteRecipes(String idToken) {
-
-    }
-    /*
-    @Override
-    public void getUserFavoriteNews(String idToken) {
         databaseReference.child(FIREBASE_USERS_COLLECTION).child(idToken).
                 child(FIREBASE_FAVORITE_RECIPES_COLLECTION).get().addOnCompleteListener(task -> {
                     if (!task.isSuccessful()) {
@@ -88,16 +85,16 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource{
                     else {
                         Log.d(TAG, "Successful read: " + task.getResult().getValue());
 
-                        List<News> newsList = new ArrayList<>();
+                        List<Recipe> recipesList = new ArrayList<>();
                         for(DataSnapshot ds : task.getResult().getChildren()) {
-                            News news = ds.getValue(News.class);
-                            newsList.add(news);
+                            Recipe recipe = ds.getValue(Recipe.class);
+                            recipesList.add(recipe);
                         }
 
-                        userResponseCallback.onSuccessFromRemoteDatabase(newsList);
+                        userResponseCallback.onSuccessFromRemoteDatabase(recipesList);
                     }
                 });
-    }*/
+    }
 
     @Override
     public void getUserPreferences(String idToken) {

@@ -22,12 +22,18 @@ import static it.unimib.food_alchemy.util.Constants.VEGAN;
 import static it.unimib.food_alchemy.util.Constants.VEGETARIAN;
 import static it.unimib.food_alchemy.util.Constants.WHEAT;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.Spinner;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -52,46 +58,64 @@ import it.unimib.food_alchemy.ui.main.MainActivity;
 public class PreferencesActivity extends AppCompatActivity {
 
     private static final String TAG = PreferencesActivity.class.getSimpleName();
-    private ActivityPreferencesBinding activityPreferencesBinding;
+
+    private Spinner spinnerDiets;
+    private CheckBox checkBoxDairy;
+    private CheckBox checkBoxGrain;
+    private CheckBox checkBoxEgg;
+    private CheckBox checkBoxPeanut;
+    private CheckBox checkBoxSeaFood;
+    private CheckBox checkBoxSesame;
+    private CheckBox checkBoxShellFish;
+    private CheckBox checkBoxSoy;
+    private CheckBox checkBoxSulfite;
+    private CheckBox checkBoxTreeNut;
+    private CheckBox checkBoxWheat;
     private UserViewModel userViewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preferences);
 
+        spinnerDiets = findViewById(R.id.spinner_diet);
+
+        checkBoxDairy = findViewById(R.id.checkbox_dairy);
+        checkBoxGrain = findViewById(R.id.checkbox_grain);
+        checkBoxEgg = findViewById(R.id.checkbox_egg);
+        checkBoxPeanut = findViewById(R.id.checkbox_peanut);
+        checkBoxSeaFood = findViewById(R.id.checkbox_sea_food);
+        checkBoxSesame = findViewById(R.id.checkbox_sesame);
+        checkBoxShellFish = findViewById(R.id.checkbox_shell_fish);
+        checkBoxSoy = findViewById(R.id.checkbox_soy);
+        checkBoxSulfite = findViewById(R.id.checkbox_sulfite);
+        checkBoxTreeNut = findViewById(R.id.checkbox_tree_nut);
+        checkBoxWheat = findViewById(R.id.checkbox_wheat);
+
+        final Button buttonNext = findViewById(R.id.button_next);
+
         IUserRepository userRepository = ServiceLocator.getInstance().
                 getUserRepository(getApplication());
         userViewModel = new ViewModelProvider(
                 this, new UserViewModelFactory(userRepository)).get(UserViewModel.class);
+
         userViewModel.getUserPreferences(userViewModel.getLoggedUser().getIdToken()).
                 observe(this, result -> {
                     setViewsChecked();
                 });
 
-        activityPreferencesBinding.buttonNext.setOnClickListener(view -> {
-            if(isDietSelected())   {
-                Log.d(TAG,"One diet and at least one intolerance has been chosen");
-                saveInformation();
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
+
+       buttonNext.setOnClickListener(v -> {
+           saveInformation();
+           Intent intent = new Intent(this, MainActivity.class);
+           startActivity(intent);
+           finish();
+       });
     }
 
-    /**
-     * Checks if a diet has been selected.
-     * @return true if a diet has been selected, false otherwise.
-     */
-    private boolean isDietSelected() {
-
-        if (activityPreferencesBinding.spinnerDiet.getSelectedItem() != null) {
-            return true;
-        }
-
-        Snackbar.make(findViewById(android.R.id.content), R.string.alert_text_diet,
-                Snackbar.LENGTH_SHORT).show();
-        return false;
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState)    {
+        super.onSaveInstanceState(outState);
+        Log.d(TAG,"onSaveInstanceState");
     }
 
     /**
@@ -100,40 +124,40 @@ public class PreferencesActivity extends AppCompatActivity {
      */
     private void saveInformation() {
 
-        String diet = activityPreferencesBinding.spinnerDiet.getSelectedItem().toString();
+        String diet = spinnerDiets.getSelectedItem().toString();
         Set<String> intolerances = new HashSet<>();
 
-        if (activityPreferencesBinding.checkboxDairy.isChecked()) {
+        if (checkBoxDairy.isChecked()) {
             intolerances.add(DAIRY);
         }
-        if (activityPreferencesBinding.checkboxGrain.isChecked()) {
+        if (checkBoxGrain.isChecked()) {
             intolerances.add(GRAIN);
         }
-        if (activityPreferencesBinding.checkboxEgg.isChecked()) {
+        if (checkBoxEgg.isChecked()) {
             intolerances.add(EGG);
         }
-        if (activityPreferencesBinding.checkboxPeanut.isChecked()) {
+        if (checkBoxPeanut.isChecked()) {
             intolerances.add(PEANUT);
         }
-        if (activityPreferencesBinding.checkboxSeaFood.isChecked()) {
+        if (checkBoxSeaFood.isChecked()) {
             intolerances.add(SEA_FOOD);
         }
-        if (activityPreferencesBinding.checkboxSesame.isChecked()) {
+        if (checkBoxSesame.isChecked()) {
             intolerances.add(SESAME);
         }
-        if (activityPreferencesBinding.checkboxShellFish.isChecked()) {
+        if (checkBoxShellFish.isChecked()) {
             intolerances.add(SHELL_FISH);
         }
-        if (activityPreferencesBinding.checkboxSoy.isChecked()) {
+        if (checkBoxSoy.isChecked()) {
             intolerances.add(SOY);
         }
-        if (activityPreferencesBinding.checkboxSulfite.isChecked()) {
+        if (checkBoxSulfite.isChecked()) {
             intolerances.add(SULFITE);
         }
-        if (activityPreferencesBinding.checkboxTreeNut.isChecked()) {
+        if (checkBoxTreeNut.isChecked()) {
             intolerances.add(TREE_NUT);
         }
-        if (activityPreferencesBinding.checkboxWheat.isChecked()) {
+        if (checkBoxWheat.isChecked()) {
             intolerances.add(WHEAT);
         }
 
@@ -173,43 +197,43 @@ public class PreferencesActivity extends AppCompatActivity {
                 SHARED_PREFERENCES_INTOLERANCES);
 
         if (diet != null) {
-            activityPreferencesBinding.spinnerDiet.setSelection(
+            spinnerDiets.setSelection(
                     getSpinnerPositionBasedOnValue(getDiet(diet)));
         }
 
         if (intolerances != null) {
             if (intolerances.contains(DAIRY)) {
-                activityPreferencesBinding.checkboxDairy.setChecked(true);
+                checkBoxDairy.setChecked(true);
             }
             if (intolerances.contains(GRAIN)) {
-                activityPreferencesBinding.checkboxGrain.setChecked(true);
+                checkBoxGrain.setChecked(true);
             }
             if (intolerances.contains(EGG)) {
-                activityPreferencesBinding.checkboxEgg.setChecked(true);
+                checkBoxEgg.setChecked(true);
             }
             if (intolerances.contains(PEANUT)) {
-                activityPreferencesBinding.checkboxPeanut.setChecked(true);
+                checkBoxPeanut.setChecked(true);
             }
             if (intolerances.contains(SEA_FOOD)) {
-                activityPreferencesBinding.checkboxSeaFood.setChecked(true);
+                checkBoxSeaFood.setChecked(true);
             }
             if (intolerances.contains(SESAME)) {
-                activityPreferencesBinding.checkboxSesame.setChecked(true);
+                checkBoxSesame.setChecked(true);
             }
             if (intolerances.contains(SHELL_FISH)) {
-                activityPreferencesBinding.checkboxShellFish.setChecked(true);
+                checkBoxShellFish.setChecked(true);
             }
             if (intolerances.contains(SOY)) {
-                activityPreferencesBinding.checkboxSoy.setChecked(true);
+                checkBoxSoy.setChecked(true);
             }
             if (intolerances.contains(SULFITE)) {
-                activityPreferencesBinding.checkboxSulfite.setChecked(true);
+                checkBoxSulfite.setChecked(true);
             }
             if (intolerances.contains(TREE_NUT)) {
-                activityPreferencesBinding.checkboxTreeNut.setChecked(true);
+                checkBoxTreeNut.setChecked(true);
             }
             if (intolerances.contains(WHEAT)) {
-                activityPreferencesBinding.checkboxWheat.setChecked(true);
+                checkBoxWheat.setChecked(true);
             }
         }
     }
@@ -250,10 +274,5 @@ public class PreferencesActivity extends AppCompatActivity {
             default:
                 return null;
         }
-    }
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        activityPreferencesBinding = null;
     }
 }

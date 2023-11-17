@@ -131,8 +131,7 @@ public class LoginFragment extends Fragment {
                                 User user = ((Result.UserResponseSuccess) authenticationResult).getData();
                                 saveLoginData(user.getEmail(), null, user.getIdToken());
                                 userViewModel.setAuthenticationError(false);
-                                startActivityBasedOnCondition(PreferencesActivity.class, R.id.navigate_to_preferencesActivity);
-                                //retrieveUserInformationAndStartActivity(user, R.id.navigate_to_preferencesActivity);
+                                retrieveUserInformationAndStartActivity(user, R.id.navigate_to_preferencesActivity);
                             } else {
                                 userViewModel.setAuthenticationError(true);
                                 Snackbar.make(requireActivity().findViewById(android.R.id.content),
@@ -153,7 +152,7 @@ public class LoginFragment extends Fragment {
     private void retrieveUserInformationAndStartActivity(User user, int destination) {
 
         userViewModel.getUserFavoriteRecipesMutableLiveData(user.getIdToken()).observe(
-                getViewLifecycleOwner(), userFavoriteNewsRetrievalResult -> {
+                getViewLifecycleOwner(), userFavoriteRecipesRetrievalResult -> {
                     startActivityBasedOnCondition(PreferencesActivity.class, destination);
                 }
         );
@@ -190,24 +189,10 @@ public class LoginFragment extends Fragment {
 
         dataEncryptionUtil = new DataEncryptionUtil(requireActivity().getApplication());
 
-        try {
-            Log.d(TAG, "Email address from encrypted SharedPref: " + dataEncryptionUtil.
-                    readSecretDataWithEncryptedSharedPreferences(
-                            ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS));
-            Log.d(TAG, "Password from encrypted SharedPref: " + dataEncryptionUtil.
-                    readSecretDataWithEncryptedSharedPreferences(
-                            ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD));
-            Log.d(TAG, "Login data from encrypted file: " + dataEncryptionUtil.
-                    readSecretDataOnFile(ENCRYPTED_DATA_FILE_NAME));
-        } catch (GeneralSecurityException | IOException e) {
-            e.printStackTrace();
-        }
-
         fragmentLoginBinding.buttonLogin.setOnClickListener(v -> {
 
             String email = fragmentLoginBinding.textInputEditTextEmail.getText().toString().trim();
             String password = fragmentLoginBinding.textInputEditTextPassword.getText().toString().trim();
-
             //start login if email and password are ok
             if(isEmailOk(email) & isPasswordOk(password))   {
                 if (!userViewModel.isAuthenticationError()) {
@@ -217,8 +202,9 @@ public class LoginFragment extends Fragment {
                                     User user = ((Result.UserResponseSuccess) result).getData();
                                     saveLoginData(email, password, user.getIdToken());
                                     userViewModel.setAuthenticationError(false);
-                                    retrieveUserInformationAndStartActivity(user, R.id.navigate_to_preferencesActivity);
-                                    Log.d(TAG,"login ok");
+                                    /**per ora non funziona, perché manca implementazione repository ricette**/
+                                    //retrieveUserInformationAndStartActivity(user, R.id.navigate_to_preferencesActivity);
+                                    startActivityBasedOnCondition(PreferencesActivity.class,R.id.navigate_to_preferencesActivity);
                                 } else {
                                     userViewModel.setAuthenticationError(true);
                                     Snackbar.make(requireActivity().findViewById(android.R.id.content),

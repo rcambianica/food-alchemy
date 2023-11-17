@@ -100,17 +100,21 @@ public class UserRepository implements IUserRepository, UserResponseCallback/*, 
 
     @Override
     public void onSuccessFromAuthentication(User user) {
-
+        if (user != null) {
+            userDataRemoteDataSource.saveUserData(user);
+        }
     }
 
     @Override
     public void onFailureFromAuthentication(String message) {
-
+        Result.Error result = new Result.Error(message);
+        userMutableLiveData.postValue(result);
     }
 
     @Override
     public void onSuccessFromRemoteDatabase(User user) {
-
+        Result.UserResponseSuccess result = new Result.UserResponseSuccess(user);
+        userMutableLiveData.postValue(result);
     }
 
     @Override
@@ -120,12 +124,13 @@ public class UserRepository implements IUserRepository, UserResponseCallback/*, 
 
     @Override
     public void onSuccessFromGettingUserPreferences() {
-
+        userPreferencesMutableLiveData.postValue(new Result.UserResponseSuccess(null));
     }
 
     @Override
     public void onFailureFromRemoteDatabase(String message) {
-
+        Result.Error result = new Result.Error(message);
+        userMutableLiveData.postValue(result);
     }
 
     @Override

@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/auth_nav_graph"
+    android:id="@+id/auth_navigation_component"
     app:startDestination="@id/loginFragment">
 
     <fragment
@@ -42,6 +42,7 @@
         android:name="it.unimib.food_alchemy.ui.preferences.PreferencesActivity"
         android:label="PreferencesActivity"
         tools:layout="@layout/activity_preferences">
+
     </activity>
     <fragment
         android:id="@+id/registrationFragment"

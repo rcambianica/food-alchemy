@@ -10,6 +10,7 @@ import static it.unimib.food_alchemy.util.Constants.PASSWORD;
 import static it.unimib.food_alchemy.util.Constants.USER_COLLISION_ERROR;
 import static it.unimib.food_alchemy.util.Constants.WEAK_PASSWORD_ERROR;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -39,7 +40,9 @@ import it.unimib.food_alchemy.R;
 import it.unimib.food_alchemy.databinding.FragmentRegistrationBinding;
 import it.unimib.food_alchemy.model.Result;
 import it.unimib.food_alchemy.model.User;
+import it.unimib.food_alchemy.ui.preferences.PreferencesActivity;
 import it.unimib.food_alchemy.util.DataEncryptionUtil;
+import it.unimib.food_alchemy.util.SharedPreferencesUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -79,22 +82,6 @@ public class RegistrationFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState)  {
         super.onViewCreated(view, savedInstanceState);
 
-        requireActivity().addMenuProvider(new MenuProvider() {
-            @Override
-            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
-                menu.clear();
-            }
-
-            @Override
-            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
-                if (menuItem.getItemId() == android.R.id.home) {
-                    Navigation.findNavController(requireView()).navigateUp();
-                }
-                return false;
-            }
-        }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
-
-
         fragmentRegistrationBinding.buttonRegister.setOnClickListener(v -> {
             String name = fragmentRegistrationBinding.textInputEditTextName.getText().toString().trim();
             String email = fragmentRegistrationBinding.textInputEditTextEmail.getText().toString().trim();
@@ -109,8 +96,7 @@ public class RegistrationFragment extends Fragment {
                                     User user = ((Result.UserResponseSuccess) result).getData();
                                     saveLoginData(name, email, password, user.getIdToken());
                                     userViewModel.setAuthenticationError(false);
-                                    Navigation.findNavController(view).navigate(R.id.action_registrationFragment_to_PreferencesActivity);
-                                    Log.d(TAG,"ciao radu");
+                                    Navigation.findNavController(requireView()).navigate(R.id.action_registrationFragment_to_PreferencesActivity);
                                 } else {
                                     userViewModel.setAuthenticationError(true);
                                     Snackbar.make(requireActivity().findViewById(android.R.id.content),
@@ -210,7 +196,7 @@ public class RegistrationFragment extends Fragment {
             dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(
                     ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, ID_TOKEN, idToken);
             dataEncryptionUtil.writeSecreteDataOnFile(ENCRYPTED_DATA_FILE_NAME,
-                    email.concat(":").concat(password));
+                    name.concat(":").concat(email).concat(":").concat(password));
         } catch (GeneralSecurityException | IOException e) {
             e.printStackTrace();
         }

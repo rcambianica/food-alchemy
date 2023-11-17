@@ -1,18 +1,16 @@
 package it.unimib.food_alchemy.ui.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -23,6 +21,7 @@ import it.unimib.food_alchemy.data.repository.user.IUserRepository;
 import it.unimib.food_alchemy.databinding.FragmentAccountBinding;
 import it.unimib.food_alchemy.ui.auth.UserViewModel;
 import it.unimib.food_alchemy.ui.auth.UserViewModelFactory;
+import it.unimib.food_alchemy.ui.preferences.PreferencesActivity;
 import it.unimib.food_alchemy.util.ServiceLocator;
 
 /**
@@ -46,10 +45,7 @@ public class AccountFragment extends Fragment {
      *
      * @return A new instance of fragment AccountFragment.
      */
-    public static AccountFragment newInstance() {
-        AccountFragment fragment = new AccountFragment();
-        return fragment;
-    }
+    public static AccountFragment newInstance() { return new AccountFragment();}
 
     private UserViewModel userViewModel;
     @Override
@@ -64,7 +60,7 @@ public class AccountFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         fragmentAccountBinding = FragmentAccountBinding.inflate(inflater, container, false);
@@ -74,29 +70,26 @@ public class AccountFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        requireActivity().addMenuProvider(new MenuProvider() {
-            @Override
-            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
-                menu.clear();
-            }
 
-            @Override
-            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
-                return false;
-            }
+        fragmentAccountBinding.buttonEdit.setOnClickListener(v -> {
+            Navigation.findNavController(requireView()).navigate((R.id.action_accountFragment_to_preferencesActivity));
         });
 
         fragmentAccountBinding.buttonLogout.setOnClickListener(v -> {
-            userViewModel.logout().observe(getViewLifecycleOwner(), result -> {
+            userViewModel.logout();
+            Navigation.findNavController(requireView()).navigate(R.id.action_accountFragment_to_authActivity);
+            /*userViewModel.logout().observe(getViewLifecycleOwner(), result -> {
+                Log.d(TAG,"PROVA");
                 if (result.isSuccess()) {
-                    Navigation.findNavController(view).navigate(
+
+                    Navigation.findNavController(requireView()).navigate(
                             R.id.action_accountFragment_to_authActivity);
                 } else {
                     Snackbar.make(view,
                             requireActivity().getString(R.string.unexpected_error),
                             Snackbar.LENGTH_SHORT).show();
                 }
-            });
+            });*/
         });
     }
 
