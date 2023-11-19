@@ -93,8 +93,9 @@
     <string name="profile">Profile</string>
     <string name="settings">Settings</string>
     <string name="delete_ingrediens">Delete ingrediens</string>
-    <string name="this_will_delete_all_items_in_your_fridge">This will delete all items in your fridge.</string>
+    <string name="delete_all_items_in_your_fridge">Delete all items in your fridge</string>
     <string name="delete_favorites">Delete favorites</string>
-    <string name="this_will_delete_all_your_recipes_saved_in_your_favorites">This will delete all your recipes saved in your favorites.</string>
+    <string name="delete_all_your_recipes_saved_in_your_favorites">Delete all your recipes saved in your favorites</string>
     <string name="edit">Edit</string>
+    <string name="hello">Hello</string>
 </resources>

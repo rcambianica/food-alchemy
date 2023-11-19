@@ -35,6 +35,9 @@ import com.google.android.gms.auth.api.identity.BeginSignInResult;
 import com.google.android.gms.auth.api.identity.Identity;
 import com.google.android.gms.auth.api.identity.SignInClient;
 import com.google.android.gms.auth.api.identity.SignInCredential;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -99,7 +102,9 @@ public class LoginFragment extends Fragment {
                 requireActivity(),
                 new UserViewModelFactory(userRepository)).get(UserViewModel.class);
         dataEncryptionUtil = new DataEncryptionUtil(requireActivity().getApplication());
-
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
+        GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), gso);
+        /*
         oneTapClient = Identity.getSignInClient(requireActivity());
         signInRequest = BeginSignInRequest.builder()
                 .setPasswordRequestOptions(BeginSignInRequest.PasswordRequestOptions.builder()
@@ -108,9 +113,9 @@ public class LoginFragment extends Fragment {
                 .setGoogleIdTokenRequestOptions(BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
                         .setSupported(true)
                         // Your server's client ID, not your Android client ID.
-                        .setServerClientId("408703966058-e9o021l91kd5dc289pelhp6u8ftr6l9p.apps.googleusercontent.com")
+                        .setServerClientId(getString(R.string.default_web_client_id))
                         // Only show accounts previously used to sign in.
-                        .setFilterByAuthorizedAccounts(false)
+                        .setFilterByAuthorizedAccounts(true)
                         .build())
                 // Automatically sign in when exactly one credential is retrieved.
                 .setAutoSelectEnabled(true)
@@ -146,16 +151,7 @@ public class LoginFragment extends Fragment {
                             Snackbar.LENGTH_SHORT).show();
                 }
             }
-        });
-    }
-
-    private void retrieveUserInformationAndStartActivity(User user, int destination) {
-
-        userViewModel.getUserFavoriteRecipesMutableLiveData(user.getIdToken()).observe(
-                getViewLifecycleOwner(), userFavoriteRecipesRetrievalResult -> {
-                    startActivityBasedOnCondition(PreferencesActivity.class, destination);
-                }
-        );
+        });*/
     }
 
     @Override
@@ -290,6 +286,16 @@ public class LoginFragment extends Fragment {
             startActivity(intent);
         }
         requireActivity().finish();
+    }
+
+
+    private void retrieveUserInformationAndStartActivity(User user, int destination) {
+
+        userViewModel.getUserFavoriteRecipesMutableLiveData(user.getIdToken()).observe(
+                getViewLifecycleOwner(), userFavoriteRecipesRetrievalResult -> {
+                    startActivityBasedOnCondition(PreferencesActivity.class, destination);
+                }
+        );
     }
 
     /**

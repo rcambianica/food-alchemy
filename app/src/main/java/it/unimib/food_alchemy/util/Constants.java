@@ -9,17 +9,17 @@ public class Constants {
     public static final String VEGETARIAN = "Vegetarian";
     public static final String VEGAN = "Vegan";
 
-    public static final String DAIRY = "dairy";
-    public static final String GRAIN = "grain";
-    public static final String EGG = "egg";
-    public static final String PEANUT = "peanut";
-    public static final String SEA_FOOD = "sea_food";
-    public static final String SESAME = "sesame";
-    public static final String SHELL_FISH = "shell_fish";
-    public static final String SOY = "soy";
-    public static final String SULFITE = "sulfite";
-    public static final String TREE_NUT = "tree_nut";
-    public static final String WHEAT = "wheat";
+    public static final String DAIRY = "Dairy";
+    public static final String GRAIN = "Grain";
+    public static final String EGG = "Egg";
+    public static final String PEANUT = "Peanut";
+    public static final String SEA_FOOD = "Sea Food";
+    public static final String SESAME = "Sesame";
+    public static final String SHELL_FISH = "Shell Fish";
+    public static final String SOY = "Soy";
+    public static final String SULFITE = "Sulfite";
+    public static final String TREE_NUT = "Tree Nut";
+    public static final String WHEAT = "Wheat";
 
     //Constants for SharedPreferences
     public static final String SHARED_PREFERENCES_FILE_NAME = "it.unimib.food_alchemy.preferences";

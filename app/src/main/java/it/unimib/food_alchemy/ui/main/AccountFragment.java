@@ -1,28 +1,37 @@
 package it.unimib.food_alchemy.ui.main;
 
-import android.content.Intent;
+import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_DIET;
+import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_FILE_NAME;
+import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_INTOLERANCES;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
+
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.material.snackbar.Snackbar;
+import java.util.Set;
 
 import it.unimib.food_alchemy.R;
 import it.unimib.food_alchemy.data.repository.user.IUserRepository;
+import it.unimib.food_alchemy.data.repository.user.UserRepository;
 import it.unimib.food_alchemy.databinding.FragmentAccountBinding;
+import it.unimib.food_alchemy.model.Result;
+import it.unimib.food_alchemy.model.User;
 import it.unimib.food_alchemy.ui.auth.UserViewModel;
 import it.unimib.food_alchemy.ui.auth.UserViewModelFactory;
-import it.unimib.food_alchemy.ui.preferences.PreferencesActivity;
 import it.unimib.food_alchemy.util.ServiceLocator;
+import it.unimib.food_alchemy.util.SharedPreferencesUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,7 +40,6 @@ import it.unimib.food_alchemy.util.ServiceLocator;
  */
 public class AccountFragment extends Fragment {
     private static final String TAG = AccountFragment.class.getSimpleName();
-
     private FragmentAccountBinding fragmentAccountBinding;
 
 
@@ -71,6 +79,18 @@ public class AccountFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        fragmentAccountBinding.userEmail.setText(userViewModel.getLoggedUser().getEmail());
+        SharedPreferencesUtil sharedPreferencesUtil = new SharedPreferencesUtil(getActivity().getApplication());
+
+        String diet = sharedPreferencesUtil.readStringData(
+                SHARED_PREFERENCES_FILE_NAME, SHARED_PREFERENCES_DIET);
+        String[] intolerances = sharedPreferencesUtil.readStringSetData(SHARED_PREFERENCES_FILE_NAME,
+                SHARED_PREFERENCES_INTOLERANCES).toArray(new String[0]);
+
+        fragmentAccountBinding.textviewUserDiet.setText(diet);
+        Log.d(TAG, intolerancesToString(intolerances));
+        fragmentAccountBinding.textviewUserIntolerances.setText(intolerancesToString(intolerances));
+
         fragmentAccountBinding.buttonEdit.setOnClickListener(v -> {
             Navigation.findNavController(requireView()).navigate((R.id.action_accountFragment_to_preferencesActivity));
         });
@@ -93,6 +113,16 @@ public class AccountFragment extends Fragment {
         });
     }
 
+    private String intolerancesToString(String[] array)   {
+        String intolerances = "- ";
+        for(int i = 0; i < array.length; i++) {
+            intolerances = intolerances.concat(array[i]);
+            if(i<array.length-1)
+                intolerances = intolerances.concat("\n").concat("- ");
+            Log.d(TAG,intolerances);
+        }
+        return intolerances;
+    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();

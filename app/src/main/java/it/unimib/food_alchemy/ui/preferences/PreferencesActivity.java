@@ -127,6 +127,7 @@ public class PreferencesActivity extends AppCompatActivity {
         String diet = spinnerDiets.getSelectedItem().toString();
         Set<String> intolerances = new HashSet<>();
 
+
         if (checkBoxDairy.isChecked()) {
             intolerances.add(DAIRY);
         }

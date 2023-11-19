@@ -9,27 +9,38 @@
     <ImageView
         android:id="@+id/profileImageView"
         android:layout_width="0dp"
-        android:layout_height="120dp"
+        android:layout_height="100dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:src="@drawable/undraw_pic_profile_re_7g2h"
-        app:layout_constraintBottom_toTopOf="@+id/userEmail"
+        app:layout_constraintBottom_toTopOf="@+id/hello"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/hello"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/hello"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/userEmail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profileImageView" />
+
+    <TextView
         android:id="@+id/userEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="rickycambia14@gmail.com"
-        android:textSize="20sp"
-        android:textStyle="bold"
+        android:textSize="22sp"
+        android:textStyle="italic"
         app:layout_constraintBottom_toTopOf="@id/cardview"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/profileImageView"/>
+        app:layout_constraintTop_toTopOf="@id/hello" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardview"
@@ -55,11 +66,20 @@
                 android:text="@string/diet"
                 android:textColor="?android:textColorPrimary"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@id/textview_intolerances"
+                app:layout_constraintBottom_toTopOf="@id/textview_user_diet"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.05"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/textview_user_diet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintHorizontal_bias="0.05"
+                app:layout_constraintTop_toBottomOf="@id/textview_diet"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/textview_intolerances"/>
 
             <TextView
                 android:id="@+id/textview_intolerances"
@@ -68,24 +88,22 @@
                 android:text="@string/intolerances"
                 android:textColor="?android:textColorPrimary"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@id/textview_ingredients"
+                app:layout_constraintBottom_toTopOf="@+id/textview_user_intolerances"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.05"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/textview_diet" />
-
+                app:layout_constraintTop_toBottomOf="@id/textview_user_diet" />
             <TextView
-                android:id="@+id/textview_ingredients"
+                android:id="@+id/textview_user_intolerances"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ingredients"
-                android:textColor="?android:textColorPrimary"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.05"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/textview_intolerances" />
+                app:layout_constraintTop_toBottomOf="@id/textview_intolerances"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:maxLines="11"
+                />
 
             <Button
                 android:id="@+id/button_edit"
@@ -133,7 +151,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout1"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="70dp"
             app:layout_constraintBottom_toTopOf="@id/constraintLayout2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -168,8 +186,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:text="@string/this_will_delete_all_items_in_your_fridge"
-                android:textSize="12sp"
+                android:text="@string/delete_all_items_in_your_fridge"
+                android:textSize="14sp"
                 app:layout_constraintBottom_toTopOf="@+id/view"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -191,7 +209,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout2"
             android:layout_width="0dp"
-            android:layout_height="80dp"
+            android:layout_height="70dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -227,8 +245,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:text="@string/this_will_delete_all_your_recipes_saved_in_your_favorites"
-                android:textSize="12sp"
+                android:text="@string/delete_all_your_recipes_saved_in_your_favorites"
+                android:textSize="14sp"
                 app:layout_constraintBottom_toTopOf="@+id/view2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"

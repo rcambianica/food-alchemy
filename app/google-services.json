@@ -15,14 +15,6 @@
       },
       "oauth_client": [
         {
-          "client_id": "408703966058-hd86fl5sn5g149lhl4opiigrih9vf25i.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "it.unimib.food_alchemy",
-            "certificate_hash": "3c566ccdc9af11cff736394dffb6e36fb201bd66"
-          }
-        },
-        {
           "client_id": "408703966058-e9o021l91kd5dc289pelhp6u8ftr6l9p.apps.googleusercontent.com",
           "client_type": 3
         }
