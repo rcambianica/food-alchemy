@@ -102,9 +102,7 @@ public class LoginFragment extends Fragment {
                 requireActivity(),
                 new UserViewModelFactory(userRepository)).get(UserViewModel.class);
         dataEncryptionUtil = new DataEncryptionUtil(requireActivity().getApplication());
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
-        GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), gso);
-        /*
+
         oneTapClient = Identity.getSignInClient(requireActivity());
         signInRequest = BeginSignInRequest.builder()
                 .setPasswordRequestOptions(BeginSignInRequest.PasswordRequestOptions.builder()
@@ -151,7 +149,7 @@ public class LoginFragment extends Fragment {
                             Snackbar.LENGTH_SHORT).show();
                 }
             }
-        });*/
+        });
     }
 
     @Override
