@@ -15,14 +15,6 @@
       },
       "oauth_client": [
         {
-          "client_id": "408703966058-fb7qi2d9djs2u4iaf97uujntrqa4st6m.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "it.unimib.food_alchemy",
-            "certificate_hash": "36b2b4aa6ffc6941faf44902ca28858464d157bc"
-          }
-        },
-        {
           "client_id": "408703966058-hd86fl5sn5g149lhl4opiigrih9vf25i.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -31,7 +23,7 @@
           }
         },
         {
-          "client_id": "408703966058-hfkapuo2eglmntoro2p04ef2dq1feuf1.apps.googleusercontent.com",
+          "client_id": "408703966058-l0th5v3fh4amnkk2lu6bkmv7mbnc2m78.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "it.unimib.food_alchemy",
@@ -39,7 +31,15 @@
           }
         },
         {
-          "client_id": "408703966058-e9o021l91kd5dc289pelhp6u8ftr6l9p.apps.googleusercontent.com",
+          "client_id": "408703966058-uj0m80ku199kkeo5tb0e64a0d9nhr0gk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "it.unimib.food_alchemy",
+            "certificate_hash": "36b2b4aa6ffc6941faf44902ca28858464d157bc"
+          }
+        },
+        {
+          "client_id": "408703966058-kc71qp1qaltc8qrcnk2tipb2aast0paj.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
