@@ -95,7 +95,7 @@
     <string name="delete_ingrediens">Delete ingrediens</string>
     <string name="delete_all_items_in_your_fridge">Delete all items in your fridge</string>
     <string name="delete_favorites">Delete favorites</string>
-    <string name="delete_all_your_recipes_saved_in_your_favorites">Delete all your recipes saved in your favorites</string>
+    <string name="delete_all_your_recipes_saved_in_your_favorites">Delete all your favorites recipes</string>
     <string name="edit">Edit</string>
     <string name="hello">Hello</string>
 </resources>
