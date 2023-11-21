@@ -88,7 +88,6 @@ public class AccountFragment extends Fragment {
                 SHARED_PREFERENCES_INTOLERANCES).toArray(new String[0]);
 
         fragmentAccountBinding.textviewUserDiet.setText(diet);
-        Log.d(TAG, intolerancesToString(intolerances));
         fragmentAccountBinding.textviewUserIntolerances.setText(intolerancesToString(intolerances));
 
         fragmentAccountBinding.buttonEdit.setOnClickListener(v -> {
@@ -119,7 +118,6 @@ public class AccountFragment extends Fragment {
             intolerances = intolerances.concat(array[i]);
             if(i<array.length-1)
                 intolerances = intolerances.concat("\n").concat("- ");
-            Log.d(TAG,intolerances);
         }
         return intolerances;
     }

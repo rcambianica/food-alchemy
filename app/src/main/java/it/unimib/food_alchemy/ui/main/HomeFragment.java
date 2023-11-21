@@ -1,5 +1,7 @@
 package it.unimib.food_alchemy.ui.main;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.SearchView;
 
 import it.unimib.food_alchemy.R;
 import it.unimib.food_alchemy.databinding.FragmentHomeBinding;
@@ -55,8 +58,8 @@ public class HomeFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
-
         super.onViewCreated(view, savedInstanceState);
+
         fragmentHomeBinding.bottoneMainCourse.setOnClickListener(v -> {
             Log.d(TAG, "bottone main course cliccato");
         });
@@ -74,16 +77,9 @@ public class HomeFragment extends Fragment {
         });
     }
 
-
-
     @Override
     public void onDestroyView(){
-
         super.onDestroyView();
         fragmentHomeBinding = null;
-
     }
-
-
-
 }
