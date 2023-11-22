@@ -203,7 +203,7 @@
                     app:layout_constraintBottom_toTopOf="@id/texview_diet">
 
                     <com.google.android.material.chip.ChipGroup
-                        android:id="@+id/chipGroupCategories"
+                        android:id="@+id/categories_chip_group"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
@@ -273,14 +273,22 @@
                     app:layout_constraintBottom_toTopOf="@id/textview_intolerances">
 
                     <com.google.android.material.chip.ChipGroup
-                        android:id="@+id/groupDiet"
+                        android:id="@+id/diet_chip_group"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         app:singleLine="true">
 
                         <com.google.android.material.chip.Chip
-                            android:id="@+id/glutenFree"
+                            android:id="@+id/no_diet"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="false"
+                            android:text="@string/gluten_free" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/gluten_free"
                             style="@style/Widget.Material3.Chip.Filter"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -320,11 +328,11 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/scrollViewDiet"
-                    app:layout_constraintBottom_toTopOf="@id/groupIntolerances"/>
+                    app:layout_constraintBottom_toTopOf="@id/intolerances_chip_group"/>
 
 
                 <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/groupIntolerances"
+                    android:id="@+id/intolerances_chip_group"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -370,7 +378,7 @@
                         android:text="@string/peanut" />
 
                     <com.google.android.material.chip.Chip
-                        android:id="@+id/seaFood"
+                        android:id="@+id/sea_food"
                         style="@style/Widget.Material3.Chip.Filter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -386,7 +394,7 @@
                         android:text="@string/sesame" />
 
                     <com.google.android.material.chip.Chip
-                        android:id="@+id/shellFish"
+                        android:id="@+id/shell_fish"
                         style="@style/Widget.Material3.Chip.Filter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -410,7 +418,7 @@
                         android:text="@string/sulfite" />
 
                     <com.google.android.material.chip.Chip
-                        android:id="@+id/treeNut"
+                        android:id="@+id/tree_nut"
                         style="@style/Widget.Material3.Chip.Filter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
