@@ -71,7 +71,6 @@ public class FavoritesRecyclerViewAdapter extends RecyclerView.Adapter<Favorites
 
         @Override
         public void onClick(View view) {
-            onItemClickListener.onFavClick(favList.get(getAdapterPosition()));
             if(view.getId()==R.id.delete){
                 favList.remove(getAdapterPosition());
                 notifyItemRemoved(getAdapterPosition());

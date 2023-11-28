@@ -25,17 +25,13 @@ import static it.unimib.food_alchemy.util.Constants.WHEAT;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Spinner;
-
-import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -44,7 +40,6 @@ import java.util.Set;
 
 import it.unimib.food_alchemy.R;
 import it.unimib.food_alchemy.data.repository.user.IUserRepository;
-import it.unimib.food_alchemy.databinding.ActivityPreferencesBinding;
 import it.unimib.food_alchemy.ui.auth.UserViewModelFactory;
 import it.unimib.food_alchemy.util.DataEncryptionUtil;
 import it.unimib.food_alchemy.util.ServiceLocator;

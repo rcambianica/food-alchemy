@@ -49,6 +49,7 @@
                 android:id="@+id/cardview_diet"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                style="@style/Widget.Material3.CardView.Elevated"
                 android:layout_marginStart="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
@@ -93,6 +94,7 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardview"
+                style="@style/Widget.Material3.CardView.Elevated"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"

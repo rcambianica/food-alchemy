@@ -39,10 +39,7 @@ public class FavoritesFragment extends Fragment {
      * @return A new instance of fragment FavoritesFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static FavoritesFragment newInstance() {
-        FavoritesFragment fragment = new FavoritesFragment();
-        return fragment;
-    }
+    public static FavoritesFragment newInstance() {return new FavoritesFragment();}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
