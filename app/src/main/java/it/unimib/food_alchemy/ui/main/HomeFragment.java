@@ -33,6 +33,7 @@ import android.view.ViewGroup;
 
 import java.util.Set;
 
+import it.unimib.food_alchemy.R;
 import it.unimib.food_alchemy.databinding.FragmentHomeBinding;
 import it.unimib.food_alchemy.util.SharedPreferencesUtil;
 
@@ -42,6 +43,8 @@ import it.unimib.food_alchemy.util.SharedPreferencesUtil;
  * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment {
+
+    private boolean[] buttonState = {false, false, false, false};
     private static final String TAG = HomeFragment.class.getSimpleName();
     private FragmentHomeBinding fragmentHomeBinding;
     public HomeFragment() {
@@ -71,19 +74,86 @@ public class HomeFragment extends Fragment {
 
     }
 
+    private void toggleButtonChecked(final int button) {
+        switch (button) {
+            case 0:
+                if (buttonState[button]) {
+                fragmentHomeBinding.bottoneMainCourse.setBackgroundResource(R.drawable.custom_button);
+                fragmentHomeBinding.chipMainCourse.setChecked(false);
+                } else {
+                fragmentHomeBinding.bottoneMainCourse.setBackgroundResource(R.drawable.custom_button_checked);
+                fragmentHomeBinding.chipMainCourse.setChecked(true);
+                }
+                buttonState[button] = !buttonState[button];
+                break;
+            case 1:
+                if (buttonState[button]) {
+                    fragmentHomeBinding.bottoneSideDish.setBackgroundResource(R.drawable.custom_button);
+                    fragmentHomeBinding.chipSideDish.setChecked(false);
+                } else {
+                    fragmentHomeBinding.bottoneSideDish.setBackgroundResource(R.drawable.custom_button_checked);
+                    fragmentHomeBinding.chipSideDish.setChecked(true);
+                }
+                buttonState[button] = !buttonState[button];
+                break;
+            case 2:
+                if (buttonState[button]) {
+                    fragmentHomeBinding.bottoneDessert.setBackgroundResource(R.drawable.custom_button);
+                    fragmentHomeBinding.chipDessert.setChecked(false);
+                } else {
+                    fragmentHomeBinding.bottoneDessert.setBackgroundResource(R.drawable.custom_button_checked);
+                    fragmentHomeBinding.chipDessert.setChecked(true);
+                }
+                buttonState[button] = !buttonState[button];
+                break;
+            case 3:
+                if (buttonState[button]) {
+                    fragmentHomeBinding.bottoneAppetizer.setBackgroundResource(R.drawable.custom_button);
+                    fragmentHomeBinding.chipAppetizer.setChecked(false);
+                } else {
+                    fragmentHomeBinding.bottoneAppetizer.setBackgroundResource(R.drawable.custom_button_checked);
+                    fragmentHomeBinding.chipAppetizer.setChecked(true);
+                }
+                buttonState[button] = !buttonState[button];
+                break;
+        }
+
+
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
-
         setViewsChecked();
 
-        fragmentHomeBinding.bottoneMainCourse.setOnClickListener(v -> Log.d(TAG, "bottone main course cliccato"));
-
-        fragmentHomeBinding.bottoneSideDish.setOnClickListener(v -> Log.d(TAG, "bottone side dish cliccato"));
-
-        fragmentHomeBinding.bottoneDessert.setOnClickListener(v -> Log.d(TAG, "bottone dessert cliccato"));
-
-        fragmentHomeBinding.bottoneAppetizer.setOnClickListener(v -> Log.d(TAG, "bottone appetizer cliccato"));
+        fragmentHomeBinding.bottoneMainCourse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "bottone main course cliccato");
+                toggleButtonChecked(0);
+            }
+        });
+        fragmentHomeBinding.bottoneSideDish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "bottone side dish cliccato");
+                toggleButtonChecked(1);
+            }
+        });
+        fragmentHomeBinding.bottoneDessert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "bottone dessert cliccato");
+                toggleButtonChecked(2);
+            }
+        });
+        fragmentHomeBinding.bottoneAppetizer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "bottone appetizer cliccato");
+                toggleButtonChecked(3);
+            }
+        });
     }
 
     private void setViewsChecked()  {
