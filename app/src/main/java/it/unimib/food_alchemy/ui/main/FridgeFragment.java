@@ -2,10 +2,12 @@ package it.unimib.food_alchemy.ui.main;
 
 import static android.app.ProgressDialog.show;
 
+import android.graphics.Canvas;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -27,6 +29,7 @@ import it.unimib.food_alchemy.databinding.FragmentFavoritesBinding;
 import it.unimib.food_alchemy.databinding.FragmentFridgeBinding;
 import it.unimib.food_alchemy.model.Ingredient;
 import it.unimib.food_alchemy.model.Result;
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,7 +40,9 @@ public class FridgeFragment extends Fragment {
 
     private FragmentFridgeBinding fragmentFridgeBinding;
     private List<Ingredient> ingredientList;
-    private RecyclerView recyclerViewIngredients;
+
+    //serve per recuperare un ingrediente eliminato per sbaglio con lo swipe a sinistra
+    private Ingredient deletedIngredient = null;
     private IngredientsRecyclerViewAdapter ingredientsRecyclerViewAdapter;
     public FridgeFragment() {
         // Required empty public constructor
@@ -59,7 +64,7 @@ public class FridgeFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         fragmentFridgeBinding = FragmentFridgeBinding.inflate(inflater,container,false);
@@ -70,15 +75,16 @@ public class FridgeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        recyclerViewIngredients = fragmentFridgeBinding.recyclerviewIngredients;
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(requireContext());
-        recyclerViewIngredients.setLayoutManager(layoutManager);
+        RecyclerView recyclerViewIngredients = fragmentFridgeBinding.recyclerviewIngredients;
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(requireContext(),
+                LinearLayoutManager.VERTICAL, false);
+
 
 
 
         ingredientList = new ArrayList<>();
         for(int i = 0; i < 20; i++) {
-            ingredientList.add(new Ingredient("cheese","28/11/2023"));
+            ingredientList.add(new Ingredient("cheese "+i,"28/11/2023"));
         }
 
 
@@ -89,8 +95,51 @@ public class FridgeFragment extends Fragment {
                         Snackbar.make(view, ingredient.getTitle(), Snackbar.LENGTH_SHORT).show();
                     }
                 });
-
+        recyclerViewIngredients.setLayoutManager(layoutManager);
         recyclerViewIngredients.setAdapter(ingredientsRecyclerViewAdapter);
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerViewIngredients);
+    }
+
+    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            int pos = viewHolder.getAdapterPosition();
+            deletedIngredient = new Ingredient(ingredientList.get(pos).getTitle(), ingredientList.get(pos).getExpiryDate());
+            ingredientList.remove(pos);
+            ingredientsRecyclerViewAdapter.notifyItemRemoved(pos);
+            Snackbar.make(requireView(),deletedIngredient.getTitle(),Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ingredientList.add(pos,deletedIngredient);
+                    ingredientsRecyclerViewAdapter.notifyItemInserted(pos);
+                }
+            }).show();
+        }
+
+        @Override
+        public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+
+            new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                    .addBackgroundColor(ContextCompat.getColor(requireContext(), R.color.red))
+                    .addActionIcon(R.drawable.baseline_delete_24)
+                    .addCornerRadius(1,5)
+                    .addPadding(1,6,6,6)
+                    .create()
+                    .decorate();
+
+            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+        }
+    };
+
+    private void setExpiryColor()   {
+
     }
 
     @Override

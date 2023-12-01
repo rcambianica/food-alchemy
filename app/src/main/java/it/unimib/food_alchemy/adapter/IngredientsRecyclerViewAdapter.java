@@ -1,6 +1,5 @@
 package it.unimib.food_alchemy.adapter;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,9 +38,10 @@ public class IngredientsRecyclerViewAdapter extends
     }
     @NonNull
     @Override
-    public IngredientsRecyclerViewAdapter.IngredientsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public IngredientsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).
                 inflate(R.layout.ingredient_list_item, parent,false);
+
         return new IngredientsViewHolder(view);
     }
 
@@ -65,7 +65,6 @@ public class IngredientsRecyclerViewAdapter extends
 
         private final TextView textViewTitle;
         private final TextView textViewDate;
-
         private final ImageView check;
 
         public IngredientsViewHolder(@NonNull View itemView)    {
@@ -73,6 +72,7 @@ public class IngredientsRecyclerViewAdapter extends
             textViewTitle = itemView.findViewById(R.id.title_textview);
             textViewDate = itemView.findViewById(R.id.date_textview);
             check = itemView.findViewById(R.id.check_imageview);
+            itemView.setOnClickListener(this);
         }
 
         public void bind (Ingredient ingredient)    {
@@ -81,8 +81,10 @@ public class IngredientsRecyclerViewAdapter extends
         }
         @Override
         public void onClick(View v) {
-            check.setVisibility(View.INVISIBLE);
-            Log.d("cliccato","ciao");
+            if(check.getVisibility() == View.INVISIBLE)
+                check.setVisibility(View.VISIBLE);
+            else
+                check.setVisibility(View.INVISIBLE);
             onItemClickListener.onIngredientsItemClick(ingredientsList.get(getAdapterPosition()));
         }
     }
