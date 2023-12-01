@@ -91,22 +91,33 @@
                 android:text="@string/intolerances"
                 android:textColor="?android:textColorPrimary"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/textview_user_intolerances"
+                app:layout_constraintBottom_toTopOf="@+id/intolerances_scrollview"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.05"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/textview_user_diet" />
-            <TextView
-                android:id="@+id/textview_user_intolerances"
+            <ScrollView
+                android:id="@+id/intolerances_scrollview"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintHorizontal_bias="0.05"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                android:layout_height="60dp"
                 app:layout_constraintTop_toBottomOf="@id/textview_intolerances"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:maxLines="11"
-                />
+                app:layout_constraintHorizontal_bias="0.05"
+                android:scrollbars="none">
+                <TextView
+                    android:id="@+id/textview_user_intolerances"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintHorizontal_bias="0.05"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    />
+
+            </ScrollView>
 
             <Button
                 android:id="@+id/button_edit"
@@ -121,7 +132,7 @@
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="1.0" />
+                app:layout_constraintVertical_bias="0.0" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 

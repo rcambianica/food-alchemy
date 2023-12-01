@@ -1,7 +1,6 @@
 package it.unimib.food_alchemy.ui.main;
 
-import static android.app.ProgressDialog.show;
-
+import android.app.DatePickerDialog;
 import android.graphics.Canvas;
 import android.os.Bundle;
 
@@ -9,14 +8,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -25,10 +25,8 @@ import java.util.List;
 
 import it.unimib.food_alchemy.R;
 import it.unimib.food_alchemy.adapter.IngredientsRecyclerViewAdapter;
-import it.unimib.food_alchemy.databinding.FragmentFavoritesBinding;
 import it.unimib.food_alchemy.databinding.FragmentFridgeBinding;
 import it.unimib.food_alchemy.model.Ingredient;
-import it.unimib.food_alchemy.model.Result;
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 /**
@@ -100,6 +98,10 @@ public class FridgeFragment extends Fragment {
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(recyclerViewIngredients);
+
+        fragmentFridgeBinding.addIngredientButton.setOnClickListener(v -> {
+            Navigation.findNavController(requireView()).navigate(R.id.action_fridgeFragment_to_addIngredientFragment);
+        });
     }
 
     ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {

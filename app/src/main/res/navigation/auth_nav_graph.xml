@@ -26,10 +26,18 @@
             app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
         <action
             android:id="@+id/navigate_to_preferencesActivity"
-            app:destination="@id/PreferencesActivity" />
+            app:destination="@id/PreferencesActivity"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
         <action
             android:id="@+id/navigate_to_mainActivity"
-            app:destination="@id/mainActivity" />
+            app:destination="@id/mainActivity"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
     <activity
         android:id="@+id/mainActivity"
@@ -42,7 +50,6 @@
         android:name="it.unimib.food_alchemy.ui.preferences.PreferencesActivity"
         android:label="PreferencesActivity"
         tools:layout="@layout/activity_preferences">
-
     </activity>
     <fragment
         android:id="@+id/registrationFragment"
@@ -58,7 +65,11 @@
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
         <action
             android:id="@+id/action_registrationFragment_to_PreferencesActivity"
-            app:destination="@id/PreferencesActivity" />
+            app:destination="@id/PreferencesActivity"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
     <fragment
         android:id="@+id/forgotPasswordFragment"

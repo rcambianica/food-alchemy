@@ -99,5 +99,10 @@
     <string name="edit">Edit</string>
     <string name="hello">Hello</string>
     <string name="default_web_client_id">408703966058-kc71qp1qaltc8qrcnk2tipb2aast0paj.apps.googleusercontent.com</string>
-    <string name="add">add</string>
+    <string name="add">Add</string>
+    <string name="check">check</string>
+    <string name="add_an_ingredient">Add an ingredient to your fridge</string>
+    <string name="ingredient">Ingredient</string>
+    <string name="expiry_date">Expiry date</string>
+    <string name="fragment_add_ingredient">fragment_add_ingredient</string>
 </resources>
