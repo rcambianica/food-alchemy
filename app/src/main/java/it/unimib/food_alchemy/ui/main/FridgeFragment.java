@@ -1,5 +1,13 @@
 package it.unimib.food_alchemy.ui.main;
 
+import static it.unimib.food_alchemy.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
+import static it.unimib.food_alchemy.util.Constants.ID_TOKEN;
+import static it.unimib.food_alchemy.util.Constants.SHARED_FRIDGE_ITEMS_FILE_NAME;
+import static it.unimib.food_alchemy.util.Constants.SHARED_FRIDGE_ITEMS_FIRST_LOADING;
+import static it.unimib.food_alchemy.util.Constants.SHARED_FRIDGE_ITEMS_FRIDGE;
+import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_FILE_NAME;
+import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_FIRST_LOADING;
+
 import android.app.DatePickerDialog;
 import android.graphics.Canvas;
 import android.os.Bundle;
@@ -8,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,13 +29,23 @@ import android.widget.DatePicker;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import it.unimib.food_alchemy.R;
 import it.unimib.food_alchemy.adapter.IngredientsRecyclerViewAdapter;
+import it.unimib.food_alchemy.data.repository.user.IUserRepository;
 import it.unimib.food_alchemy.databinding.FragmentFridgeBinding;
 import it.unimib.food_alchemy.model.Ingredient;
+import it.unimib.food_alchemy.ui.auth.UserViewModel;
+import it.unimib.food_alchemy.ui.auth.UserViewModelFactory;
+import it.unimib.food_alchemy.util.DataEncryptionUtil;
+import it.unimib.food_alchemy.util.ServiceLocator;
+import it.unimib.food_alchemy.util.SharedPreferencesUtil;
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 /**
@@ -42,6 +61,8 @@ public class FridgeFragment extends Fragment {
     //serve per recuperare un ingrediente eliminato per sbaglio con lo swipe a sinistra
     private Ingredient deletedIngredient = null;
     private IngredientsRecyclerViewAdapter ingredientsRecyclerViewAdapter;
+
+    private UserViewModel userViewModel;
     public FridgeFragment() {
         // Required empty public constructor
     }
@@ -59,6 +80,15 @@ public class FridgeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        IUserRepository userRepository = ServiceLocator.getInstance().
+                getUserRepository(getActivity().getApplication());
+        userViewModel = new ViewModelProvider(
+                this, new UserViewModelFactory(userRepository)).get(UserViewModel.class);
+
+        userViewModel.getUserFridgeItems(userViewModel.getLoggedUser().getIdToken()).observe(this, result -> {
+
+        });
     }
 
     @Override
@@ -102,6 +132,7 @@ public class FridgeFragment extends Fragment {
         fragmentFridgeBinding.addIngredientButton.setOnClickListener(v -> {
             Navigation.findNavController(requireView()).navigate(R.id.action_fridgeFragment_to_addIngredientFragment);
         });
+        saveInformation();
     }
 
     ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -129,7 +160,7 @@ public class FridgeFragment extends Fragment {
         public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
 
             new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-                    .addBackgroundColor(ContextCompat.getColor(requireContext(), R.color.red))
+                    .addBackgroundColor(ContextCompat.getColor(requireContext(), R.color.md_theme_light_error))
                     .addActionIcon(R.drawable.baseline_delete_24)
                     .addCornerRadius(1,5)
                     .addPadding(1,6,6,6)
@@ -142,6 +173,30 @@ public class FridgeFragment extends Fragment {
 
     private void setExpiryColor()   {
 
+    }
+
+    private void saveInformation()  {
+        Set<String> fridgeItems = new HashSet<>();
+        for(int i = 0; i < ingredientList.size(); i++)  {
+            fridgeItems.add(ingredientList.get(i).getTitle()+" expiry_date: "+ingredientList.get(i).getExpiryDate());
+        }
+
+        SharedPreferencesUtil sharedPreferencesUtil = new SharedPreferencesUtil(getActivity().getApplication());
+        sharedPreferencesUtil.writeStringSetData(
+                SHARED_FRIDGE_ITEMS_FILE_NAME, SHARED_FRIDGE_ITEMS_FRIDGE, fridgeItems);
+        sharedPreferencesUtil.writeBooleanData(SHARED_FRIDGE_ITEMS_FILE_NAME,
+                SHARED_FRIDGE_ITEMS_FIRST_LOADING, true);
+
+        DataEncryptionUtil dataEncryptionUtil = new DataEncryptionUtil(getActivity());
+        String idToken = null;
+        try {
+            idToken = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(
+                    ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, ID_TOKEN);
+        } catch (GeneralSecurityException | IOException e) {
+            e.printStackTrace();
+        }
+
+        userViewModel.saveUserFridgeItems(fridgeItems,idToken);
     }
 
     @Override

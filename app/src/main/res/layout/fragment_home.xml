@@ -35,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/dish_of_the_day"
-            android:textSize="30sp"
+            android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/imageView"
             app:layout_constraintEnd_toEndOf="parent"
@@ -61,7 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:text="@string/discovery"
-            android:textSize="30sp"
+            android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/scrollViewDiscover"
             app:layout_constraintEnd_toEndOf="parent"
@@ -96,11 +96,10 @@
                     android:layout_marginEnd="8dp"
                     android:background="@drawable/custom_button"
                     android:drawableTop="@drawable/food_dish_svgrepo_com"
-                    android:drawableTint="@color/primary"
+                    android:drawableTint="?attr/colorControlNormal"
                     android:paddingTop="20dp"
                     android:paddingBottom="25dp"
                     android:text="@string/main_course"
-                    android:textColor="@color/primary"
                     android:enabled="true"/>
 
 
@@ -111,11 +110,10 @@
                     android:layout_marginEnd="8dp"
                     android:background="@drawable/custom_button"
                     android:drawableTop="@drawable/side_dish_pollo"
-                    android:drawableTint="@color/primary"
+                    android:drawableTint="?attr/colorControlNormal"
                     android:paddingTop="20dp"
                     android:paddingBottom="25dp"
-                    android:text="@string/side_dish"
-                    android:textColor="@color/primary" />
+                    android:text="@string/side_dish" />
 
                 <android.widget.Button
                     android:id="@+id/bottone_dessert"
@@ -124,11 +122,10 @@
                     android:layout_marginEnd="8dp"
                     android:background="@drawable/custom_button"
                     android:drawableTop="@drawable/food_cake_slice"
-                    android:drawableTint="@color/primary"
+                    android:drawableTint="?attr/colorControlNormal"
                     android:paddingTop="20dp"
                     android:paddingBottom="25dp"
-                    android:text="@string/dessert"
-                    android:textColor="@color/primary" />
+                    android:text="@string/dessert" />
 
                 <android.widget.Button
                     android:id="@+id/bottone_appetizer"
@@ -137,11 +134,10 @@
                     android:layout_marginEnd="8dp"
                     android:background="@drawable/custom_button"
                     android:drawableTop="@drawable/appetizer"
-                    android:drawableTint="@color/primary"
+                    android:drawableTint="?attr/colorControlNormal"
                     android:paddingTop="20dp"
                     android:paddingBottom="25dp"
-                    android:text="@string/appetizer"
-                    android:textColor="@color/primary" />
+                    android:text="@string/appetizer" />
 
             </LinearLayout>
 

@@ -16,7 +16,9 @@ import androidx.navigation.Navigation;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
 import it.unimib.food_alchemy.R;
 import it.unimib.food_alchemy.databinding.FragmentAddIngredientBinding;

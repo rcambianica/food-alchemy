@@ -27,6 +27,11 @@ public class Constants {
     public static final String SHARED_PREFERENCES_INTOLERANCES = "intolerances";
     public static final String SHARED_PREFERENCES_FIRST_LOADING = "first_loading";
 
+    //Constants for SharedFridgeItems
+    public static final String SHARED_FRIDGE_ITEMS_FILE_NAME = "it.unimib.food_alchemy.fridge_items";
+    public static final String SHARED_FRIDGE_ITEMS_FRIDGE = "fridge";
+    public static final String SHARED_FRIDGE_ITEMS_FIRST_LOADING = "first_loading";
+
     // Constants for EncryptedSharedPreferences
     public static final String ENCRYPTED_SHARED_PREFERENCES_FILE_NAME = "it.unimib.food_alchemy.encrypted_preferences";
     public static final String NAME = "name";
