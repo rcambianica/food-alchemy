@@ -25,16 +25,22 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 import it.unimib.food_alchemy.R;
+import it.unimib.food_alchemy.adapter.HomeRecipesRecylerViewAdapter;
 import it.unimib.food_alchemy.databinding.FragmentHomeBinding;
+import it.unimib.food_alchemy.model.HomeRecipeModel;
 import it.unimib.food_alchemy.util.SharedPreferencesUtil;
 
 /**
@@ -44,6 +50,9 @@ import it.unimib.food_alchemy.util.SharedPreferencesUtil;
  */
 public class HomeFragment extends Fragment {
 
+    ArrayList<HomeRecipeModel> homeRecipeModels = new ArrayList<>();
+
+    int[] homeRecipeImages = {R.drawable.appetizer};
     private boolean[] buttonState = {false, false, false, false};
     private static final String TAG = HomeFragment.class.getSimpleName();
     private FragmentHomeBinding fragmentHomeBinding;
@@ -64,14 +73,18 @@ public class HomeFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    private void setHomeRecipeModels(){
+        for(int i = 0; i < 10; i++){
+            homeRecipeModels.add(new HomeRecipeModel("titolo " + i, "descrizione", homeRecipeImages[0]));
+        }
+    }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         fragmentHomeBinding = FragmentHomeBinding.inflate(inflater,container, false);
         return fragmentHomeBinding.getRoot();
-
-
     }
 
     private void toggleButtonChecked(final int button) {
@@ -79,40 +92,32 @@ public class HomeFragment extends Fragment {
             case 0:
                 if (buttonState[button]) {
                 fragmentHomeBinding.bottoneMainCourse.setBackgroundResource(R.drawable.custom_button);
-                fragmentHomeBinding.chipMainCourse.setChecked(false);
                 } else {
                 fragmentHomeBinding.bottoneMainCourse.setBackgroundResource(R.drawable.custom_button_checked);
-                fragmentHomeBinding.chipMainCourse.setChecked(true);
                 }
                 buttonState[button] = !buttonState[button];
                 break;
             case 1:
                 if (buttonState[button]) {
                     fragmentHomeBinding.bottoneSideDish.setBackgroundResource(R.drawable.custom_button);
-                    fragmentHomeBinding.chipSideDish.setChecked(false);
                 } else {
                     fragmentHomeBinding.bottoneSideDish.setBackgroundResource(R.drawable.custom_button_checked);
-                    fragmentHomeBinding.chipSideDish.setChecked(true);
                 }
                 buttonState[button] = !buttonState[button];
                 break;
             case 2:
                 if (buttonState[button]) {
                     fragmentHomeBinding.bottoneDessert.setBackgroundResource(R.drawable.custom_button);
-                    fragmentHomeBinding.chipDessert.setChecked(false);
                 } else {
                     fragmentHomeBinding.bottoneDessert.setBackgroundResource(R.drawable.custom_button_checked);
-                    fragmentHomeBinding.chipDessert.setChecked(true);
                 }
                 buttonState[button] = !buttonState[button];
                 break;
             case 3:
                 if (buttonState[button]) {
                     fragmentHomeBinding.bottoneAppetizer.setBackgroundResource(R.drawable.custom_button);
-                    fragmentHomeBinding.chipAppetizer.setChecked(false);
                 } else {
                     fragmentHomeBinding.bottoneAppetizer.setBackgroundResource(R.drawable.custom_button_checked);
-                    fragmentHomeBinding.chipAppetizer.setChecked(true);
                 }
                 buttonState[button] = !buttonState[button];
                 break;
@@ -124,8 +129,21 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
-        setViewsChecked();
 
+        RecyclerView recipesRecyclerView = fragmentHomeBinding.recipesRecyclerView;
+
+        setHomeRecipeModels();
+
+        HomeRecipesRecylerViewAdapter adapter = new HomeRecipesRecylerViewAdapter(requireContext(), homeRecipeModels);
+        recipesRecyclerView.setAdapter(adapter);
+        recipesRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+
+        fragmentHomeBinding.searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_searchFragment);
+            }
+        });
         fragmentHomeBinding.bottoneMainCourse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -156,61 +174,8 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private void setViewsChecked()  {
-        SharedPreferencesUtil sharedPreferencesUtil = new SharedPreferencesUtil(requireActivity().getApplication());
 
-        String diet = sharedPreferencesUtil.readStringData(
-                SHARED_PREFERENCES_FILE_NAME, SHARED_PREFERENCES_DIET);
-        Set<String> intolerances = sharedPreferencesUtil.readStringSetData(SHARED_PREFERENCES_FILE_NAME,
-                SHARED_PREFERENCES_INTOLERANCES);
 
-        if (diet != null) {
-            if(diet.equals(NO_DIET))
-                fragmentHomeBinding.noDiet.setChecked(true);
-            if(diet.equals(GLUTEN_FREE))
-                fragmentHomeBinding.glutenFree.setChecked(true);
-            if(diet.equals(VEGETARIAN))
-                fragmentHomeBinding.vegetarian.setChecked(true);
-            if(diet.equals(VEGAN))
-                fragmentHomeBinding.vegan.setChecked(true);
-        }
-
-        if (intolerances != null) {
-            if (intolerances.contains(DAIRY)) {
-                fragmentHomeBinding.dairy.setChecked(true);
-            }
-            if (intolerances.contains(GRAIN)) {
-                fragmentHomeBinding.grain.setChecked(true);
-            }
-            if (intolerances.contains(EGG)) {
-                fragmentHomeBinding.egg.setChecked(true);
-            }
-            if (intolerances.contains(PEANUT)) {
-                fragmentHomeBinding.peanut.setChecked(true);
-            }
-            if (intolerances.contains(SEA_FOOD)) {
-                fragmentHomeBinding.seaFood.setChecked(true);
-            }
-            if (intolerances.contains(SESAME)) {
-                fragmentHomeBinding.sesame.setChecked(true);
-            }
-            if (intolerances.contains(SHELL_FISH)) {
-                fragmentHomeBinding.shellFish.setChecked(true);
-            }
-            if (intolerances.contains(SOY)) {
-                fragmentHomeBinding.soy.setChecked(true);
-            }
-            if (intolerances.contains(SULFITE)) {
-                fragmentHomeBinding.sulfite.setChecked(true);
-            }
-            if (intolerances.contains(TREE_NUT)) {
-                fragmentHomeBinding.treeNut.setChecked(true);
-            }
-            if (intolerances.contains(WHEAT)) {
-                fragmentHomeBinding.wheat.setChecked(true);
-            }
-        }
-    }
 
     @Override
     public void onDestroyView(){

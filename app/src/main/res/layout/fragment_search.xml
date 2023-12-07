@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.main.MainActivity">
+
+    <!-- SearchView -->
+    <SearchView
+        android:id="@+id/searchView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/chip_group_categories"
+        android:layout_marginTop="10dp"
+        android:queryHint="Search..."
+        app:iconifiedByDefault="false"
+        android:background="@color/purple_200"
+        android:clickable="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.02"
+        android:focusable="true" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chip_ingredients"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="paret"
+        app:layout_constraintTop_toBottomOf="@id/searchView"
+        app:layout_constraintBottom_toTopOf="@id/text_categories">
+
+    </com.google.android.material.chip.ChipGroup>
+
+    <!-- First set of TextView and ChipGroup -->
+    <TextView
+        android:id="@+id/text_categories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/categories"
+        android:layout_marginTop="16dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/chip_ingredients"
+        app:layout_constraintBottom_toTopOf="@id/chip_group_categories"
+        app:layout_constraintHorizontal_bias="0.1" />
+
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chip_group_categories"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_categories"
+        android:layout_marginTop="8dp"
+        app:singleSelection="true"
+        android:layout_marginStart="18dp"
+        android:layout_marginEnd="18dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_categories"
+        app:layout_constraintBottom_toTopOf="@id/text_diet">
+
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_main_course"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="@string/main_course" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_side_dish"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="@string/side_dish" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_dessert"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="@string/dessert" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_appetizer"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="@string/appetizer" />
+
+        <!-- Pre-set chips for the first group -->
+        <!-- Add more pre-set chips as needed -->
+
+    </com.google.android.material.chip.ChipGroup>
+
+    <!-- Second set of TextView and ChipGroup -->
+    <TextView
+        android:id="@+id/text_diet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/diet"
+        android:layout_below="@id/searchView"
+        android:layout_marginTop="16dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/chip_group_categories"
+        app:layout_constraintBottom_toTopOf="@id/chip_group_diet"
+        app:layout_constraintHorizontal_bias="0.1"/>
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chip_group_diet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_diet"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginEnd="18dp"
+        app:singleSelection="false"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_diet"
+        app:layout_constraintBottom_toTopOf="@id/text_intolerances">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/no_diet"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="@string/gluten_free" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/gluten_free"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="@string/gluten_free" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/vegetarian"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="@string/vegetarian" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/vegan"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="@string/vegan" />
+        <!-- Pre-set chips for the second group -->
+        <!-- Add more pre-set chips as needed -->
+
+    </com.google.android.material.chip.ChipGroup>
+
+    <!-- Third set of TextView and ChipGroup -->
+    <TextView
+        android:id="@+id/text_intolerances"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/intolerances"
+        android:layout_below="@id/chip_group_diet"
+        android:layout_marginTop="16dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/chip_group_diet"
+        app:layout_constraintBottom_toTopOf="@id/chip_group_intolerances"
+        app:layout_constraintHorizontal_bias="0.1"/>
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chip_group_intolerances"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_intolerances"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginEnd="18dp"
+        app:singleSelection="false"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_intolerances">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/dairy"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="@string/dairy" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/egg"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="@string/egg" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/grain"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="@string/grain" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/peanut"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="@string/peanut" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/sea_food"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="@string/sea_food" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/sesame"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="@string/sesame" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/shell_fish"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="@string/shell_fish" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/soy"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="@string/soy" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/sulfite"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="@string/sulfite" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/tree_nut"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="@string/tree_nut" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/wheat"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="@string/wheat" />
+
+        <!-- Pre-set chips for the third group -->
+        <!-- Add more pre-set chips as needed -->
+
+    </com.google.android.material.chip.ChipGroup>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/back_to_home_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:src="@drawable/baseline_arrow_back_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.95"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.98"
+        android:focusable="true" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -112,11 +112,11 @@
         android:textColor="@color/primary"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView2"
+        app:layout_constraintStart_toEndOf="@+id/text_diet"
         app:layout_constraintTop_toBottomOf="@+id/button_google_login" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/text_diet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="0dp"
