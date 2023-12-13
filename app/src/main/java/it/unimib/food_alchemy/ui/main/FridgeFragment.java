@@ -86,9 +86,9 @@ public class FridgeFragment extends Fragment {
         userViewModel = new ViewModelProvider(
                 this, new UserViewModelFactory(userRepository)).get(UserViewModel.class);
 
-        userViewModel.getUserFridgeItems(userViewModel.getLoggedUser().getIdToken()).observe(this, result -> {
+        /*userViewModel.getUserFridgeItems(userViewModel.getLoggedUser().getIdToken()).observe(this, result -> {
 
-        });
+        });*/
     }
 
     @Override
@@ -196,7 +196,7 @@ public class FridgeFragment extends Fragment {
             e.printStackTrace();
         }
 
-        userViewModel.saveUserFridgeItems(fridgeItems,idToken);
+        //userViewModel.saveUserFridgeItems(fridgeItems,idToken);
     }
 
     @Override

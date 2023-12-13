@@ -85,7 +85,7 @@ public class SearchFragment extends Fragment {
 
         setViewsChecked();
 
-        fragmentSearchBinding.backToHomeButton.setOnClickListener(new View.OnClickListener() {
+        fragmentSearchBinding.returnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Navigation.findNavController(requireView()).navigate(R.id.action_searchFragment_to_homeFragment);
