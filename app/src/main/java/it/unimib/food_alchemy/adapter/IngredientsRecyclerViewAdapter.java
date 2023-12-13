@@ -1,14 +1,22 @@
 package it.unimib.food_alchemy.adapter;
 
+import static it.unimib.food_alchemy.R.color.md_theme_light_error;
+
+import android.graphics.Color;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import it.unimib.food_alchemy.R;
@@ -77,7 +85,18 @@ public class IngredientsRecyclerViewAdapter extends
 
         public void bind (Ingredient ingredient)    {
             textViewTitle.setText(ingredient.getTitle());
-            textViewDate.setText(ingredient.getExpiryDate());
+            textViewDate.setText(formatDate(ingredient.getExpiryDate()));
+            /**
+             * colora il background dell'elemento se è scaduto o in scadenza
+             * **/
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                int expiryDays = Integer.parseInt(ingredient.getExpiryDate()) - Integer.parseInt(getCurrentDate());
+                if(expiryDays < 0)  {
+                    itemView.setBackgroundColor(Color.parseColor("#93000A"));
+                }
+                else if(expiryDays>=1 && expiryDays < 4)
+                    itemView.setBackgroundColor(Color.parseColor("#FFD700"));
+            }
         }
         @Override
         public void onClick(View v) {
@@ -86,6 +105,24 @@ public class IngredientsRecyclerViewAdapter extends
             else
                 check.setVisibility(View.INVISIBLE);
             onItemClickListener.onIngredientsItemClick(ingredientsList.get(getAdapterPosition()));
+        }
+        @RequiresApi(api = Build.VERSION_CODES.O)
+        private String getCurrentDate() {
+            // Ottieni la data corrente
+            LocalDate currentDate = LocalDate.now();
+            // Restituisci la data formattata
+            return currentDate.format(DateTimeFormatter.BASIC_ISO_DATE);
+        }
+
+        private String formatDate(String date) {
+            String formattedString = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                DateTimeFormatter initialFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+                LocalDate localDate = LocalDate.parse(date, initialFormatter);
+                DateTimeFormatter targetFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                formattedString = localDate.format(targetFormatter);
+            }
+            return formattedString;
         }
     }
 }

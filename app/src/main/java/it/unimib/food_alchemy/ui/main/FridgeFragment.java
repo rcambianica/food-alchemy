@@ -5,15 +5,18 @@ import static it.unimib.food_alchemy.util.Constants.ID_TOKEN;
 import static it.unimib.food_alchemy.util.Constants.SHARED_FRIDGE_ITEMS_FILE_NAME;
 import static it.unimib.food_alchemy.util.Constants.SHARED_FRIDGE_ITEMS_FIRST_LOADING;
 import static it.unimib.food_alchemy.util.Constants.SHARED_FRIDGE_ITEMS_FRIDGE;
-import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_FILE_NAME;
-import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_FIRST_LOADING;
 
-import android.app.DatePickerDialog;
 import android.graphics.Canvas;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -22,16 +25,14 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.DatePicker;
-
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -55,6 +56,7 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
  */
 public class FridgeFragment extends Fragment {
 
+    private static final String TAG = FridgeFragment.class.getSimpleName();
     private FragmentFridgeBinding fragmentFridgeBinding;
     private List<Ingredient> ingredientList;
 
@@ -103,18 +105,20 @@ public class FridgeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+
         RecyclerView recyclerViewIngredients = fragmentFridgeBinding.recyclerviewIngredients;
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(requireContext(),
                 LinearLayoutManager.VERTICAL, false);
 
-
-
-
         ingredientList = new ArrayList<>();
-        for(int i = 0; i < 20; i++) {
-            ingredientList.add(new Ingredient("cheese "+i,"28/11/2023"));
+        for(int i = 0; i < 10; i++) {
+            if(i%2 == 0)
+                ingredientList.add(new Ingredient("cheese "+i,"20231128"));
+            else
+                ingredientList.add(new Ingredient("potato "+i,"20231213"));
         }
 
+        ingredientList.add(new Ingredient("chicken", "20231215"));
 
         ingredientsRecyclerViewAdapter =
                 new IngredientsRecyclerViewAdapter(ingredientList, new IngredientsRecyclerViewAdapter.OnItemClickListener() {
@@ -143,7 +147,7 @@ public class FridgeFragment extends Fragment {
 
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-            int pos = viewHolder.getAdapterPosition();
+            int pos = viewHolder.getBindingAdapterPosition();
             deletedIngredient = new Ingredient(ingredientList.get(pos).getTitle(), ingredientList.get(pos).getExpiryDate());
             ingredientList.remove(pos);
             ingredientsRecyclerViewAdapter.notifyItemRemoved(pos);
@@ -171,9 +175,6 @@ public class FridgeFragment extends Fragment {
         }
     };
 
-    private void setExpiryColor()   {
-
-    }
 
     private void saveInformation()  {
         Set<String> fridgeItems = new HashSet<>();
