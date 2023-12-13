@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.time.LocalDate;
@@ -74,12 +75,15 @@ public class IngredientsRecyclerViewAdapter extends
         private final TextView textViewTitle;
         private final TextView textViewDate;
         private final ImageView check;
+        private final View flag_view;
 
         public IngredientsViewHolder(@NonNull View itemView)    {
             super(itemView);
             textViewTitle = itemView.findViewById(R.id.title_textview);
             textViewDate = itemView.findViewById(R.id.date_textview);
             check = itemView.findViewById(R.id.check_imageview);
+            flag_view = itemView.findViewById(R.id.flag_view);
+
             itemView.setOnClickListener(this);
         }
 
@@ -92,10 +96,20 @@ public class IngredientsRecyclerViewAdapter extends
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 int expiryDays = Integer.parseInt(ingredient.getExpiryDate()) - Integer.parseInt(getCurrentDate());
                 if(expiryDays < 0)  {
-                    itemView.setBackgroundColor(Color.parseColor("#93000A"));
+                    //constraintLayout.setBackgroundColor(Color.parseColor("#93000A"));
+                    //textViewDate.setTextColor(Color.parseColor("#93000A"));
+                    //itemView.setBackgroundColor(Color.parseColor("#93000A"));
+                    flag_view.setVisibility(View.VISIBLE);
+                    flag_view.setBackgroundColor(Color.parseColor("#93000A"));
                 }
-                else if(expiryDays>=1 && expiryDays < 4)
-                    itemView.setBackgroundColor(Color.parseColor("#FFD700"));
+                else if(expiryDays>=1 && expiryDays < 4)    {
+                    //constraintLayout.setBackgroundColor(Color.parseColor("#FFD700"));
+                    //textViewDate.setTextColor(Color.parseColor("#FFD700"));
+                    //itemView.setBackgroundColor(Color.parseColor("#FFD700"));
+                    flag_view.setVisibility(View.VISIBLE);
+                    flag_view.setBackgroundColor(Color.parseColor("#FFD700"));
+                }
+
             }
         }
         @Override

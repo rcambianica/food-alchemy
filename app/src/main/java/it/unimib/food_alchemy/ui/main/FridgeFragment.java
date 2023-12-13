@@ -113,9 +113,9 @@ public class FridgeFragment extends Fragment {
         ingredientList = new ArrayList<>();
         for(int i = 0; i < 10; i++) {
             if(i%2 == 0)
-                ingredientList.add(new Ingredient("cheese "+i,"20231128"));
+                ingredientList.add(new Ingredient("cheese "+i,"20231213"));
             else
-                ingredientList.add(new Ingredient("potato "+i,"20231213"));
+                ingredientList.add(new Ingredient("potato "+i,"20231128"));
         }
 
         ingredientList.add(new Ingredient("chicken", "20231215"));

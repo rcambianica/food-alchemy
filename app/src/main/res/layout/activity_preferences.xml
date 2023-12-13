@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
-        android:src="@drawable/undraw_set_preferences_kwia"
+        android:src="@drawable/undraw_active_options_re_8rj3"
         app:layout_constraintBottom_toTopOf="@+id/textview_preferences"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
