@@ -7,7 +7,6 @@ import static it.unimib.food_alchemy.util.Constants.SHARED_FRIDGE_ITEMS_FIRST_LO
 import static it.unimib.food_alchemy.util.Constants.SHARED_FRIDGE_ITEMS_FRIDGE;
 
 import android.graphics.Canvas;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,7 +15,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -29,10 +27,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -84,7 +79,7 @@ public class FridgeFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         IUserRepository userRepository = ServiceLocator.getInstance().
-                getUserRepository(getActivity().getApplication());
+                getUserRepository(requireActivity().getApplication());
         userViewModel = new ViewModelProvider(
                 this, new UserViewModelFactory(userRepository)).get(UserViewModel.class);
 
@@ -105,7 +100,6 @@ public class FridgeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
         RecyclerView recyclerViewIngredients = fragmentFridgeBinding.recyclerviewIngredients;
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(requireContext(),
                 LinearLayoutManager.VERTICAL, false);
@@ -117,8 +111,6 @@ public class FridgeFragment extends Fragment {
             else
                 ingredientList.add(new Ingredient("potato "+i,"20231128"));
         }
-
-        ingredientList.add(new Ingredient("chicken", "20231215"));
 
         ingredientsRecyclerViewAdapter =
                 new IngredientsRecyclerViewAdapter(ingredientList, new IngredientsRecyclerViewAdapter.OnItemClickListener() {
@@ -136,7 +128,7 @@ public class FridgeFragment extends Fragment {
         fragmentFridgeBinding.addIngredientButton.setOnClickListener(v -> {
             Navigation.findNavController(requireView()).navigate(R.id.action_fridgeFragment_to_addIngredientFragment);
         });
-        saveInformation();
+        //saveInformation();
     }
 
     ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -179,10 +171,11 @@ public class FridgeFragment extends Fragment {
     private void saveInformation()  {
         Set<String> fridgeItems = new HashSet<>();
         for(int i = 0; i < ingredientList.size(); i++)  {
-            fridgeItems.add(ingredientList.get(i).getTitle()+" expiry_date: "+ingredientList.get(i).getExpiryDate());
+            fridgeItems.add(ingredientList.get(i).getTitle()+" - "+ingredientList.get(i).getExpiryDate());
+            Log.d(TAG, ingredientList.get(i).toString());
         }
-
-        SharedPreferencesUtil sharedPreferencesUtil = new SharedPreferencesUtil(getActivity().getApplication());
+        /*
+        SharedPreferencesUtil sharedPreferencesUtil = new SharedPreferencesUtil(requireActivity().getApplication());
         sharedPreferencesUtil.writeStringSetData(
                 SHARED_FRIDGE_ITEMS_FILE_NAME, SHARED_FRIDGE_ITEMS_FRIDGE, fridgeItems);
         sharedPreferencesUtil.writeBooleanData(SHARED_FRIDGE_ITEMS_FILE_NAME,
@@ -195,9 +188,9 @@ public class FridgeFragment extends Fragment {
                     ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, ID_TOKEN);
         } catch (GeneralSecurityException | IOException e) {
             e.printStackTrace();
-        }
+        }*/
 
-        //userViewModel.saveUserFridgeItems(fridgeItems,idToken);
+        //userViewModel.saveUserFridgeItems(ingredientList,idToken);
     }
 
     @Override

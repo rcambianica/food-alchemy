@@ -11,6 +11,7 @@ public interface UserResponseCallback {
     void onSuccessFromRemoteDatabase(User user);
     void onSuccessFromRemoteDatabase(List<Recipe> recipeList);
     void onSuccessFromGettingUserPreferences();
+    void onSuccessFromGettingUserFridgeItems();
     void onFailureFromRemoteDatabase(String message);
     void onSuccessLogout();
 }

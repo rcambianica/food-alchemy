@@ -20,6 +20,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.Set;
 
 import it.unimib.food_alchemy.R;
@@ -80,7 +82,7 @@ public class AccountFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         fragmentAccountBinding.userEmail.setText(userViewModel.getLoggedUser().getEmail());
-        SharedPreferencesUtil sharedPreferencesUtil = new SharedPreferencesUtil(getActivity().getApplication());
+        SharedPreferencesUtil sharedPreferencesUtil = new SharedPreferencesUtil(requireActivity().getApplication());
 
         String diet = sharedPreferencesUtil.readStringData(
                 SHARED_PREFERENCES_FILE_NAME, SHARED_PREFERENCES_DIET);
@@ -101,7 +103,7 @@ public class AccountFragment extends Fragment {
                 Log.d(TAG,"PROVA");
                 if (result.isSuccess()) {
 
-                    Navigation.findNavController(requireView()).navigate(
+                    Navigation.findNavController(view).navigate(
                             R.id.action_accountFragment_to_authActivity);
                 } else {
                     Snackbar.make(view,

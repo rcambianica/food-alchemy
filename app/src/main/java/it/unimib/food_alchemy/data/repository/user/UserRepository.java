@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import java.util.List;
 import java.util.Set;
 
+import it.unimib.food_alchemy.model.Ingredient;
 import it.unimib.food_alchemy.model.Recipe;
 import it.unimib.food_alchemy.model.Result;
 import it.unimib.food_alchemy.model.User;
@@ -24,6 +25,7 @@ public class UserRepository implements IUserRepository, UserResponseCallback/*, 
     private final MutableLiveData<Result> userMutableLiveData;
     private final MutableLiveData<Result> userFavoriteRecipesMutableLiveData;
     private final MutableLiveData<Result> userPreferencesMutableLiveData;
+    private final MutableLiveData<Result> userFridgeItemsMutableLiveData;
 
     public UserRepository(BaseUserAuthenticationRemoteDataSource userRemoteDataSource,
                           BaseUserDataRemoteDataSource userDataRemoteDataSource/*,
@@ -34,6 +36,7 @@ public class UserRepository implements IUserRepository, UserResponseCallback/*, 
         this.userMutableLiveData = new MutableLiveData<>();
         this.userPreferencesMutableLiveData = new MutableLiveData<>();
         this.userFavoriteRecipesMutableLiveData = new MutableLiveData<>();
+        this.userFridgeItemsMutableLiveData = new MutableLiveData<>();
         this.userRemoteDataSource.setUserResponseCallback(this);
         this.userDataRemoteDataSource.setUserResponseCallback(this);
         //this.recipesLocalDataSource.setRecipesCallback(this);
@@ -68,6 +71,12 @@ public class UserRepository implements IUserRepository, UserResponseCallback/*, 
     }
 
     @Override
+    public MutableLiveData<Result> getUserFridgeItems(String idToken)    {
+        userDataRemoteDataSource.getUserFridgeItems(idToken);
+        return userFridgeItemsMutableLiveData;
+    }
+
+    @Override
     public MutableLiveData<Result> logout() {
         userRemoteDataSource.logout();
         return userMutableLiveData;
@@ -99,6 +108,11 @@ public class UserRepository implements IUserRepository, UserResponseCallback/*, 
     }
 
     @Override
+    public void saveUserFridgeItems(List<Ingredient> ingredientList, String idToken)    {
+        userDataRemoteDataSource.saveUserFridgeItems(ingredientList, idToken);
+    }
+
+    @Override
     public void onSuccessFromAuthentication(User user) {
         if (user != null) {
             userDataRemoteDataSource.saveUserData(user);
@@ -125,6 +139,11 @@ public class UserRepository implements IUserRepository, UserResponseCallback/*, 
     @Override
     public void onSuccessFromGettingUserPreferences() {
         userPreferencesMutableLiveData.postValue(new Result.UserResponseSuccess(null));
+    }
+
+    @Override
+    public void onSuccessFromGettingUserFridgeItems()   {
+        userFridgeItemsMutableLiveData.postValue(new Result.UserResponseSuccess(null));
     }
 
     @Override

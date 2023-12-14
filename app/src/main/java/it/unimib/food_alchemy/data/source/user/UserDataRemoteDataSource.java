@@ -2,6 +2,9 @@ package it.unimib.food_alchemy.data.source.user;
 
 import static it.unimib.food_alchemy.util.Constants.FIREBASE_FAVORITE_RECIPES_COLLECTION;
 import static it.unimib.food_alchemy.util.Constants.FIREBASE_USERS_COLLECTION;
+import static it.unimib.food_alchemy.util.Constants.SHARED_FRIDGE_ITEMS_FRIDGE;
+import static it.unimib.food_alchemy.util.Constants.SHARED_FRIDGE_ITEMS_TITLE;
+import static it.unimib.food_alchemy.util.Constants.SHARED_FRIGDE_ITEMS_EXPIRY_DATE;
 import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_DIET;
 import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_INTOLERANCES;
@@ -20,11 +23,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.checkerframework.common.reflection.qual.NewInstance;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import it.unimib.food_alchemy.model.Ingredient;
 import it.unimib.food_alchemy.model.Recipe;
 import it.unimib.food_alchemy.model.User;
 import it.unimib.food_alchemy.util.SharedPreferencesUtil;
@@ -137,11 +144,52 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource{
 
     @Override
     public void saveUserPreferences(String diet, Set<String> intolerances, String idToken) {
-        //TODO Add listeners to manage error cases
         databaseReference.child(FIREBASE_USERS_COLLECTION).child(idToken).
                 child(SHARED_PREFERENCES_DIET).setValue(diet);
 
         databaseReference.child(FIREBASE_USERS_COLLECTION).child(idToken).
                 child(SHARED_PREFERENCES_INTOLERANCES).setValue(new ArrayList<>(intolerances));
+    }
+
+    @Override
+    public void getUserFridgeItems(String idToken)  {
+        databaseReference.child(FIREBASE_USERS_COLLECTION).child(idToken).
+                child(SHARED_FRIDGE_ITEMS_FRIDGE).get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+
+                        databaseReference.child(FIREBASE_USERS_COLLECTION).child(idToken).
+                                child(SHARED_FRIDGE_ITEMS_FRIDGE).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            List<Ingredient> ingredientList = new ArrayList<>();
+                                            Ingredient ingredient = new Ingredient(null,null);
+                                            for(DataSnapshot ds: task.getResult().getChildren())    {
+                                                ingredient.setTitle(ds.child(SHARED_FRIDGE_ITEMS_TITLE).getValue(String.class));
+                                                ingredient.setExpiryDate(ds.child(SHARED_FRIGDE_ITEMS_EXPIRY_DATE).getValue(String.class));
+                                                ingredientList.add(ingredient);
+                                            }
+                                            if (ingredientList.size() > 0) {
+                                                Set<String> fridgeItemsSet = new HashSet<>();
+                                                for(int i = 0; i < ingredientList.size(); i++)  {
+                                                    fridgeItemsSet.add(ingredientList.get(i).getTitle()+" - "+ingredientList.get(i).getExpiryDate());
+                                                }
+                                                sharedPreferencesUtil.writeStringSetData(
+                                                        SHARED_PREFERENCES_FILE_NAME,
+                                                        SHARED_PREFERENCES_INTOLERANCES,
+                                                        fridgeItemsSet);
+                                            }
+                                            userResponseCallback.onSuccessFromGettingUserFridgeItems();
+                                        }
+                                    }
+                                });
+                    }
+                });
+    }
+
+    @Override
+    public void saveUserFridgeItems(List<Ingredient> ingredientList, String idToken)   {
+        databaseReference.child(FIREBASE_USERS_COLLECTION).child(idToken).
+                child(SHARED_FRIDGE_ITEMS_FRIDGE).setValue(new ArrayList<>(ingredientList));
     }
 }

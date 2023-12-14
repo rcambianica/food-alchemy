@@ -30,6 +30,8 @@ public class Constants {
     //Constants for SharedFridgeItems
     public static final String SHARED_FRIDGE_ITEMS_FILE_NAME = "it.unimib.food_alchemy.fridge_items";
     public static final String SHARED_FRIDGE_ITEMS_FRIDGE = "fridge";
+    public static final String SHARED_FRIGDE_ITEMS_EXPIRY_DATE = "expiryDate";
+    public static final String SHARED_FRIDGE_ITEMS_TITLE = "title";
     public static final String SHARED_FRIDGE_ITEMS_FIRST_LOADING = "first_loading";
 
     // Constants for EncryptedSharedPreferences
