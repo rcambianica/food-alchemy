@@ -3,18 +3,32 @@ package it.unimib.food_alchemy.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 /**
  *  Class to represent the recipes of SpoonacularAPI
- *  dobbiamo capire quali attributi inserire, guardare esempio prof
  */
-@Entity
+@Entity(tableName = "recipes")
 public class Recipe implements Parcelable {
 
     @PrimaryKey
     private int id;
+    @ColumnInfo(name = "image_url")
+    private String imageUrl;
+    @ColumnInfo(name = "image_type")
+    private String imageType;
+    private String title;
+    private String instructions;
+    private List<String> cuisines;
+    private List<String> diets;
+    private BigDecimal servings;
+    @ColumnInfo(name = "is_favorite", defaultValue = "0")
+    private boolean isFavorite;
 
     public int getId() {
         return id;
@@ -24,27 +38,20 @@ public class Recipe implements Parcelable {
         this.id = id;
     }
 
-    private String title;
 
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+    public void setTitle(String title) {this.title = title;}
 
-    private String imageUrl;
 
     public String getImageUrl() {
         return imageUrl;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
+    public void setImageUrl(String imageUrl) {this.imageUrl = imageUrl;}
 
-    private String imageType;
 
     public String getImageType() {
         return imageType;
@@ -54,8 +61,7 @@ public class Recipe implements Parcelable {
         this.imageType = imageType;
     }
 
-    public Recipe()   {}
-
+    public Recipe() {}
 
     @Override
     public int describeContents() {
@@ -95,4 +101,44 @@ public class Recipe implements Parcelable {
             return new Recipe[size];
         }
     };
+
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
+    }
+
+    public String getInstructions() {
+        return instructions;
+    }
+
+    public void setInstructions(String instructions) {
+        this.instructions = instructions;
+    }
+
+    public List<String> getCuisines() {
+        return cuisines;
+    }
+
+    public void setCuisines(List<String> cuisines) {
+        this.cuisines = cuisines;
+    }
+
+    public List<String> getDiets() {
+        return diets;
+    }
+
+    public void setDiets(List<String> diets) {
+        this.diets = diets;
+    }
+
+    public BigDecimal getServings() {
+        return servings;
+    }
+
+    public void setServings(BigDecimal servings) {
+        this.servings = servings;
+    }
 }
