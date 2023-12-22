@@ -1,3 +1,12 @@
+import java.io.FileInputStream
+import java.util.Properties
+
+// Source: https://developer.android.com/studio/publish/app-signing#kts
+var spoonacularAPIKey: String = ""
+val keystorePropertiesFile: File = rootProject.file("keystore.properties")
+val keystoreProperties: Properties = Properties()
+keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -19,8 +28,15 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-    }
 
+        signingConfigs{
+            create("config") {
+                spoonacularAPIKey = keystoreProperties["SPOONACULAR_API_KEY"] as String
+            }
+        }
+        buildConfigField("String", "SPOONACULAR_API_KEY", "\"${spoonacularAPIKey}\"")
+    }
+    
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -37,6 +53,7 @@ android {
     buildFeatures {
         viewBinding = true
         compose = true
+        buildConfig = true
     }
     kotlinOptions {
         jvmTarget = "1.8"
