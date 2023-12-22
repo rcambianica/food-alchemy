@@ -83,9 +83,14 @@ public class FridgeFragment extends Fragment {
         userViewModel = new ViewModelProvider(
                 this, new UserViewModelFactory(userRepository)).get(UserViewModel.class);
 
-        /*userViewModel.getUserFridgeItems(userViewModel.getLoggedUser().getIdToken()).observe(this, result -> {
+        userViewModel.getUserFridgeItems(userViewModel.getLoggedUser().getIdToken()).observe(this, result -> {
+            if(result.isSuccess())  {
+                Log.d(TAG,"Ingredienti recuperati");
 
-        });*/
+            } else {
+                Log.d(TAG, "ERRORE");
+            }
+        });
     }
 
     @Override
@@ -128,7 +133,7 @@ public class FridgeFragment extends Fragment {
         fragmentFridgeBinding.addIngredientButton.setOnClickListener(v -> {
             Navigation.findNavController(requireView()).navigate(R.id.action_fridgeFragment_to_addIngredientFragment);
         });
-        //saveInformation();
+        saveInformation();
     }
 
     ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -174,7 +179,7 @@ public class FridgeFragment extends Fragment {
             fridgeItems.add(ingredientList.get(i).getTitle()+" - "+ingredientList.get(i).getExpiryDate());
             Log.d(TAG, ingredientList.get(i).toString());
         }
-        /*
+
         SharedPreferencesUtil sharedPreferencesUtil = new SharedPreferencesUtil(requireActivity().getApplication());
         sharedPreferencesUtil.writeStringSetData(
                 SHARED_FRIDGE_ITEMS_FILE_NAME, SHARED_FRIDGE_ITEMS_FRIDGE, fridgeItems);
@@ -188,9 +193,8 @@ public class FridgeFragment extends Fragment {
                     ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, ID_TOKEN);
         } catch (GeneralSecurityException | IOException e) {
             e.printStackTrace();
-        }*/
-
-        //userViewModel.saveUserFridgeItems(ingredientList,idToken);
+        }
+        userViewModel.saveUserFridgeItems(ingredientList,idToken);
     }
 
     @Override

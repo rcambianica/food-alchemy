@@ -2,6 +2,7 @@ package it.unimib.food_alchemy.data.source.user;
 
 import static it.unimib.food_alchemy.util.Constants.FIREBASE_FAVORITE_RECIPES_COLLECTION;
 import static it.unimib.food_alchemy.util.Constants.FIREBASE_USERS_COLLECTION;
+import static it.unimib.food_alchemy.util.Constants.SHARED_FRIDGE_ITEMS_FILE_NAME;
 import static it.unimib.food_alchemy.util.Constants.SHARED_FRIDGE_ITEMS_FRIDGE;
 import static it.unimib.food_alchemy.util.Constants.SHARED_FRIDGE_ITEMS_TITLE;
 import static it.unimib.food_alchemy.util.Constants.SHARED_FRIGDE_ITEMS_EXPIRY_DATE;
@@ -156,7 +157,6 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource{
         databaseReference.child(FIREBASE_USERS_COLLECTION).child(idToken).
                 child(SHARED_FRIDGE_ITEMS_FRIDGE).get().addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-
                         databaseReference.child(FIREBASE_USERS_COLLECTION).child(idToken).
                                 child(SHARED_FRIDGE_ITEMS_FRIDGE).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                                     @Override
@@ -175,8 +175,8 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource{
                                                     fridgeItemsSet.add(ingredientList.get(i).getTitle()+" - "+ingredientList.get(i).getExpiryDate());
                                                 }
                                                 sharedPreferencesUtil.writeStringSetData(
-                                                        SHARED_PREFERENCES_FILE_NAME,
-                                                        SHARED_PREFERENCES_INTOLERANCES,
+                                                        SHARED_FRIDGE_ITEMS_FILE_NAME,
+                                                        SHARED_FRIDGE_ITEMS_FRIDGE,
                                                         fridgeItemsSet);
                                             }
                                             userResponseCallback.onSuccessFromGettingUserFridgeItems();

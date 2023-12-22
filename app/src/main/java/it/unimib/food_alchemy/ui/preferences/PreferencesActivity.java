@@ -24,6 +24,7 @@ import static it.unimib.food_alchemy.util.Constants.WHEAT;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
@@ -32,6 +33,8 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Spinner;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -66,12 +69,14 @@ public class PreferencesActivity extends AppCompatActivity {
     private CheckBox checkBoxSulfite;
     private CheckBox checkBoxTreeNut;
     private CheckBox checkBoxWheat;
+    private ConstraintLayout layout;
     private UserViewModel userViewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preferences);
 
+        layout = findViewById(R.id.preferences_activity_layout);
         spinnerDiets = findViewById(R.id.spinner_diet);
 
         checkBoxDairy = findViewById(R.id.checkbox_dairy);
@@ -95,7 +100,13 @@ public class PreferencesActivity extends AppCompatActivity {
 
         userViewModel.getUserPreferences(userViewModel.getLoggedUser().getIdToken()).
                 observe(this, result -> {
-                    setViewsChecked();
+                    if(result.isSuccess())  {
+                        setViewsChecked();
+                    } else {
+                        Snackbar.make(layout,
+                                getString(R.string.unexpected_error),
+                                Snackbar.LENGTH_SHORT).show();
+                    }
                 });
 
 

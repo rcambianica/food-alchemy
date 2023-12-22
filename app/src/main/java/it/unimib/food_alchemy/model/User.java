@@ -3,8 +3,6 @@ package it.unimib.food_alchemy.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import androidx.annotation.NonNull;
-
 import com.google.firebase.database.Exclude;
 
 public class User implements Parcelable {
@@ -46,7 +44,7 @@ public class User implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(@NonNull Parcel parcel, int i) {
+    public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(name);
         parcel.writeString(email);
         parcel.writeString(idToken);

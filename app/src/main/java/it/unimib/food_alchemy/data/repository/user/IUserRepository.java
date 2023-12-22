@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData;
 import java.util.List;
 import java.util.Set;
 
-import it.unimib.food_alchemy.R;
 import it.unimib.food_alchemy.model.Ingredient;
 import it.unimib.food_alchemy.model.Result;
 import it.unimib.food_alchemy.model.User;

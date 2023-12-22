@@ -4,13 +4,11 @@ import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_DIET;
 import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_INTOLERANCES;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
@@ -22,14 +20,9 @@ import android.view.ViewGroup;
 
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.Set;
-
 import it.unimib.food_alchemy.R;
 import it.unimib.food_alchemy.data.repository.user.IUserRepository;
-import it.unimib.food_alchemy.data.repository.user.UserRepository;
 import it.unimib.food_alchemy.databinding.FragmentAccountBinding;
-import it.unimib.food_alchemy.model.Result;
-import it.unimib.food_alchemy.model.User;
 import it.unimib.food_alchemy.ui.auth.UserViewModel;
 import it.unimib.food_alchemy.ui.auth.UserViewModelFactory;
 import it.unimib.food_alchemy.util.ServiceLocator;
@@ -97,12 +90,8 @@ public class AccountFragment extends Fragment {
         });
 
         fragmentAccountBinding.buttonLogout.setOnClickListener(v -> {
-            userViewModel.logout();
-            Navigation.findNavController(requireView()).navigate(R.id.action_accountFragment_to_authActivity);
-            /*userViewModel.logout().observe(getViewLifecycleOwner(), result -> {
-                Log.d(TAG,"PROVA");
-                if (result.isSuccess()) {
-
+            userViewModel.logout().observe(getViewLifecycleOwner(), result -> {
+                if(result.isSuccess())  {
                     Navigation.findNavController(view).navigate(
                             R.id.action_accountFragment_to_authActivity);
                 } else {
@@ -110,7 +99,7 @@ public class AccountFragment extends Fragment {
                             requireActivity().getString(R.string.unexpected_error),
                             Snackbar.LENGTH_SHORT).show();
                 }
-            });*/
+            });
         });
     }
 

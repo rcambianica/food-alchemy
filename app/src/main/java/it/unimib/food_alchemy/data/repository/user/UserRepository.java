@@ -1,5 +1,7 @@
 package it.unimib.food_alchemy.data.repository.user;
 
+import android.util.Log;
+
 import androidx.lifecycle.MutableLiveData;
 
 import java.util.List;
@@ -154,6 +156,6 @@ public class UserRepository implements IUserRepository, UserResponseCallback/*, 
 
     @Override
     public void onSuccessLogout() {
-
+        userMutableLiveData.postValue(new Result.UserResponseSuccess(null));
     }
 }
