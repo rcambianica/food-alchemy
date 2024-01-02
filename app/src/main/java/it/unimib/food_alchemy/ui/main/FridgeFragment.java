@@ -37,6 +37,7 @@ import it.unimib.food_alchemy.adapter.IngredientsRecyclerViewAdapter;
 import it.unimib.food_alchemy.data.repository.user.IUserRepository;
 import it.unimib.food_alchemy.databinding.FragmentFridgeBinding;
 import it.unimib.food_alchemy.model.Ingredient;
+import it.unimib.food_alchemy.model.Result;
 import it.unimib.food_alchemy.ui.auth.UserViewModel;
 import it.unimib.food_alchemy.ui.auth.UserViewModelFactory;
 import it.unimib.food_alchemy.util.DataEncryptionUtil;
@@ -69,7 +70,6 @@ public class FridgeFragment extends Fragment {
      * this fragment using the provided parameters.
      * @return A new instance of fragment FridgeFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static FridgeFragment newInstance() {
         return new FridgeFragment();
     }
@@ -82,15 +82,7 @@ public class FridgeFragment extends Fragment {
                 getUserRepository(requireActivity().getApplication());
         userViewModel = new ViewModelProvider(
                 this, new UserViewModelFactory(userRepository)).get(UserViewModel.class);
-
-        userViewModel.getUserFridgeItems(userViewModel.getLoggedUser().getIdToken()).observe(this, result -> {
-            if(result.isSuccess())  {
-                Log.d(TAG,"Ingredienti recuperati");
-
-            } else {
-                Log.d(TAG, "ERRORE");
-            }
-        });
+        ingredientList = new ArrayList<>();
     }
 
     @Override
@@ -109,13 +101,8 @@ public class FridgeFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(requireContext(),
                 LinearLayoutManager.VERTICAL, false);
 
-        ingredientList = new ArrayList<>();
-        for(int i = 0; i < 10; i++) {
-            if(i%2 == 0)
-                ingredientList.add(new Ingredient("cheese "+i,"20231213"));
-            else
-                ingredientList.add(new Ingredient("potato "+i,"20231128"));
-        }
+
+
 
         ingredientsRecyclerViewAdapter =
                 new IngredientsRecyclerViewAdapter(ingredientList, new IngredientsRecyclerViewAdapter.OnItemClickListener() {
@@ -133,7 +120,19 @@ public class FridgeFragment extends Fragment {
         fragmentFridgeBinding.addIngredientButton.setOnClickListener(v -> {
             Navigation.findNavController(requireView()).navigate(R.id.action_fridgeFragment_to_addIngredientFragment);
         });
-        saveInformation();
+        //saveInformation();
+        userViewModel.getUserFridgeItems(userViewModel.getLoggedUser().getIdToken()).observe(getViewLifecycleOwner(),
+                result -> {
+                    if(result.isSuccess())  {
+                        //qua devo capire come aggiornare la recycler view
+
+                    }
+                    else {
+                        Snackbar.make(view,
+                                requireActivity().getString(R.string.unexpected_error),
+                                Snackbar.LENGTH_SHORT).show();
+                    }
+        });
     }
 
     ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -177,7 +176,6 @@ public class FridgeFragment extends Fragment {
         Set<String> fridgeItems = new HashSet<>();
         for(int i = 0; i < ingredientList.size(); i++)  {
             fridgeItems.add(ingredientList.get(i).getTitle()+" - "+ingredientList.get(i).getExpiryDate());
-            Log.d(TAG, ingredientList.get(i).toString());
         }
 
         SharedPreferencesUtil sharedPreferencesUtil = new SharedPreferencesUtil(requireActivity().getApplication());

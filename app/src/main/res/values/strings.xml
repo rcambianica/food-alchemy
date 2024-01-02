@@ -35,6 +35,9 @@
     <string name="reset_button">Reset</string>
     <string name="return_button">Return to login</string>
 
+    <!--ADD AN INGREDIENT-->
+    <string name="error_ingredient_message">The ingredient cannot be null!</string>
+
     <!--SEARCH-->
     <string name="search">Search Here</string>
     <!--CHIPCATEGORIES-->
@@ -105,7 +108,6 @@
     <string name="ingredient">Ingredient</string>
     <string name="expiry_date">Expiry date</string>
     <string name="fragment_add_ingredient">fragment_add_ingredient</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
     <string name="return_to_home">Return to home</string>
 </resources>

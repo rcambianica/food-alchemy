@@ -42,7 +42,7 @@
         android:id="@+id/imageView5"
         android:layout_width="300dp"
         android:layout_height="300dp"
-        app:layout_constraintBottom_toTopOf="@+id/text_input_edit_text_ingredient"
+        app:layout_constraintBottom_toTopOf="@+id/text_input_layout_ingredient"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/linear_layout"
@@ -51,19 +51,21 @@
         android:importantForAccessibility="no" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/text_input_edit_text_ingredient"
+        android:id="@+id/text_input_layout_ingredient"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginStart="40dp"
         android:layout_marginEnd="40dp"
+        app:endIconMode="clear_text"
+        app:errorEnabled="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView5"
         app:layout_constraintBottom_toTopOf="@id/expiry_date_textview">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/text_input_layout_ingredient"
+            android:id="@+id/text_input_edit_text_ingredient"
             android:layout_width="match_parent"
             android:layout_height="61dp"
             android:inputType="text"
@@ -79,7 +81,7 @@
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_input_edit_text_ingredient"
+        app:layout_constraintTop_toBottomOf="@+id/text_input_layout_ingredient"
         app:layout_constraintBottom_toTopOf="@id/spinner_button"/>
 
     <Button

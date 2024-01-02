@@ -29,6 +29,7 @@ import org.checkerframework.common.reflection.qual.NewInstance;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -163,16 +164,14 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource{
                                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                                         if (task.isSuccessful()) {
                                             List<Ingredient> ingredientList = new ArrayList<>();
-                                            Ingredient ingredient = new Ingredient(null,null);
                                             for(DataSnapshot ds: task.getResult().getChildren())    {
-                                                ingredient.setTitle(ds.child(SHARED_FRIDGE_ITEMS_TITLE).getValue(String.class));
-                                                ingredient.setExpiryDate(ds.child(SHARED_FRIGDE_ITEMS_EXPIRY_DATE).getValue(String.class));
-                                                ingredientList.add(ingredient);
+                                                ingredientList.add(new Ingredient(ds.child(SHARED_FRIDGE_ITEMS_TITLE).getValue(String.class),
+                                                        ds.child(SHARED_FRIGDE_ITEMS_EXPIRY_DATE).getValue(String.class)));
                                             }
                                             if (ingredientList.size() > 0) {
-                                                Set<String> fridgeItemsSet = new HashSet<>();
-                                                for(int i = 0; i < ingredientList.size(); i++)  {
-                                                    fridgeItemsSet.add(ingredientList.get(i).getTitle()+" - "+ingredientList.get(i).getExpiryDate());
+                                                Set<String> fridgeItemsSet = new LinkedHashSet<>();
+                                                for (Ingredient i: ingredientList) {
+                                                    fridgeItemsSet.add(i.getTitle() + " - " + i.getExpiryDate());
                                                 }
                                                 sharedPreferencesUtil.writeStringSetData(
                                                         SHARED_FRIDGE_ITEMS_FILE_NAME,

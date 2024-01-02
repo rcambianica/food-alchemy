@@ -96,16 +96,10 @@ public class IngredientsRecyclerViewAdapter extends
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 int expiryDays = Integer.parseInt(ingredient.getExpiryDate()) - Integer.parseInt(getCurrentDate());
                 if(expiryDays < 0)  {
-                    //constraintLayout.setBackgroundColor(Color.parseColor("#93000A"));
-                    //textViewDate.setTextColor(Color.parseColor("#93000A"));
-                    //itemView.setBackgroundColor(Color.parseColor("#93000A"));
                     flag_view.setVisibility(View.VISIBLE);
                     flag_view.setBackgroundColor(Color.parseColor("#93000A"));
                 }
                 else if(expiryDays>=1 && expiryDays < 4)    {
-                    //constraintLayout.setBackgroundColor(Color.parseColor("#FFD700"));
-                    //textViewDate.setTextColor(Color.parseColor("#FFD700"));
-                    //itemView.setBackgroundColor(Color.parseColor("#FFD700"));
                     flag_view.setVisibility(View.VISIBLE);
                     flag_view.setBackgroundColor(Color.parseColor("#FFD700"));
                 }

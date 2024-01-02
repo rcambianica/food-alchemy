@@ -198,7 +198,7 @@ public class LoginFragment extends Fragment {
                                     userViewModel.setAuthenticationError(false);
                                     /*per ora non funziona, perché manca implementazione repository ricette**/
                                     //retrieveUserInformationAndStartActivity(user, R.id.navigate_to_preferencesActivity);
-                                    startActivityBasedOnCondition(PreferencesActivity.class,R.id.navigate_to_preferencesActivity);
+                                    //startActivityBasedOnCondition(PreferencesActivity.class,R.id.navigate_to_preferencesActivity);
                                 } else {
                                     userViewModel.setAuthenticationError(true);
                                     Snackbar.make(requireActivity().findViewById(android.R.id.content),

@@ -34,7 +34,7 @@ android {
                 spoonacularAPIKey = keystoreProperties["SPOONACULAR_API_KEY"] as String
             }
         }
-        buildConfigField("String", "SPOONACULAR_API_KEY", "\"${spoonacularAPIKey}\"")
+        buildConfigField("String", "SPOONACULAR_API_KEY", spoonacularAPIKey)
     }
     
     buildTypes {
@@ -71,7 +71,7 @@ android {
 dependencies {
 
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.10.0")
+    implementation("com.google.android.material:material:1.11.0")
     implementation(platform("com.google.firebase:firebase-bom:32.5.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth")
@@ -79,7 +79,7 @@ dependencies {
     implementation ("commons-validator", "commons-validator", "1.7")
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
-    implementation("androidx.activity:activity-compose:1.8.1")
+    implementation("androidx.activity:activity-compose:1.8.2")
     implementation(platform("androidx.compose:compose-bom:2023.10.01"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")

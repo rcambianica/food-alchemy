@@ -4,14 +4,22 @@ public abstract class Result {
     private Result() {}
 
     public boolean isSuccess()  {
-        if(this instanceof UserResponseSuccess) {
+        if(this instanceof RecipesResponseSuccess || this instanceof UserResponseSuccess) {
             return true;
         } else {
             return false;
         }
     }
 
-    //qua ci andrà RecipesResponseSuccess
+    public static final class RecipesResponseSuccess extends Result {
+        private final RecipesResponse recipesResponse;
+        public RecipesResponseSuccess(RecipesResponse recipesResponse)  {
+            this.recipesResponse = recipesResponse;
+        }
+        public RecipesResponse getData() {
+            return recipesResponse;
+        }
+    }
 
     /**
      * Class that represents a successful action during the interaction

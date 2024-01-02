@@ -1,5 +1,11 @@
 package it.unimib.food_alchemy.ui.main;
 
+import static it.unimib.food_alchemy.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
+import static it.unimib.food_alchemy.util.Constants.ID_TOKEN;
+import static it.unimib.food_alchemy.util.Constants.SHARED_FRIDGE_ITEMS_FILE_NAME;
+import static it.unimib.food_alchemy.util.Constants.SHARED_FRIDGE_ITEMS_FIRST_LOADING;
+import static it.unimib.food_alchemy.util.Constants.SHARED_FRIDGE_ITEMS_FRIDGE;
+
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.res.Configuration;
@@ -12,16 +18,29 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
 import it.unimib.food_alchemy.R;
+import it.unimib.food_alchemy.data.repository.user.IUserRepository;
+import it.unimib.food_alchemy.data.repository.user.UserRepository;
 import it.unimib.food_alchemy.databinding.FragmentAddIngredientBinding;
+import it.unimib.food_alchemy.model.Ingredient;
+import it.unimib.food_alchemy.ui.auth.UserViewModel;
+import it.unimib.food_alchemy.ui.auth.UserViewModelFactory;
+import it.unimib.food_alchemy.util.DataEncryptionUtil;
+import it.unimib.food_alchemy.util.ServiceLocator;
+import it.unimib.food_alchemy.util.SharedPreferencesUtil;
 
 
 /**
@@ -31,9 +50,10 @@ import it.unimib.food_alchemy.databinding.FragmentAddIngredientBinding;
  */
 public class AddIngredientFragment extends Fragment {
 
+    private static final String TAG = AddIngredientFragment.class.getSimpleName();
     private FragmentAddIngredientBinding fragmentAddIngredientBinding;
     private DatePickerDialog datePickerDialog;
-
+    private UserViewModel userViewModel;
     public AddIngredientFragment()  {
         // Required empty public constructor
     }
@@ -51,6 +71,12 @@ public class AddIngredientFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        IUserRepository userRepository = ServiceLocator.getInstance().
+                getUserRepository(requireActivity().getApplication());
+        userViewModel = new ViewModelProvider(
+                requireActivity(),
+                new UserViewModelFactory(userRepository)).get(UserViewModel.class);
     }
 
     @Override
@@ -65,12 +91,18 @@ public class AddIngredientFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         initDatePicker();
-        Log.d("TAG", getTodaysDate());
+
         fragmentAddIngredientBinding.spinnerButton.setText(getTodaysDate());
         fragmentAddIngredientBinding.spinnerButton.setOnClickListener(v -> datePickerDialog.show());
         fragmentAddIngredientBinding.returnButton.setOnClickListener(v -> Navigation.findNavController(requireView()).navigate(R.id.action_addIngredientFragment_to_fridgeFragment));
         fragmentAddIngredientBinding.saveButton.setOnClickListener(v -> {
-            Navigation.findNavController(requireView()).navigate(R.id.action_addIngredientFragment_to_fridgeFragment);
+
+            String ingredientName = fragmentAddIngredientBinding.textInputEditTextIngredient.getText().toString().trim();
+            String expiryDate = fragmentAddIngredientBinding.spinnerButton.getText().toString().trim();
+            if(isIngredientOk(ingredientName))  {
+                addIngredient(ingredientName, expiryDate);
+                Navigation.findNavController(requireView()).navigate(R.id.action_addIngredientFragment_to_fridgeFragment);
+            }
         });
     }
 
@@ -93,7 +125,6 @@ public class AddIngredientFragment extends Fragment {
         Calendar cal = Calendar.getInstance();
         int year = cal.get(Calendar.YEAR);
         int month = cal.get(Calendar.MONTH);
-        SimpleDateFormat dayOfMonthFormat = new SimpleDateFormat("dd", Locale.getDefault());
         int day = cal.get(Calendar.DAY_OF_MONTH);
 
         int currentTheme = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
@@ -109,9 +140,50 @@ public class AddIngredientFragment extends Fragment {
     }
 
     private String makeDateString(int day, int month, int year) {
+        String d;
+        String m;
         if(day > 0 && day < 10)
-            return "0" + day + "/" + month + "/" + year;
-        return day + "/" + month + "/" + year;
+            d = "0" + day;
+        else
+            d = String.valueOf(day);
+        if(month > 0 && month < 10)
+            m = "0" + month;
+        else
+            m = String.valueOf(month);
+        return year + m + d;
+    }
+
+    private boolean isIngredientOk(String ingredient) {
+        // Check if the ingredient is null
+        if (ingredient.isEmpty()) {
+            fragmentAddIngredientBinding.textInputLayoutIngredient.setError(getString(R.string.error_ingredient_message));
+            return false;
+        } else {
+            fragmentAddIngredientBinding.textInputLayoutIngredient.setError(null);
+            return true;
+        }
+    }
+
+    private void addIngredient(String ingredientName, String expiryDate)  {
+
+        List<Ingredient> ingredientList = new ArrayList<>();
+        ingredientList.add(new Ingredient(ingredientName,expiryDate));
+        Log.d(TAG, ingredientList.toString());
+        SharedPreferencesUtil sharedPreferencesUtil = new SharedPreferencesUtil(requireActivity().getApplication());
+        sharedPreferencesUtil.writeStringData(
+                SHARED_FRIDGE_ITEMS_FILE_NAME, SHARED_FRIDGE_ITEMS_FRIDGE, ingredientName+ " - " + expiryDate);
+        sharedPreferencesUtil.writeBooleanData(SHARED_FRIDGE_ITEMS_FILE_NAME,
+                SHARED_FRIDGE_ITEMS_FIRST_LOADING, true);
+
+        DataEncryptionUtil dataEncryptionUtil = new DataEncryptionUtil(getActivity());
+        String idToken = null;
+        try {
+            idToken = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(
+                    ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, ID_TOKEN);
+        } catch (GeneralSecurityException | IOException e) {
+            e.printStackTrace();
+        }
+        userViewModel.saveUserFridgeItems(ingredientList,idToken);
     }
 
     @Override
