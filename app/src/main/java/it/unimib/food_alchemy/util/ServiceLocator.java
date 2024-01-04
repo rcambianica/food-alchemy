@@ -21,7 +21,7 @@ public class ServiceLocator {
 
     private static volatile ServiceLocator INSTANCE = null;
 
-    private ServiceLocator() {}
+    public ServiceLocator() {}
 
     public static ServiceLocator getInstance() {
         if (INSTANCE == null) {
@@ -44,11 +44,9 @@ public class ServiceLocator {
         return retrofit.create(SpoonacularApiService.class);
     }
 
-    /**
     public RecipeRoomDatabase getRecipeDao(Application application) {
         return RecipeRoomDatabase.getDatabase(application);
     }
-     **/
 
     /**
      * Creates an instance of IUserRepository.

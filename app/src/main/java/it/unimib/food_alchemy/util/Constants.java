@@ -48,7 +48,8 @@ public class Constants {
     public static final String SPOONACULAR_API_BASE_URL = "https://api.spoonacular.com/";
     public static final String RECIPES_ENDPOINT = "recipes/complexSearch";
     public static final String RECIPES_QUERY_PARAMETER = "query";
-    public static final int RECIPES_NUMBER_PARAMETER = 100;
+    public static final int RECIPES_NUMBER_PARAMETER = 10;
+    public static final int REFRESH_TIMEOUT = 1000 * 60 * 60; // 1 hour in milliseconds
 
     // Constants for Room database
     public static final String RECIPES_DATABASE_NAME = "recipes_db";

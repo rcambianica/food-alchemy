@@ -3,11 +3,15 @@ package it.unimib.food_alchemy.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,21 +20,44 @@ import java.util.List;
 @Entity(tableName = "recipes")
 public class Recipe implements Parcelable {
 
+    @SerializedName("id")
     @PrimaryKey
-    private int id;
+    private long id;
+
+    @SerializedName("image")
     @ColumnInfo(name = "image_url")
     private String imageUrl;
+
+    @SerializedName("imageType")
     @ColumnInfo(name = "image_type")
     private String imageType;
+
+    @SerializedName("title")
+    @NonNull
     private String title;
-    private String instructions;
-    private List<String> cuisines;
-    private List<String> diets;
-    private BigDecimal servings;
+
+    @SerializedName("instructions")
+    @NonNull
+    private String instructions = null;
+
+    @SerializedName("diets")
+    private List<String> diets = new ArrayList<String>();
+
+    @SerializedName("intolerances")
+    private List<String> intolerances;
+
+    @SerializedName("dishTypes")
+    private List<String> type = new ArrayList<String>();
+
+    @SerializedName("ingredients")
+    @NonNull
+    private List<String> ingredients = new ArrayList<String>();
+
     @ColumnInfo(name = "is_favorite", defaultValue = "0")
+    @NonNull
     private boolean isFavorite;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -46,9 +73,7 @@ public class Recipe implements Parcelable {
     public void setTitle(String title) {this.title = title;}
 
 
-    public String getImageUrl() {
-        return imageUrl;
-    }
+    public String getImageUrl() {return imageUrl;}
 
     public void setImageUrl(String imageUrl) {this.imageUrl = imageUrl;}
 
@@ -70,24 +95,34 @@ public class Recipe implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.id);
+        dest.writeLong(this.id);
         dest.writeString(this.title);
         dest.writeString(this.imageUrl);
         dest.writeString(this.imageType);
+        dest.writeString(this.instructions);
+        dest.writeList(this.diets);
+        dest.writeList(this.intolerances);
+        dest.writeList(this.type);
+        dest.writeList(this.ingredients);
+        dest.writeByte((byte) (this.isFavorite ? 1 : 0));
     }
 
     public void readFromParcel(Parcel source) {
-        this.id = source.readInt();
+        this.id = source.readLong();
         this.title = source.readString();
         this.imageUrl = source.readString();
         this.imageType = source.readString();
+        this.instructions = source.readString();
+        source.readStringList(this.diets);
+        source.readStringList(this.intolerances);
+        source.readStringList(this.type);
+        source.readStringList(this.ingredients);
+        this.isFavorite = source.readByte() != 0;
     }
 
     protected Recipe(Parcel in) {
-        this.id = in.readInt();
-        this.title = in.readString();
-        this.imageUrl = in.readString();
-        this.imageType = in.readString();
+        super();
+        readFromParcel(in);
     }
 
     public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
@@ -118,14 +153,6 @@ public class Recipe implements Parcelable {
         this.instructions = instructions;
     }
 
-    public List<String> getCuisines() {
-        return cuisines;
-    }
-
-    public void setCuisines(List<String> cuisines) {
-        this.cuisines = cuisines;
-    }
-
     public List<String> getDiets() {
         return diets;
     }
@@ -134,11 +161,27 @@ public class Recipe implements Parcelable {
         this.diets = diets;
     }
 
-    public BigDecimal getServings() {
-        return servings;
+    public List<String> getIntolerances() {
+        return intolerances;
     }
 
-    public void setServings(BigDecimal servings) {
-        this.servings = servings;
+    public void setIntolerances(List<String> intolerances) {
+        this.intolerances = intolerances;
+    }
+
+    public List<String> getType() {
+        return type;
+    }
+
+    public void setType(List<String> type) {
+        this.type = type;
+    }
+
+    public List<String> getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(List<String> ingredients) {
+        this.ingredients = ingredients;
     }
 }

@@ -22,8 +22,8 @@ public class FavoritesRecyclerViewAdapter extends RecyclerView.Adapter<Favorites
         void onDeleteButtonPressed(int position);
 
     }
-    private List<Favorites>favList;
-    private OnItemClickListener onItemClickListener;
+    private final List<Favorites>favList;
+    private final OnItemClickListener onItemClickListener;
 
 
     public FavoritesRecyclerViewAdapter(List<Favorites> favList, OnItemClickListener onItemClickListener){

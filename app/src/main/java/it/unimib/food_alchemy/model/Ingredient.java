@@ -4,11 +4,34 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
 
+import com.google.gson.annotations.SerializedName;
+
+@Entity(tableName = "ingredients")
 public class Ingredient implements Parcelable {
 
+    @SerializedName("name")
+    @PrimaryKey
+    @NonNull
     private String title;
+
+    @SerializedName("image")
+    @ColumnInfo(name = "image")
+    private String image = null;
+
+    @SerializedName("expiry_date")
+    @ColumnInfo(name = "expiry_date")
+    @NonNull
     private String expiryDate;
+
+    @SerializedName("is_present_in_fridge")
+    @ColumnInfo(name = "is_present_in_fridge", defaultValue = "0")
+    @NonNull
+    private boolean isPresentInFridge;
 
     public String getTitle() {
         return title;
@@ -30,18 +53,30 @@ public class Ingredient implements Parcelable {
     public String toString() {
         return "Ingredient{" +
                 "title='" + title + '\'' +
+                ", image='" + image + '\'' +
                 ", expiryDate='" + expiryDate + '\'' +
+                ", presentInFridge='" + isPresentInFridge + '\'' +
                 '}';
     }
 
+    @Ignore
     public Ingredient (String title, String expiryDate)   {
         this.title = title;
         this.expiryDate = expiryDate;
     }
 
+    public Ingredient (String title, String image, String expiryDate, boolean isPresentInFridge)   {
+        this.title = title;
+        this.image = image;
+        this.expiryDate = expiryDate;
+        this.isPresentInFridge = isPresentInFridge;
+    }
+
     protected Ingredient(Parcel in) {
         title = in.readString();
+        image = in.readString();
         expiryDate = in.readString();
+        isPresentInFridge = in.readByte() != 0;
     }
 
     public static final Creator<Ingredient> CREATOR = new Creator<Ingredient>() {
@@ -64,6 +99,24 @@ public class Ingredient implements Parcelable {
     @Override
     public void writeToParcel(@NonNull Parcel parcel, int i) {
         parcel.writeString(title);
+        parcel.writeString(image);
         parcel.writeString(expiryDate);
+        parcel.writeByte((byte) (isPresentInFridge ? 1 : 0));
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public boolean getIsPresentInFridge() {
+        return isPresentInFridge;
+    }
+
+    public void setIsPresentInFridge(boolean isPresentInFridge) {
+        this.isPresentInFridge = isPresentInFridge;
     }
 }

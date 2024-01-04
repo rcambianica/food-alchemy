@@ -35,6 +35,9 @@
     <string name="reset_button">Reset</string>
     <string name="return_button">Return to login</string>
 
+    <!-- RECIPES REPOSITORY -->
+    <string name="error_retrieving_recipes">Unable to contact the server. Please try again later</string>
+
     <!--ADD AN INGREDIENT-->
     <string name="error_ingredient_message">The ingredient cannot be null!</string>
 

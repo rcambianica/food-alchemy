@@ -13,10 +13,11 @@ import androidx.room.TypeConverters;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import it.unimib.food_alchemy.model.Ingredient;
 import it.unimib.food_alchemy.model.Recipe;
 import it.unimib.food_alchemy.util.Converters;
 
-@Database(entities = {Recipe.class}, version = DATABASE_VERSION)
+@Database(entities = {Recipe.class, Ingredient.class}, version = DATABASE_VERSION)
 @TypeConverters({Converters.class})
 public abstract class RecipeRoomDatabase extends RoomDatabase{
 

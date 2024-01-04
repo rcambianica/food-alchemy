@@ -9,19 +9,26 @@ import androidx.room.Update;
 
 import java.util.List;
 
+import it.unimib.food_alchemy.model.Ingredient;
 import it.unimib.food_alchemy.model.Recipe;
 
 @Dao
 public interface RecipeDao {
-    @Query("SELECT * FROM recipes ORDER BY id")
-    List<Recipe> getAll();
-
     @Query("SELECT * FROM recipes WHERE id = :id")
     Recipe getRecipeById(long id);
 
-    @Query("SELECT * FROM recipes WHERE is_favorite = true ORDER BY id")
+    @Query("SELECT * FROM recipes ORDER BY RANDOM() LIMIT 1")
+    Recipe getRandomRecipe();
+
+    @Query("SELECT * FROM recipes WHERE is_favorite = true ORDER BY title")
     List<Recipe> getFavoriteRecipes();
 
-    @Query("UPDATE recipes SET is_favorite = :is_favorite WHERE id = :id")
-    int updateRecipeIsFavorite(long id, boolean is_favorite);
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertAll(List<Recipe> recipes);
+
+    @Update
+    int updateRecipe(Recipe recipe);
+
+    @Query("UPDATE recipes SET is_favorite = false WHERE is_favorite = true")
+    void deleteFavoriteRecipes();
 }

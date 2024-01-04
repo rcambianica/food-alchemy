@@ -53,7 +53,7 @@ public class HomeFragment extends Fragment {
     ArrayList<HomeRecipeModel> homeRecipeModels = new ArrayList<>();
 
     int[] homeRecipeImages = {R.drawable.appetizer};
-    private boolean[] buttonState = {false, false, false, false};
+    private final boolean[] buttonState = {false, false, false, false};
     private static final String TAG = HomeFragment.class.getSimpleName();
     private FragmentHomeBinding fragmentHomeBinding;
     public HomeFragment() {

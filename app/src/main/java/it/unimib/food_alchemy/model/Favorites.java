@@ -1,5 +1,8 @@
 package it.unimib.food_alchemy.model;
 
+import androidx.room.Entity;
+
+@Entity(tableName = "favorites")
 public class Favorites {
 
     private String title;
@@ -8,18 +11,11 @@ public class Favorites {
 
     private String content;
 
-    public Favorites() {}
-
     public Favorites(String title,String description, String content) {
         this.title = title;
         this.description = description;
         this.content = content;
     }
-
-    public Favorites(String author, String title) {
-        this(author, title, null);
-    }
-
 
     public String getTitle() {
         return title;
@@ -50,7 +46,7 @@ public class Favorites {
 
     @Override
     public String toString() {
-        return "News{" +
+        return "Favorite{" +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", content='" + content + '\'' +
