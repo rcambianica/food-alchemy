@@ -103,6 +103,8 @@ public class RecipeApiResponse implements Parcelable {
     }
 
     protected RecipeApiResponse(Parcel in) {
+        in.readList(results, Recipe.class.getClassLoader());
+        totalResults = in.readInt();
     }
 
     public static final Creator<RecipeApiResponse> CREATOR = new Creator<RecipeApiResponse>() {
@@ -123,6 +125,8 @@ public class RecipeApiResponse implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(@NonNull Parcel parcel, int i) {
+    public void writeToParcel(@NonNull Parcel dest, int i) {
+        dest.writeList(results);
+        dest.writeInt(totalResults);
     }
 }
