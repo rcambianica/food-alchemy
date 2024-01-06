@@ -8,7 +8,7 @@ import it.unimib.food_alchemy.model.Ingredient;
 import it.unimib.food_alchemy.model.Recipe;
 
 public interface IRecipesRepository {
-    void fetchRecipes(String query, String type, String diets, List<String> intolerances, List<String> ingredients, int page, long lastUpdate);
+    void fetchRecipes(String query, String type, String diet, List<String> intolerances, List<String> ingredients, int page, long lastUpdate);
 
     void fetchRecipe(long id);
 

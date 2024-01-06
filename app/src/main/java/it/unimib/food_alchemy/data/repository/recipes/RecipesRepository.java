@@ -37,14 +37,14 @@ public class RecipesRepository implements IRecipesRepository {
     }
 
     @Override
-    public void fetchRecipes(String query, String type, String diets, List<String> intolerances, List<String> ingredients, int page, long lastUpdate) {
+    public void fetchRecipes(String query, String type, String diet, List<String> intolerances, List<String> ingredients, int page, long lastUpdate) {
         long currentTime = System.currentTimeMillis();
 
         if (currentTime - lastUpdate > REFRESH_TIMEOUT) {
             Call<RecipeApiResponse> responseCall =
                     recipesApiService.searchRecipes(
                             query,
-                            diets,
+                            diet,
                             String.join(",", intolerances),
                             String.join(",", ingredients),
                             type,
