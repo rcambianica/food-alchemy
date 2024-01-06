@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import it.unimib.food_alchemy.repository.IRecipesRepository;
+import it.unimib.food_alchemy.data.repository.recipes.IRecipesRepository;
 
 public class RecipeViewModelFactory implements ViewModelProvider.Factory {
 

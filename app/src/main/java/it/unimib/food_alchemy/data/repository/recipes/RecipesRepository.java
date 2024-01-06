@@ -1,4 +1,4 @@
-package it.unimib.food_alchemy.repository;
+package it.unimib.food_alchemy.data.repository.recipes;
 
 import static it.unimib.food_alchemy.util.Constants.RECIPES_NUMBER_PARAMETER;
 import static it.unimib.food_alchemy.util.Constants.REFRESH_TIMEOUT;
@@ -7,7 +7,6 @@ import android.app.Application;
 
 import androidx.annotation.NonNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import it.unimib.food_alchemy.BuildConfig;

@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel;
 import java.util.List;
 
 import it.unimib.food_alchemy.model.Recipe;
-import it.unimib.food_alchemy.repository.IRecipesRepository;
+import it.unimib.food_alchemy.data.repository.recipes.IRecipesRepository;
 
 public class RecipeViewModel extends ViewModel {
 

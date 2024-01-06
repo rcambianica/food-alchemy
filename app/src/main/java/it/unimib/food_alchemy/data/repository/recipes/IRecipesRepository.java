@@ -1,4 +1,4 @@
-package it.unimib.food_alchemy.repository;
+package it.unimib.food_alchemy.data.repository.recipes;
 
 import androidx.room.Query;
 
