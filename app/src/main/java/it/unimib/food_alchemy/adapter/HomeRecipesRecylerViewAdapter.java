@@ -37,7 +37,6 @@ public class HomeRecipesRecylerViewAdapter extends RecyclerView.Adapter<HomeReci
     public void onBindViewHolder(@NonNull HomeRecipesRecylerViewAdapter.MyViewHolder holder, int position) {
 
         holder.title.setText(homeRecipeModels.get(position).getRecipeTitle());
-        holder.description.setText(homeRecipeModels.get(position).getRecipeDescription());
         holder.imageView.setImageResource(homeRecipeModels.get(position).getRecipeImage());
     }
 
@@ -61,7 +60,6 @@ public class HomeRecipesRecylerViewAdapter extends RecyclerView.Adapter<HomeReci
 
             imageView = itemView.findViewById(R.id.recipe_image);
             title = itemView.findViewById(R.id.recipe_name);
-            description = itemView.findViewById(R.id.recipe_description);
         }
     }
 }

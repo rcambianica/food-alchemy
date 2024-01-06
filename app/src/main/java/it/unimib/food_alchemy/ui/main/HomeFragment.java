@@ -19,7 +19,7 @@ import static it.unimib.food_alchemy.util.Constants.VEGAN;
 import static it.unimib.food_alchemy.util.Constants.VEGETARIAN;
 import static it.unimib.food_alchemy.util.Constants.WHEAT;
 
-
+import android.widget.Button;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -52,7 +52,7 @@ public class HomeFragment extends Fragment {
 
     ArrayList<HomeRecipeModel> homeRecipeModels = new ArrayList<>();
 
-    int[] homeRecipeImages = {R.drawable.appetizer};
+    int[] homeRecipeImages = {R.drawable.arrosto};
     private final boolean[] buttonState = {false, false, false, false};
     private static final String TAG = HomeFragment.class.getSimpleName();
     private FragmentHomeBinding fragmentHomeBinding;
@@ -75,7 +75,7 @@ public class HomeFragment extends Fragment {
 
     private void setHomeRecipeModels(){
         for(int i = 0; i < 10; i++){
-            homeRecipeModels.add(new HomeRecipeModel("titolo " + i, "descrizione", homeRecipeImages[0]));
+            homeRecipeModels.add(new HomeRecipeModel("Arrosto al forno " + i, homeRecipeImages[0]));
         }
     }
 
@@ -87,43 +87,29 @@ public class HomeFragment extends Fragment {
         return fragmentHomeBinding.getRoot();
     }
 
-    private void toggleButtonChecked(final int button) {
-        switch (button) {
-            case 0:
-                if (buttonState[button]) {
-                fragmentHomeBinding.bottoneMainCourse.setBackgroundResource(R.drawable.custom_button);
+    private void toggleButtonChecked(final int clickedButton) {
+        Button[] buttons = {
+                fragmentHomeBinding.bottoneMainCourse,
+                fragmentHomeBinding.bottoneSideDish,
+                fragmentHomeBinding.bottoneDessert,
+                fragmentHomeBinding.bottoneAppetizer
+        };
+
+        for (int i = 0; i < buttons.length; i++) {
+            if (i == clickedButton) {
+                // Toggle the state for the clicked button
+                buttonState[i] = !buttonState[i];
+                if (buttonState[i]) {
+                    buttons[i].setBackgroundResource(R.drawable.custom_button_checked);
                 } else {
-                fragmentHomeBinding.bottoneMainCourse.setBackgroundResource(R.drawable.custom_button_checked);
+                    buttons[i].setBackgroundResource(R.drawable.custom_button);
                 }
-                buttonState[button] = !buttonState[button];
-                break;
-            case 1:
-                if (buttonState[button]) {
-                    fragmentHomeBinding.bottoneSideDish.setBackgroundResource(R.drawable.custom_button);
-                } else {
-                    fragmentHomeBinding.bottoneSideDish.setBackgroundResource(R.drawable.custom_button_checked);
-                }
-                buttonState[button] = !buttonState[button];
-                break;
-            case 2:
-                if (buttonState[button]) {
-                    fragmentHomeBinding.bottoneDessert.setBackgroundResource(R.drawable.custom_button);
-                } else {
-                    fragmentHomeBinding.bottoneDessert.setBackgroundResource(R.drawable.custom_button_checked);
-                }
-                buttonState[button] = !buttonState[button];
-                break;
-            case 3:
-                if (buttonState[button]) {
-                    fragmentHomeBinding.bottoneAppetizer.setBackgroundResource(R.drawable.custom_button);
-                } else {
-                    fragmentHomeBinding.bottoneAppetizer.setBackgroundResource(R.drawable.custom_button_checked);
-                }
-                buttonState[button] = !buttonState[button];
-                break;
+            } else {
+                // Turn off other buttons
+                buttonState[i] = false;
+                buttons[i].setBackgroundResource(R.drawable.custom_button);
+            }
         }
-
-
     }
 
     @Override

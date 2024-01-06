@@ -34,7 +34,7 @@ android {
                 spoonacularAPIKey = keystoreProperties["SPOONACULAR_API_KEY"] as String
             }
         }
-        buildConfigField("String", "SPOONACULAR_API_KEY", "\"${spoonacularAPIKey}\"")
+        buildConfigField("String", "SPOONACULAR_API_KEY", spoonacularAPIKey)
     }
     
     buildTypes {

@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *  Class to represent the recipes of SpoonacularAPI
+ *  Class to  represent the recipes of SpoonacularAPI
  */
 @Entity(tableName = "recipes")
 public class Recipe implements Parcelable {
