@@ -14,6 +14,9 @@ import it.unimib.food_alchemy.model.Recipe;
 
 @Dao
 public interface RecipeDao {
+    @Query("SELECT * FROM recipes")
+    List<Recipe> getAll();
+
     @Query("SELECT * FROM recipes WHERE id = :id")
     Recipe getRecipeById(long id);
 
@@ -24,10 +27,13 @@ public interface RecipeDao {
     List<Recipe> getFavoriteRecipes();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertAll(List<Recipe> recipes);
+    List<Long> insertAll(List<Recipe> recipes);
 
     @Update
     int updateRecipe(Recipe recipe);
+
+    @Update
+    int updateRecipes(List<Recipe> recipes);
 
     @Query("UPDATE recipes SET is_favorite = false WHERE is_favorite = true")
     void deleteFavoriteRecipes();

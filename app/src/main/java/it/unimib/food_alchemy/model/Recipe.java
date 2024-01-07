@@ -57,11 +57,14 @@ public class Recipe implements Parcelable {
     @NonNull
     private boolean isFavorite;
 
+    @ColumnInfo(name = "is_synchronized")
+    private boolean isSynchronized;
+
     public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -183,5 +186,13 @@ public class Recipe implements Parcelable {
 
     public void setIngredients(List<String> ingredients) {
         this.ingredients = ingredients;
+    }
+
+    public boolean isSynchronized() {
+        return isSynchronized;
+    }
+
+    public void setSynchronized(boolean aSynchronized) {
+        isSynchronized = aSynchronized;
     }
 }
