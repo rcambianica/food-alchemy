@@ -49,9 +49,9 @@ public class Recipe implements Parcelable {
     @SerializedName("dishTypes")
     private List<String> type = new ArrayList<String>();
 
-    @SerializedName("ingredients")
+    @SerializedName("extendedIngredients")
     @NonNull
-    private List<String> ingredients = new ArrayList<String>();
+    private List<Ingredient> ingredients = new ArrayList<Ingredient>();
 
     @ColumnInfo(name = "is_favorite", defaultValue = "0")
     @NonNull
@@ -119,7 +119,7 @@ public class Recipe implements Parcelable {
         source.readStringList(this.diets);
         source.readStringList(this.intolerances);
         source.readStringList(this.type);
-        source.readStringList(this.ingredients);
+        source.readList(this.ingredients, Ingredient.class.getClassLoader());
         this.isFavorite = source.readByte() != 0;
     }
 
@@ -180,11 +180,11 @@ public class Recipe implements Parcelable {
         this.type = type;
     }
 
-    public List<String> getIngredients() {
+    public List<Ingredient> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(List<String> ingredients) {
+    public void setIngredients(List<Ingredient> ingredients) {
         this.ingredients = ingredients;
     }
 

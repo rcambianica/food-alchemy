@@ -19,17 +19,16 @@ public class Ingredient implements Parcelable {
     @NonNull
     private String title;
 
-    @SerializedName("image")
-    @ColumnInfo(name = "image")
+    private float amount;
+
+    private String unit;
+
     private String image = null;
 
-    @SerializedName("expiry_date")
-    @ColumnInfo(name = "expiry_date")
     @NonNull
     private String expiryDate;
 
-    @SerializedName("is_present_in_fridge")
-    @ColumnInfo(name = "is_present_in_fridge", defaultValue = "0")
+    @ColumnInfo(defaultValue = "0")
     @NonNull
     private boolean isPresentInFridge;
 
@@ -51,12 +50,7 @@ public class Ingredient implements Parcelable {
 
     @Override
     public String toString() {
-        return "Ingredient{" +
-                "title='" + title + '\'' +
-                ", image='" + image + '\'' +
-                ", expiryDate='" + expiryDate + '\'' +
-                ", presentInFridge='" + isPresentInFridge + '\'' +
-                '}';
+        return getAmount() + " " + getUnit() + " " + getTitle();
     }
 
     @Ignore
@@ -65,7 +59,7 @@ public class Ingredient implements Parcelable {
         this.expiryDate = expiryDate;
     }
 
-    public Ingredient (String title, String image, String expiryDate, boolean isPresentInFridge)   {
+    public Ingredient (String title, String image, String expiryDate, boolean isPresentInFridge) {
         this.title = title;
         this.image = image;
         this.expiryDate = expiryDate;
@@ -118,5 +112,21 @@ public class Ingredient implements Parcelable {
 
     public void setIsPresentInFridge(boolean isPresentInFridge) {
         this.isPresentInFridge = isPresentInFridge;
+    }
+
+    public float getAmount() {
+        return amount;
+    }
+
+    public void setAmount(float amount) {
+        this.amount = amount;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
 }
