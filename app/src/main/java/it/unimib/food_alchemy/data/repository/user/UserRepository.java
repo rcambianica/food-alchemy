@@ -160,6 +160,7 @@ public class UserRepository implements IUserRepository, UserResponseCallback, Re
     @Override
     public void onSuccessLogout() {
         userMutableLiveData.postValue(new Result.UserResponseSuccess(null));
+        recipesLocalDataSource.deleteAll();
     }
 
     @Override

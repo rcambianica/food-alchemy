@@ -1,5 +1,7 @@
 package it.unimib.food_alchemy.data.source.recipes;
 
+import static it.unimib.food_alchemy.util.Constants.ENCRYPTED_DATA_FILE_NAME;
+import static it.unimib.food_alchemy.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.food_alchemy.util.Constants.LAST_UPDATE;
 import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.food_alchemy.util.Constants.UNEXPECTED_ERROR;
@@ -186,6 +188,21 @@ public class RecipesLocalDataSource extends BaseRecipesLocalDataSource{
                 RecipeApiResponse recipesApiResponse = new RecipeApiResponse();
                 recipesApiResponse.setResults(recipesList);
                 recipesCallback.onSuccessSynchronization();
+            }
+        });
+    }
+
+    @Override
+    public void deleteAll() {
+        RecipeRoomDatabase.databaseWriteExecutor.execute(() -> {
+            long recipesCounter = recipesDao.getAll().size();
+            long recipesDeletedRecipes = recipesDao.deleteAll();
+
+            // It means that everything has been deleted
+            if (recipesCounter == recipesDeletedRecipes) {
+                sharedPreferencesUtil.deleteAll(SHARED_PREFERENCES_FILE_NAME);
+                dataEncryptionUtil.deleteAll(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, ENCRYPTED_DATA_FILE_NAME);
+                recipesCallback.onSuccessDeletion();
             }
         });
     }
