@@ -26,6 +26,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavBackStackEntry;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
@@ -33,6 +34,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.chip.ChipGroup;
 
 import java.util.Set;
@@ -93,6 +95,17 @@ public class SearchFragment extends Fragment {
             }
         });
 
+        NavBackStackEntry navBackStackEntry = Navigation.
+                findNavController(view).getPreviousBackStackEntry();
+
+        // Logic to highlight the correct tab in BottomNavigationView when the user
+        // goes to NewsDetailFragment from a tab which is neither CountryNewsFragment
+        // nor FavoriteNewsFragment
+        if (navBackStackEntry != null &&
+                navBackStackEntry.getDestination().getId() == R.id.homeFragment) {
+            ((BottomNavigationView) requireActivity().findViewById(R.id.bottom_navigation)).
+                    getMenu().findItem(R.id.homeFragment).setChecked(true);
+        }
     }
 
     private void setViewsChecked()  {
