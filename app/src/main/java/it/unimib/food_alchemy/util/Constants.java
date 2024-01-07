@@ -49,6 +49,8 @@ public class Constants {
     public static final String RECIPES_ENDPOINT = "recipes/complexSearch";
     public static final String RECIPES_QUERY_PARAMETER = "query";
     public static final int RECIPES_NUMBER_PARAMETER = 10;
+
+    public static final String LAST_UPDATE = "last_update";
     public static final int REFRESH_TIMEOUT = 1000 * 60 * 60; // 1 hour in milliseconds
 
     // Constants for Room database

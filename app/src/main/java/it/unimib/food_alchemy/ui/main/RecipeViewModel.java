@@ -1,15 +1,18 @@
 package it.unimib.food_alchemy.ui.main;
 
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.List;
 
-import it.unimib.food_alchemy.model.Recipe;
 import it.unimib.food_alchemy.data.repository.recipes.IRecipesRepository;
+import it.unimib.food_alchemy.model.Recipe;
+import it.unimib.food_alchemy.model.Result;
 
 public class RecipeViewModel extends ViewModel {
 
     private final IRecipesRepository recipeRepository;
+    private MutableLiveData<Result> recipesListLiveData;
 
     public RecipeViewModel(IRecipesRepository recipeRepository) {
         this.recipeRepository = recipeRepository;
@@ -27,8 +30,8 @@ public class RecipeViewModel extends ViewModel {
         recipeRepository.fetchRandomRecipe();
     }
 
-    public void getFavoriteRecipes() {
-        recipeRepository.getFavoriteRecipes();
+    public void getFavoriteRecipes(boolean firstLoading) {
+        recipeRepository.getFavoriteRecipes(firstLoading);
     }
 
     public void updateRecipe(Recipe recipe) {

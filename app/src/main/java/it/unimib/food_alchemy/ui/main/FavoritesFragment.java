@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,33 +18,34 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.unimib.food_alchemy.R;
 import it.unimib.food_alchemy.adapter.FavoritesRecyclerViewAdapter;
+import it.unimib.food_alchemy.data.repository.recipes.IRecipesRepository;
 import it.unimib.food_alchemy.databinding.FragmentFavoritesBinding;
-import it.unimib.food_alchemy.model.Favorites;
+import it.unimib.food_alchemy.model.Recipe;
+import it.unimib.food_alchemy.util.ServiceLocator;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link FavoritesFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Fragment that shows the favorites recipes
  */
 public class FavoritesFragment extends Fragment {
 
+    private static final String TAG = FavoritesFragment.class.getSimpleName();
     private FragmentFavoritesBinding fragmentFavoritesBinding;
+    private List<Recipe> recipesList;
+    private FavoritesRecyclerViewAdapter favoritesRecyclerViewAdapter;
+    private RecipeViewModel recipesViewModel;
     public FavoritesFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     * @return A new instance of fragment FavoritesFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static FavoritesFragment newInstance() {return new FavoritesFragment();}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        recipesList= new ArrayList<>();
+        recipesViewModel = new ViewModelProvider(requireActivity()).get(RecipeViewModel.class);
     }
 
     @Override
@@ -61,23 +63,20 @@ public class FavoritesFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(requireContext());
         recyclerViewFavorites.setLayoutManager(layoutManager);
 
-        List<Favorites> favArray = new ArrayList<>();
-        for(int i=0; i<100; i++){
-            favArray.add(new Favorites("Titolo"+ i, "decription"+i, null));
-        }
 
-        FavoritesRecyclerViewAdapter adapter= new FavoritesRecyclerViewAdapter(favArray, new FavoritesRecyclerViewAdapter.OnItemClickListener() {
+         favoritesRecyclerViewAdapter =
+                 new FavoritesRecyclerViewAdapter(recipesList, new FavoritesRecyclerViewAdapter.OnItemClickListener() {
             @Override
-            public void onFavClick(Favorites favorites) {
-                Snackbar.make(view,favorites.getTitle(),Snackbar.LENGTH_SHORT).show();
+            public void onFavClick(Recipe recipe) {
+                Snackbar.make(view,recipe.getTitle(),Snackbar.LENGTH_SHORT).show();
             }
 
             @Override
             public void onDeleteButtonPressed(int position) {
-                Snackbar.make(view,"Size"+favArray.size(),Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(view,"Size"+recipesList.size(),Snackbar.LENGTH_SHORT).show();
             }
         });
-        recyclerViewFavorites.setAdapter(adapter);
+        recyclerViewFavorites.setAdapter(favoritesRecyclerViewAdapter);
 
     }
 

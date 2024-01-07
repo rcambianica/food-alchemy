@@ -7,8 +7,11 @@ import androidx.lifecycle.MutableLiveData;
 import java.util.List;
 import java.util.Set;
 
+import it.unimib.food_alchemy.data.source.recipes.BaseRecipesLocalDataSource;
+import it.unimib.food_alchemy.data.source.recipes.RecipesCallback;
 import it.unimib.food_alchemy.model.Ingredient;
 import it.unimib.food_alchemy.model.Recipe;
+import it.unimib.food_alchemy.model.RecipeApiResponse;
 import it.unimib.food_alchemy.model.Result;
 import it.unimib.food_alchemy.model.User;
 import it.unimib.food_alchemy.data.source.user.BaseUserAuthenticationRemoteDataSource;
@@ -17,31 +20,31 @@ import it.unimib.food_alchemy.data.source.user.BaseUserDataRemoteDataSource;
 /**
  * Manca implementazione repository recipes, di conseguenza anche recipeCallback etc...
  */
-public class UserRepository implements IUserRepository, UserResponseCallback/*, RecipeCallback*/{
+public class UserRepository implements IUserRepository, UserResponseCallback, RecipesCallback {
 
     private static final String TAG = UserRepository.class.getSimpleName();
 
     private final BaseUserAuthenticationRemoteDataSource userRemoteDataSource;
     private final BaseUserDataRemoteDataSource userDataRemoteDataSource;
-    //private final BaseRecipesLocalDataSource recipesLocalDataSource;
+    private final BaseRecipesLocalDataSource recipesLocalDataSource;
     private final MutableLiveData<Result> userMutableLiveData;
     private final MutableLiveData<Result> userFavoriteRecipesMutableLiveData;
     private final MutableLiveData<Result> userPreferencesMutableLiveData;
     private final MutableLiveData<Result> userFridgeItemsMutableLiveData;
 
     public UserRepository(BaseUserAuthenticationRemoteDataSource userRemoteDataSource,
-                          BaseUserDataRemoteDataSource userDataRemoteDataSource/*,
-                          BaseRecipesLocalDataSource recipesLocalDataSource*/) {
+                          BaseUserDataRemoteDataSource userDataRemoteDataSource,
+                          BaseRecipesLocalDataSource recipesLocalDataSource) {
         this.userRemoteDataSource = userRemoteDataSource;
         this.userDataRemoteDataSource = userDataRemoteDataSource;
-        //this.recipesLocalDataSource = recipesLocalDataSource;
+        this.recipesLocalDataSource = recipesLocalDataSource;
         this.userMutableLiveData = new MutableLiveData<>();
         this.userPreferencesMutableLiveData = new MutableLiveData<>();
         this.userFavoriteRecipesMutableLiveData = new MutableLiveData<>();
         this.userFridgeItemsMutableLiveData = new MutableLiveData<>();
         this.userRemoteDataSource.setUserResponseCallback(this);
         this.userDataRemoteDataSource.setUserResponseCallback(this);
-        //this.recipesLocalDataSource.setRecipesCallback(this);
+        this.recipesLocalDataSource.setRecipesCallback(this);
     }
 
     @Override
@@ -157,5 +160,65 @@ public class UserRepository implements IUserRepository, UserResponseCallback/*, 
     @Override
     public void onSuccessLogout() {
         userMutableLiveData.postValue(new Result.UserResponseSuccess(null));
+    }
+
+    @Override
+    public void onSuccessFromRemote(RecipeApiResponse recipeApiResponse, long lastUpdate) {
+
+    }
+
+    @Override
+    public void onFailureFromRemote(Exception exception) {
+
+    }
+
+    @Override
+    public void onSuccessFromLocal(RecipeApiResponse recipeApiResponse) {
+
+    }
+
+    @Override
+    public void onFailureFromLocal(Exception exception) {
+
+    }
+
+    @Override
+    public void onRecipesFavoriteStatusChanged(Recipe recipes, List<Recipe> favoriteRecipes) {
+
+    }
+
+    @Override
+    public void onRecipesFavoriteStatusChanged(List<Recipe> recipes) {
+
+    }
+
+    @Override
+    public void onDeleteFavoriteRecipesSuccess(List<Recipe> favoriteRecipes) {
+
+    }
+
+    @Override
+    public void onSuccessFromCloudReading(List<Recipe> recipes) {
+
+    }
+
+    @Override
+    public void onSuccessFromCloudWriting(Recipe recipes) {
+
+    }
+
+    @Override
+    public void onFailureFromCloud(Exception exception) {
+
+    }
+
+    @Override
+    public void onSuccessSynchronization() {
+
+    }
+
+    @Override
+    public void onSuccessDeletion() {
+
     }
 }

@@ -1,5 +1,6 @@
 package it.unimib.food_alchemy.data.source.recipes;
 
+import static it.unimib.food_alchemy.util.Constants.LAST_UPDATE;
 import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.food_alchemy.util.Constants.UNEXPECTED_ERROR;
 
@@ -12,7 +13,7 @@ import it.unimib.food_alchemy.model.RecipeApiResponse;
 import it.unimib.food_alchemy.util.DataEncryptionUtil;
 import it.unimib.food_alchemy.util.SharedPreferencesUtil;
 
-public class RecipesLocalDataSource {
+public class RecipesLocalDataSource extends BaseRecipesLocalDataSource{
 
     private final RecipeDao recipesDao;
     private final SharedPreferencesUtil sharedPreferencesUtil;
@@ -32,8 +33,9 @@ public class RecipesLocalDataSource {
      * The method is executed with an ExecutorService defined in RecipeRoomDatabase class
      * because the database access cannot been executed in the main thread.
      */
+
     @Override
-    public void getNews() {
+    public void getRecipes() {
         RecipeRoomDatabase.databaseWriteExecutor.execute(() -> {
             //TODO Fix this instruction
             RecipeApiResponse recipesApiResponse = new RecipeApiResponse();
@@ -43,22 +45,22 @@ public class RecipesLocalDataSource {
     }
 
     @Override
-    public void getFavoriteNews() {
+    public void getFavoriteRecipes() {
         RecipeRoomDatabase.databaseWriteExecutor.execute(() -> {
-            List<Recipe> favoriteNews = recipesDao.getFavoriteRecipes();
-            recipesCallback.onNewsFavoriteStatusChanged(favoriteNews);
+            List<Recipe> favoriteRecipes = recipesDao.getFavoriteRecipes();
+            recipesCallback.onRecipesFavoriteStatusChanged(favoriteRecipes);
         });
     }
 
     @Override
-    public void updateNews(Recipe recipe) {
+    public void updateRecipes(Recipe recipe) {
         RecipeRoomDatabase.databaseWriteExecutor.execute(() -> {
             if (recipe != null) {
                 int rowUpdatedCounter = recipesDao.updateRecipe(recipe);
                 // It means that the update succeeded because only one row had to be updated
                 if (rowUpdatedCounter == 1) {
-                    Recipe updatedNews = recipesDao.getRecipeById(recipe.getId());
-                    recipesCallback.onNewsFavoriteStatusChanged(updatedNews, recipesDao.getFavoriteRecipes());
+                    Recipe updatedRecipe = recipesDao.getRecipeById(recipe.getId());
+                    recipesCallback.onRecipesFavoriteStatusChanged(updatedRecipe, recipesDao.getFavoriteRecipes());
                 } else {
                     recipesCallback.onFailureFromLocal(new Exception(UNEXPECTED_ERROR));
                 }
@@ -75,18 +77,18 @@ public class RecipesLocalDataSource {
     }
 
     @Override
-    public void deleteFavoriteNews() {
+    public void deleteFavoriteRecipes() {
         RecipeRoomDatabase.databaseWriteExecutor.execute(() -> {
-            List<Recipe> favoriteNews = recipesDao.getFavoriteRecipes();
-            for (Recipe recipe : favoriteNews) {
+            List<Recipe> favoriteRecipes = recipesDao.getFavoriteRecipes();
+            for (Recipe recipe : favoriteRecipes) {
                 recipe.setFavorite(false);
             }
-            int updatedRowsNumber = recipesDao.updateRecipes(favoriteNews);
+            int updatedRowsNumber = recipesDao.updateRecipes(favoriteRecipes);
 
             // It means that the update succeeded because the number of updated rows is
             // equal to the number of the original favorite recipe
-            if (updatedRowsNumber == favoriteNews.size()) {
-                recipesCallback.onDeleteFavoriteNewsSuccess(favoriteNews);
+            if (updatedRowsNumber == favoriteRecipes.size()) {
+                recipesCallback.onDeleteFavoriteRecipesSuccess(favoriteRecipes);
             } else {
                 recipesCallback.onFailureFromLocal(new Exception(UNEXPECTED_ERROR));
             }
@@ -100,7 +102,7 @@ public class RecipesLocalDataSource {
      * @param recipesApiResponse the list of recipe to be written in the local database.
      */
     @Override
-    public void insertNews(RecipeApiResponse recipesApiResponse) {
+    public void insertRecipes(RecipeApiResponse recipesApiResponse) {
         RecipeRoomDatabase.databaseWriteExecutor.execute(() -> {
             // Reads the recipe from the database
             List<Recipe> allRecipes = recipesDao.getAll();
@@ -148,7 +150,7 @@ public class RecipesLocalDataSource {
      * @param recipesList the list of recipe to be written in the local database.
      */
     @Override
-    public void insertNews(List<Recipe> recipesList) {
+    public void insertRecipes(List<Recipe> recipesList) {
         RecipeRoomDatabase.databaseWriteExecutor.execute(() -> {
             if (recipesList != null) {
 

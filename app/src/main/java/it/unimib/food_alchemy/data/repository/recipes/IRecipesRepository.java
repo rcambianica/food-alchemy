@@ -1,20 +1,22 @@
 package it.unimib.food_alchemy.data.repository.recipes;
 
-import androidx.room.Query;
+import androidx.lifecycle.MutableLiveData;
 
 import java.util.List;
 
-import it.unimib.food_alchemy.model.Ingredient;
 import it.unimib.food_alchemy.model.Recipe;
+import it.unimib.food_alchemy.model.Result;
 
 public interface IRecipesRepository {
-    void fetchRecipes(String query, String type, String diet, List<String> intolerances, List<String> ingredients, int page, long lastUpdate);
+    MutableLiveData<Result> fetchRecipes(String query, String type, String diet, List<String> intolerances, List<String> ingredients, int page, long lastUpdate);
+
+    void fetchRecipes(String query, String type, String diet, List<String> intolerances, List<String> ingredients, int page);
 
     void fetchRecipe(long id);
 
     void fetchRandomRecipe();
 
-    void getFavoriteRecipes();
+    MutableLiveData<Result> getFavoriteRecipes(boolean firstLoading);
 
     void updateRecipe(Recipe recipe);
 

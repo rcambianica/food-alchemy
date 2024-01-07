@@ -2,10 +2,10 @@ import java.io.FileInputStream
 import java.util.Properties
 
 // Source: https://developer.android.com/studio/publish/app-signing#kts
-var spoonacularAPIKey: String = ""
-val keystorePropertiesFile: File = rootProject.file("keystore.properties")
-val keystoreProperties: Properties = Properties()
-keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+val localPropertiesFile: File = rootProject.file("local.properties")
+val localProperties: Properties = Properties()
+localProperties.load(FileInputStream(localPropertiesFile))
+
 
 plugins {
     id("com.android.application")
@@ -29,12 +29,7 @@ android {
             useSupportLibrary = true
         }
 
-        signingConfigs{
-            create("config") {
-                spoonacularAPIKey = keystoreProperties["SPOONACULAR_API_KEY"] as String
-            }
-        }
-        buildConfigField("String", "SPOONACULAR_API_KEY", "\"${spoonacularAPIKey}\"")
+        resValue("string","spoonacular_api_key", localProperties.getProperty("spoonacular_api_key",""))
     }
     
     buildTypes {

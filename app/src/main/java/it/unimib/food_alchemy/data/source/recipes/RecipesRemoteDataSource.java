@@ -5,6 +5,8 @@ import static it.unimib.food_alchemy.util.Constants.RETROFIT_ERROR;
 
 import androidx.annotation.NonNull;
 
+import java.util.List;
+
 import it.unimib.food_alchemy.data.service.SpoonacularApiService;
 import it.unimib.food_alchemy.model.RecipeApiResponse;
 import it.unimib.food_alchemy.util.ServiceLocator;
@@ -12,7 +14,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class RecipesRemoteDataSource {
+public class RecipesRemoteDataSource extends BaseRecipesRemoteDataSource{
     private final SpoonacularApiService recipesApiService;
     private final String apiKey;
 
@@ -21,6 +23,21 @@ public class RecipesRemoteDataSource {
         this.recipesApiService = ServiceLocator.getInstance().getSpoonacularApiService();
     }
 
+    @Override
+    public void getRecipes(String query, String type, String diet, List<String> intolerances, List<String> ingredients, int page) {
+        //Call<RecipeApiResponse> recipeResponseCall = recipesApiService.searchRecipes(query,diet,intolerances,ingredients,page);
+    }
+
+    @Override
+    public void getRecipe(long id) {
+
+    }
+
+    @Override
+    public void getRandomRecipe() {
+
+    }
+/*
     @Override
     public void getNews(String country, int page) {
         Call<RecipeApiResponse> newsResponseCall = recipesApiService.getNews(country, TOP_HEADLINES_PAGE_SIZE_VALUE, page, apiKey);
@@ -42,5 +59,5 @@ public class RecipesRemoteDataSource {
                 recipesCallback.onFailureFromRemote(new Exception(RETROFIT_ERROR));
             }
         });
-    }
+    }*/
 }

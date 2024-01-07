@@ -4,7 +4,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,22 +12,24 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import it.unimib.food_alchemy.R;
-import it.unimib.food_alchemy.model.Favorites;
+import it.unimib.food_alchemy.model.Recipe;
 
 public class FavoritesRecyclerViewAdapter extends RecyclerView.Adapter<FavoritesRecyclerViewAdapter.Holder>{
 
-    public interface OnItemClickListener{
-        void onFavClick(Favorites favorites);
-        void onDeleteButtonPressed(int position);
-
-    }
-    private final List<Favorites>favList;
+    private final List<Recipe> recipesList;
     private final OnItemClickListener onItemClickListener;
 
 
-    public FavoritesRecyclerViewAdapter(List<Favorites> favList, OnItemClickListener onItemClickListener){
+    public interface OnItemClickListener{
+        void onFavClick(Recipe recipe);
+        void onDeleteButtonPressed(int position);
+
+    }
+
+
+    public FavoritesRecyclerViewAdapter(List<Recipe> recipesList, OnItemClickListener onItemClickListener){
         this.onItemClickListener=onItemClickListener;
-        this.favList= favList;
+        this.recipesList = recipesList;
     }
     @NonNull
     @Override
@@ -39,13 +40,13 @@ public class FavoritesRecyclerViewAdapter extends RecyclerView.Adapter<Favorites
 
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int position) {
-        holder.bind(favList.get(position));
+        holder.bind(recipesList.get(position));
     }
 
     @Override
     public int getItemCount() {
-       if(favList!=null)
-           return favList.size();
+       if(recipesList !=null)
+           return recipesList.size();
        else
            return 0;
     }
@@ -64,19 +65,18 @@ public class FavoritesRecyclerViewAdapter extends RecyclerView.Adapter<Favorites
             buttonDelete.setOnClickListener(this);
         }
 
-        public void bind (Favorites favorites){
-            textTitle.setText(favorites.getTitle());
-            textDescription.setText(favorites.getDescription());
+        public void bind (Recipe recipe){
+            textTitle.setText(recipe.getTitle());
         }
 
         @Override
         public void onClick(View view) {
             if(view.getId()==R.id.delete){
-                favList.remove(getAdapterPosition());
+                recipesList.remove(getAdapterPosition());
                 notifyItemRemoved(getAdapterPosition());
                 onItemClickListener.onDeleteButtonPressed(getAdapterPosition());
             } else {
-                onItemClickListener.onFavClick(favList.get(getAdapterPosition()));
+                onItemClickListener.onFavClick(recipesList.get(getAdapterPosition()));
                 }
 
         }
