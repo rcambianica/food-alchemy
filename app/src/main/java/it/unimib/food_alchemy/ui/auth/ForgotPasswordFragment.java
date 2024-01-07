@@ -38,7 +38,6 @@ public class ForgotPasswordFragment extends Fragment {
      *
      * @return A new instance of fragment ForgotPasswordFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static ForgotPasswordFragment newInstance() {
         ForgotPasswordFragment fragment = new ForgotPasswordFragment();
         return fragment;
@@ -72,7 +71,7 @@ public class ForgotPasswordFragment extends Fragment {
         });
 
         fragmentForgotPasswordBinding.buttonReturnLogin.setOnClickListener(v -> {
-            Navigation.findNavController(requireView()).navigate(R.id.action_forgotPasswordFragment_to_loginFragment);
+            Navigation.findNavController(requireView()).navigateUp();
         });
     }
 

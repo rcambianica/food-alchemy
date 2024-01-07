@@ -11,10 +11,20 @@
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_homeFragment_to_searchFragment"
-            app:destination="@id/searchFragment" />
+            app:destination="@id/searchFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@id/homeFragment"/>
         <action
             android:id="@+id/action_homeFragment_to_recipeFragment"
-            app:destination="@id/recipeFragment" />
+            app:destination="@id/recipeFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@id/homeFragment" />
     </fragment>
     <fragment
         android:id="@+id/favoritesFragment"
@@ -32,7 +42,8 @@
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@id/fridgeFragment"/>
     </fragment>
     <fragment
         android:id="@+id/accountFragment"
@@ -70,30 +81,14 @@
         android:id="@+id/addIngredientFragment"
         android:name="it.unimib.food_alchemy.ui.main.AddIngredientFragment"
         android:label="@string/fragment_add_ingredient"
-        tools:layout="@layout/fragment_add_ingredient" >
-        <action
-            android:id="@+id/action_addIngredientFragment_to_fridgeFragment"
-            app:destination="@id/fridgeFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
-    </fragment>
+        tools:layout="@layout/fragment_add_ingredient" />
     <fragment
         android:id="@+id/searchFragment"
         android:name="it.unimib.food_alchemy.ui.main.SearchFragment"
         android:label="fragment_search"
-        tools:layout="@layout/fragment_search" >
-        <action
-            android:id="@+id/action_searchFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_search" />
     <fragment
         android:id="@+id/recipeFragment"
         android:name="it.unimib.food_alchemy.ui.main.RecipeFragment"
-        android:label="RecipeFragment" >
-        <action
-            android:id="@+id/action_recipeFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
-    </fragment>
+        android:label="RecipeFragment" />
 </navigation>

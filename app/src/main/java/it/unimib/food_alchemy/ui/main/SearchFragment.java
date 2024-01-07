@@ -89,7 +89,7 @@ public class SearchFragment extends Fragment {
         fragmentSearchBinding.returnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Navigation.findNavController(requireView()).navigate(R.id.action_searchFragment_to_homeFragment);
+                Navigation.findNavController(requireView()).navigateUp();
             }
         });
 

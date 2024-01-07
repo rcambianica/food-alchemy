@@ -19,7 +19,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavBackStackEntry;
 import androidx.navigation.Navigation;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -94,16 +97,29 @@ public class AddIngredientFragment extends Fragment {
 
         fragmentAddIngredientBinding.spinnerButton.setText(getTodaysDate());
         fragmentAddIngredientBinding.spinnerButton.setOnClickListener(v -> datePickerDialog.show());
-        fragmentAddIngredientBinding.returnButton.setOnClickListener(v -> Navigation.findNavController(requireView()).navigate(R.id.action_addIngredientFragment_to_fridgeFragment));
+        fragmentAddIngredientBinding.returnButton.setOnClickListener(v -> {
+            Navigation.findNavController(requireView()).navigateUp();
+        });
         fragmentAddIngredientBinding.saveButton.setOnClickListener(v -> {
-
             String ingredientName = fragmentAddIngredientBinding.textInputEditTextIngredient.getText().toString().trim();
             String expiryDate = fragmentAddIngredientBinding.spinnerButton.getText().toString().trim();
             if(isIngredientOk(ingredientName))  {
                 addIngredient(ingredientName, expiryDate);
-                Navigation.findNavController(requireView()).navigate(R.id.action_addIngredientFragment_to_fridgeFragment);
+                Navigation.findNavController(requireView()).navigateUp();
             }
         });
+        NavBackStackEntry navBackStackEntry = Navigation.
+                findNavController(view).getPreviousBackStackEntry();
+
+        // Logic to highlight the correct tab in BottomNavigationView when the user
+        // goes to NewsDetailFragment from a tab which is neither CountryNewsFragment
+        // nor FavoriteNewsFragment
+        if (navBackStackEntry != null &&
+                navBackStackEntry.getDestination().getId() == R.id.fridgeFragment) {
+            ((BottomNavigationView) requireActivity().findViewById(R.id.bottom_navigation)).
+                    getMenu().findItem(R.id.fridgeFragment).setChecked(true);
+        }
+
     }
 
     private String getTodaysDate() {

@@ -115,8 +115,7 @@ public class RegistrationFragment extends Fragment {
         });
 
         fragmentRegistrationBinding.buttonSignin.setOnClickListener(v-> {
-            Navigation.findNavController(view).navigate(
-                    R.id.action_registrationFragment_to_loginFragment);
+            Navigation.findNavController(view).navigateUp();
         });
     }
 
