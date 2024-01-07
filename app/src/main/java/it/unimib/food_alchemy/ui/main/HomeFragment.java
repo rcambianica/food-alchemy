@@ -120,7 +120,12 @@ public class HomeFragment extends Fragment {
 
         setHomeRecipeModels();
 
-        HomeRecipesRecylerViewAdapter adapter = new HomeRecipesRecylerViewAdapter(requireContext(), homeRecipeModels);
+        HomeRecipesRecylerViewAdapter adapter = new HomeRecipesRecylerViewAdapter(requireContext(), homeRecipeModels, new HomeRecipesRecylerViewAdapter.OnItemClickListener() {
+            @Override
+            public void onItemCLick(int position) {
+                Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_recipeFragment);
+            }
+        });
         recipesRecyclerView.setAdapter(adapter);
         recipesRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
@@ -159,8 +164,6 @@ public class HomeFragment extends Fragment {
             }
         });
     }
-
-
 
 
     @Override

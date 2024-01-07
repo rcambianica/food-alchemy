@@ -18,11 +18,21 @@ import it.unimib.food_alchemy.ui.main.HomeFragment;
 
 public class HomeRecipesRecylerViewAdapter extends RecyclerView.Adapter<HomeRecipesRecylerViewAdapter.MyViewHolder> {
     Context context;
+
     ArrayList<HomeRecipeModel> homeRecipeModels;
-    public HomeRecipesRecylerViewAdapter(Context context, ArrayList<HomeRecipeModel> homeRecipeModels){
+
+    public interface OnItemClickListener{
+        void onItemCLick(int position);
+    }
+
+    private final OnItemClickListener onItemClickListener;
+
+    public HomeRecipesRecylerViewAdapter(Context context, ArrayList<HomeRecipeModel> homeRecipeModels, OnItemClickListener onItemClickListener){
         this.context = context;
         this.homeRecipeModels = homeRecipeModels;
+        this.onItemClickListener = onItemClickListener;
     }
+
 
 
     @NonNull
@@ -30,7 +40,7 @@ public class HomeRecipesRecylerViewAdapter extends RecyclerView.Adapter<HomeReci
     public HomeRecipesRecylerViewAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.recipes_home, parent, false);
-        return new HomeRecipesRecylerViewAdapter.MyViewHolder(view);
+        return new HomeRecipesRecylerViewAdapter.MyViewHolder(view, onItemClickListener);
     }
 
     @Override
@@ -55,11 +65,23 @@ public class HomeRecipesRecylerViewAdapter extends RecyclerView.Adapter<HomeReci
         TextView title, description;
 
 
-        public MyViewHolder(@NonNull View itemView) {
+        public MyViewHolder(@NonNull View itemView, OnItemClickListener onItemClickListener) {
             super(itemView);
 
             imageView = itemView.findViewById(R.id.recipe_image);
             title = itemView.findViewById(R.id.recipe_name);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (onItemClickListener != null){
+                        int position = getAdapterPosition();
+
+                        if(position != RecyclerView.NO_POSITION){
+                            onItemClickListener.onItemCLick(position);
+                        }
+                    }
+                }
+            });
         }
     }
 }

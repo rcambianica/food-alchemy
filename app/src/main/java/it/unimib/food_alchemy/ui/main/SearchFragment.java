@@ -26,6 +26,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
@@ -91,6 +92,7 @@ public class SearchFragment extends Fragment {
                 Navigation.findNavController(requireView()).navigate(R.id.action_searchFragment_to_homeFragment);
             }
         });
+
     }
 
     private void setViewsChecked()  {
