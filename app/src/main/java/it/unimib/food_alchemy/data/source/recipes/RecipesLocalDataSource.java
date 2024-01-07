@@ -195,8 +195,8 @@ public class RecipesLocalDataSource extends BaseRecipesLocalDataSource{
     @Override
     public void deleteAll() {
         RecipeRoomDatabase.databaseWriteExecutor.execute(() -> {
-            long recipesCounter = recipesDao.getAll().size();
-            long recipesDeletedRecipes = recipesDao.deleteAll();
+            int recipesCounter = recipesDao.getAll().size();
+            int recipesDeletedRecipes = recipesDao.deleteAll();
 
             // It means that everything has been deleted
             if (recipesCounter == recipesDeletedRecipes) {
