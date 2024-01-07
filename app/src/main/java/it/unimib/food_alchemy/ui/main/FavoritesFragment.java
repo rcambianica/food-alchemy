@@ -23,7 +23,11 @@ import it.unimib.food_alchemy.adapter.FavoritesRecyclerViewAdapter;
 import it.unimib.food_alchemy.data.repository.recipes.IRecipesRepository;
 import it.unimib.food_alchemy.databinding.FragmentFavoritesBinding;
 import it.unimib.food_alchemy.model.Recipe;
+import it.unimib.food_alchemy.model.Result;
+import it.unimib.food_alchemy.util.Constants;
+import it.unimib.food_alchemy.util.ErrorMessagesUtil;
 import it.unimib.food_alchemy.util.ServiceLocator;
+import it.unimib.food_alchemy.util.SharedPreferencesUtil;
 
 /**
  * Fragment that shows the favorites recipes
@@ -45,7 +49,10 @@ public class FavoritesFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         recipesList= new ArrayList<>();
-        recipesViewModel = new ViewModelProvider(requireActivity()).get(RecipeViewModel.class);
+        IRecipesRepository recipesRepository = ServiceLocator.getInstance().
+                getRecipesRepository(requireActivity().getApplication());
+        recipesViewModel = new ViewModelProvider(requireActivity(),
+                new RecipeViewModelFactory(recipesRepository)).get(RecipeViewModel.class);
     }
 
     @Override
@@ -78,6 +85,38 @@ public class FavoritesFragment extends Fragment {
         });
         recyclerViewFavorites.setAdapter(favoritesRecyclerViewAdapter);
 
+        SharedPreferencesUtil sharedPreferencesUtil =
+                new SharedPreferencesUtil(requireActivity().getApplication());
+
+        boolean isFirstLoading = sharedPreferencesUtil.readBooleanData(Constants.SHARED_PREFERENCES_FILE_NAME,
+                Constants.SHARED_PREFERENCES_FIRST_LOADING);
+
+        // Observe the LiveData associated with the MutableLiveData containing the favorite news
+        // returned by the method getFavoriteNewsLiveData() of NewsViewModel class.
+        // Pay attention to which LifecycleOwner you give as value to
+        // the method observe(LifecycleOwner, Observer).
+        // In this case, getViewLifecycleOwner() refers to
+        // androidx.fragment.app.FragmentViewLifecycleOwner and not to the Fragment itself.
+        // You can read more details here: https://stackoverflow.com/a/58663143/4255576
+        recipesViewModel.getFavoriteRecipesLiveData(isFirstLoading).observe(getViewLifecycleOwner(), result -> {
+            if (result != null) {
+                if (result.isSuccess()) {
+                    recipesList.clear();
+                    recipesList.addAll(((Result.RecipesResponseSuccess)result).getData().getRecipesList());
+                    favoritesRecyclerViewAdapter.notifyDataSetChanged();
+                    if (isFirstLoading) {
+                        sharedPreferencesUtil.writeBooleanData(Constants.SHARED_PREFERENCES_FILE_NAME,
+                                Constants.SHARED_PREFERENCES_FIRST_LOADING, false);
+                    }
+                } else {
+                    ErrorMessagesUtil errorMessagesUtil =
+                            new ErrorMessagesUtil(requireActivity().getApplication());
+                    Snackbar.make(view, errorMessagesUtil.
+                                    getErrorMessage(((Result.Error)result).getMessage()),
+                            Snackbar.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     @Override

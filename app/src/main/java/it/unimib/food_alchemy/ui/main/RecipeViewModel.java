@@ -9,37 +9,88 @@ import it.unimib.food_alchemy.data.repository.recipes.IRecipesRepository;
 import it.unimib.food_alchemy.model.Recipe;
 import it.unimib.food_alchemy.model.Result;
 
+/**
+ * ViewModel to manage the list of Recipes and the list of favorite Recipes
+ */
 public class RecipeViewModel extends ViewModel {
 
-    private final IRecipesRepository recipeRepository;
+    private static final String TAG = RecipeViewModel.class.getSimpleName();
+
+    private final IRecipesRepository recipesRepository;
+    private boolean firstLoading;
     private MutableLiveData<Result> recipesListLiveData;
+    private MutableLiveData<Result> favoriteRecipesListLiveData;
 
-    public RecipeViewModel(IRecipesRepository recipeRepository) {
-        this.recipeRepository = recipeRepository;
+    public RecipeViewModel(IRecipesRepository recipesRepository)    {
+        this.recipesRepository = recipesRepository;
     }
 
-    public void fetchRecipes(String query, String type, String diets, List<String> intolerances, List<String> ingredients, int page, long lastUpdate) {
-        recipeRepository.fetchRecipes(query, type, diets, intolerances, ingredients, page, lastUpdate);
+    /**
+     * Return the LiveData object associated with the recipes list to the
+     * Fragment/Activity.
+     * @return The LiveData object associated with the recipes list.
+     */
+    public MutableLiveData<Result> getRecipes() {
+        if(recipesListLiveData == null) {
+            //fetchRecipes();
+        }
+        return recipesListLiveData;
     }
 
-    public void fetchRecipe(long id) {
-        recipeRepository.fetchRecipe(id);
+    /**
+     * Returns the LiveData object associated with the
+     * list of favorite recipes to the Fragment/Activity.
+     * @return The LiveData object associated with the list of favorite recipes.
+     */
+    public MutableLiveData<Result> getFavoriteRecipesLiveData(boolean isFirstLoading) {
+        if (favoriteRecipesListLiveData == null) {
+            getFavoriteRecipes(isFirstLoading);
+        }
+        return favoriteRecipesListLiveData;
     }
 
-    public void fetchRandomRecipe() {
-        recipeRepository.fetchRandomRecipe();
-    }
-
-    public void getFavoriteRecipes(boolean firstLoading) {
-        recipeRepository.getFavoriteRecipes(firstLoading);
-    }
-
+    /**
+     * Updates the recipe status.
+     * @param recipe The recipe to be updated.
+     */
     public void updateRecipe(Recipe recipe) {
-        recipeRepository.updateRecipe(recipe);
+        recipesRepository.updateRecipe(recipe);
     }
 
-    public void deleteFavoriteRecipes() {
-        recipeRepository.deleteFavoriteRecipes();
+    //capire bene a cosa servono le due versioni di fetchNews
+
+    /**
+     * It uses the Repository to get the list of favorite recipes
+     * and to associate it with the LiveData object.
+     */
+    private void getFavoriteRecipes(boolean firstLoading)   {
+        favoriteRecipesListLiveData = recipesRepository.getFavoriteRecipes(firstLoading);
+    }
+    /**
+     * Removes the recipe from the list of favorite recipes.
+     * @param recipe The recipe to be removed from the list of favorite recipes.
+     */
+    public void removeFromFavorite(Recipe recipe) {
+        recipesRepository.updateRecipe(recipe);
+    }
+
+    /**
+     * Clears the list of favorite recipes.
+     */
+    public void deleteAllFavoriteRecipes() {
+        recipesRepository.deleteFavoriteRecipes();
+    }
+
+    public boolean isFirstLoading() {
+        return firstLoading;
+    }
+
+    public void setFirstLoading(boolean firstLoading) {
+        this.firstLoading = firstLoading;
+    }
+
+    public MutableLiveData<Result> getRecipesResponseLiveData() {
+        return recipesListLiveData;
     }
 }
 

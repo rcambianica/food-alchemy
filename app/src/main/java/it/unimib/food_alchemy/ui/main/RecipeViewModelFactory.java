@@ -6,6 +6,10 @@ import androidx.lifecycle.ViewModelProvider;
 
 import it.unimib.food_alchemy.data.repository.recipes.IRecipesRepository;
 
+/**
+ * Custom ViewModelProvider to be able to have a custom constructor
+ * for the NewsViewModel class.
+ */
 public class RecipeViewModelFactory implements ViewModelProvider.Factory {
 
     private final IRecipesRepository recipeRepository;
