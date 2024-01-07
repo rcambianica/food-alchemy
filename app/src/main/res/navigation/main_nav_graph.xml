@@ -86,9 +86,26 @@
         android:id="@+id/searchFragment"
         android:name="it.unimib.food_alchemy.ui.main.SearchFragment"
         android:label="fragment_search"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_searchFragment_to_randomFragment"
+            app:destination="@id/randomFragment" />
+    </fragment>
     <fragment
         android:id="@+id/recipeFragment"
         android:name="it.unimib.food_alchemy.ui.main.RecipeFragment"
         android:label="RecipeFragment" />
+    <fragment
+        android:id="@+id/randomFragment"
+        android:name="it.unimib.food_alchemy.ui.main.RandomFragment"
+        android:label="RandomFragment" >
+        <action
+            android:id="@+id/action_randomFragment_to_recipeFragment"
+            app:destination="@id/recipeFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@id/randomFragment"/>
+    </fragment>
 </navigation>

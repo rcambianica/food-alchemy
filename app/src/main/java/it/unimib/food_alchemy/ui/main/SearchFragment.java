@@ -88,6 +88,13 @@ public class SearchFragment extends Fragment {
 
         setViewsChecked();
 
+        fragmentSearchBinding.searchButtonDirect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Navigation.findNavController(requireView()).navigate(R.id.action_searchFragment_to_randomFragment);
+            }
+        });
+
         fragmentSearchBinding.returnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
