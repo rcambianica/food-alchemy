@@ -14,11 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import it.unimib.food_alchemy.R;
-import it.unimib.food_alchemy.adapter.HomeRecipesRecylerViewAdapter;
+import it.unimib.food_alchemy.adapter.RecipesRecyclerViewAdapter;
 import it.unimib.food_alchemy.databinding.FragmentRandomBinding;
-import it.unimib.food_alchemy.model.HomeRecipeModel;
+import it.unimib.food_alchemy.model.Recipe;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,11 +28,9 @@ import it.unimib.food_alchemy.model.HomeRecipeModel;
  */
 public class RandomFragment extends Fragment {
 
-    ArrayList<HomeRecipeModel> homeRecipeModels = new ArrayList<>();
-
-    int[] homeRecipeImages = {R.drawable.arrosto};
-
     private FragmentRandomBinding fragmentRandomBinding;
+    List<Recipe> recipeList;
+    private RecipeViewModel recipeViewModel;
 
     public RandomFragment() {
         // Required empty public constructor
@@ -42,7 +41,7 @@ public class RandomFragment extends Fragment {
      * this fragment using the provided parameters.
      * @return A new instance of fragment RandomFragment.
      */
-    // TODO: Rename and change types and number of parameters
+
     public static RandomFragment newInstance() {
         return new RandomFragment();
     }
@@ -50,6 +49,7 @@ public class RandomFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        recipeList = new ArrayList<>();
     }
 
     @Override
@@ -66,22 +66,21 @@ public class RandomFragment extends Fragment {
 
         RecyclerView randomRecipesRecyclerView = fragmentRandomBinding.randomRecyclerview;
 
-        setRandomRecipeModels();
 
-        HomeRecipesRecylerViewAdapter adapter = new HomeRecipesRecylerViewAdapter(requireContext(), homeRecipeModels, new HomeRecipesRecylerViewAdapter.OnItemClickListener() {
+
+        RecipesRecyclerViewAdapter adapter = new RecipesRecyclerViewAdapter(requireActivity().getApplication(), recipeList, new RecipesRecyclerViewAdapter.OnItemClickListener() {
             @Override
-            public void onItemCLick(int position) {
+            public void onRecipesItemClick(Recipe recipe) {
                 Navigation.findNavController(requireView()).navigate(R.id.action_randomFragment_to_recipeFragment);
+            }
+
+            @Override
+            public void onStarButtonPressed(int position) {
+
             }
         });
         randomRecipesRecyclerView.setAdapter(adapter);
         randomRecipesRecyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
-    }
-
-    private void setRandomRecipeModels(){
-        for(int i = 0; i < 10; i++){
-            homeRecipeModels.add(new HomeRecipeModel("Arrosto al forno " + i, homeRecipeImages[0]));
-        }
     }
 
     @Override

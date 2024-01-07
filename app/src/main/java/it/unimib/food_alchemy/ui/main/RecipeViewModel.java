@@ -23,6 +23,7 @@ public class RecipeViewModel extends ViewModel {
 
     public RecipeViewModel(IRecipesRepository recipesRepository)    {
         this.recipesRepository = recipesRepository;
+        this.firstLoading = true;
     }
 
     /**
@@ -30,9 +31,9 @@ public class RecipeViewModel extends ViewModel {
      * Fragment/Activity.
      * @return The LiveData object associated with the recipes list.
      */
-    public MutableLiveData<Result> getRecipes() {
+    public MutableLiveData<Result> getRecipes(String query, String type, String diet, List<String> intolerances, List<String> ingredients, int page, long lastUpdate) {
         if(recipesListLiveData == null) {
-            //fetchRecipes();
+            fetchRecipes(query, type, diet, intolerances, ingredients, page, lastUpdate);
         }
         return recipesListLiveData;
     }
@@ -57,7 +58,9 @@ public class RecipeViewModel extends ViewModel {
         recipesRepository.updateRecipe(recipe);
     }
 
-    //capire bene a cosa servono le due versioni di fetchNews
+    public void fetchRecipes(String query, String type, String diet, List<String> intolerances, List<String> ingredients, int page, long lastUpdate)    {
+        recipesRepository.fetchRecipes(query, type, diet, intolerances, ingredients, page);
+    }
 
     /**
      * It uses the Repository to get the list of favorite recipes

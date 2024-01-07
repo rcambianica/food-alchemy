@@ -18,8 +18,7 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.unimib.food_alchemy.R;
-import it.unimib.food_alchemy.adapter.FavoritesRecyclerViewAdapter;
+import it.unimib.food_alchemy.adapter.RecipesRecyclerViewAdapter;
 import it.unimib.food_alchemy.data.repository.recipes.IRecipesRepository;
 import it.unimib.food_alchemy.databinding.FragmentFavoritesBinding;
 import it.unimib.food_alchemy.model.Recipe;
@@ -37,7 +36,7 @@ public class FavoritesFragment extends Fragment {
     private static final String TAG = FavoritesFragment.class.getSimpleName();
     private FragmentFavoritesBinding fragmentFavoritesBinding;
     private List<Recipe> recipesList;
-    private FavoritesRecyclerViewAdapter favoritesRecyclerViewAdapter;
+    private RecipesRecyclerViewAdapter favoritesRecyclerViewAdapter;
     private RecipeViewModel recipesViewModel;
     public FavoritesFragment() {
         // Required empty public constructor
@@ -72,16 +71,15 @@ public class FavoritesFragment extends Fragment {
 
 
          favoritesRecyclerViewAdapter =
-                 new FavoritesRecyclerViewAdapter(recipesList, new FavoritesRecyclerViewAdapter.OnItemClickListener() {
-            @Override
-            public void onFavClick(Recipe recipe) {
-                Snackbar.make(view,recipe.getTitle(),Snackbar.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onDeleteButtonPressed(int position) {
-                Snackbar.make(view,"Size"+recipesList.size(),Snackbar.LENGTH_SHORT).show();
-            }
+                 new RecipesRecyclerViewAdapter(requireActivity().getApplication(), recipesList, new RecipesRecyclerViewAdapter.OnItemClickListener() {
+                     @Override
+                     public void onRecipesItemClick(Recipe recipe) {
+                         Snackbar.make(view,recipe.getTitle(),Snackbar.LENGTH_SHORT).show();
+                     }
+                     @Override
+                     public void onStarButtonPressed(int position) {
+                         Snackbar.make(view,"Size"+recipesList.size(),Snackbar.LENGTH_SHORT).show();
+                     }
         });
         recyclerViewFavorites.setAdapter(favoritesRecyclerViewAdapter);
 

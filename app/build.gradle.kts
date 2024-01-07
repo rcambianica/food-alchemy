@@ -94,6 +94,7 @@ dependencies {
     implementation("androidx.room:room-runtime:2.6.1")
     implementation("com.google.firebase:firebase-database:20.3.0")
     implementation("com.google.android.gms:play-services-auth:20.7.0")
+    implementation("com.github.bumptech.glide:glide:4.16.0")
     //libreria per il background per lo swipe degli elementi del fridge
     implementation ("it.xabaras.android:recyclerview-swipedecorator:1.4")
     implementation("androidx.core:core-i18n:1.0.0-alpha01")

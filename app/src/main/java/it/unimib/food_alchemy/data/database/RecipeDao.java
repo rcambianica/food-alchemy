@@ -39,5 +39,5 @@ public interface RecipeDao {
     void deleteFavoriteRecipes();
 
     @Query("DELETE FROM recipes")
-    long deleteAll();
+    int deleteAll();
 }
