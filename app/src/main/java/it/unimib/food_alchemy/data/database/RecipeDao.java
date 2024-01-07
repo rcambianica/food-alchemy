@@ -37,4 +37,7 @@ public interface RecipeDao {
 
     @Query("UPDATE recipes SET is_favorite = false WHERE is_favorite = true")
     void deleteFavoriteRecipes();
+
+    @Query("DELETE FROM recipes")
+    long deleteAll();
 }
