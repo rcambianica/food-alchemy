@@ -1,7 +1,5 @@
 package it.unimib.food_alchemy.data.repository.recipes;
 
-import static it.unimib.food_alchemy.util.Constants.REFRESH_TIMEOUT;
-
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
@@ -39,20 +37,6 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
         this.recipesRemoteDataSource.setRecipesCallback(this);
         this.recipesLocalDataSource.setRecipesCallback(this);
         this.backupDataSource.setRecipesCallback(this);
-    }
-
-    @Override
-    public MutableLiveData<Result> fetchRecipes(String query, String type, String diet, List<String> intolerances, List<String> ingredients, int page, long lastUpdate) {
-        long currentTime = System.currentTimeMillis();
-
-        // It gets the recipes from the Web Service if the last download
-        // of the recipes has been performed more than FRESH_TIMEOUT value ago
-        if (currentTime - lastUpdate > REFRESH_TIMEOUT) {
-            recipesRemoteDataSource.getRecipes(query, type, diet, intolerances, ingredients, page);
-        } else {
-            recipesLocalDataSource.getRecipes();
-        }
-        return allRecipesMutableLiveData;
     }
 
     public void fetchRecipes(String query, String type, String diet, List<String> intolerances, List<String> ingredients, int page) {

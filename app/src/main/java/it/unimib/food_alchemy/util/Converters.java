@@ -9,9 +9,11 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.List;
 
+import it.unimib.food_alchemy.model.Ingredient;
+
 public class Converters {
     @TypeConverter
-    public static List<String> fromString(String value) {
+    public static List<String> stringsFromString(String value) {
         Type listType = new TypeToken<List<String>>() {
         }.getType();
         return new Gson().fromJson(value, listType);
@@ -23,13 +25,18 @@ public class Converters {
         String json = gson.toJson(list);
         return json;
     }
+
     @TypeConverter
-    public static String fromBigDecimal(BigDecimal number) {
-        return number.toString();
+    public static String fromIngredients(List<Ingredient> ingredients) {
+        Gson gson = new Gson();
+        String json = gson.toJson(ingredients);
+        return json;
     }
 
     @TypeConverter
-    public static BigDecimal toString(String number) {
-        return new BigDecimal(number);
+    public static List<Ingredient> ingredientsFromString(String value) {
+        Type listType = new TypeToken<List<Ingredient>>() {
+        }.getType();
+        return new Gson().fromJson(value, listType);
     }
 }

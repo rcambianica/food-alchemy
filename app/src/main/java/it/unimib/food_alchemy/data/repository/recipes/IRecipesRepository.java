@@ -8,8 +8,6 @@ import it.unimib.food_alchemy.model.Recipe;
 import it.unimib.food_alchemy.model.Result;
 
 public interface IRecipesRepository {
-    MutableLiveData<Result> fetchRecipes(String query, String type, String diet, List<String> intolerances, List<String> ingredients, int page, long lastUpdate);
-
     void fetchRecipes(String query, String type, String diet, List<String> intolerances, List<String> ingredients, int page);
 
     void fetchRecipe(long id);
