@@ -2,6 +2,7 @@ package it.unimib.food_alchemy.util;
 
 import androidx.room.TypeConverter;
 
+import com.google.firebase.analytics.connector.AnalyticsConnector;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -9,6 +10,7 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.List;
 
+import it.unimib.food_alchemy.model.AnalyzedInstruction;
 import it.unimib.food_alchemy.model.Ingredient;
 
 public class Converters {
@@ -38,5 +40,19 @@ public class Converters {
         Type listType = new TypeToken<List<Ingredient>>() {
         }.getType();
         return new Gson().fromJson(value, listType);
+    }
+
+    @TypeConverter
+    public static AnalyzedInstruction instructionFromString(String value) {
+        Type listType = new TypeToken<List<Ingredient>>() {
+        }.getType();
+        return new Gson().fromJson(value, listType);
+    }
+
+    @TypeConverter
+    public static String fromInstruction(AnalyzedInstruction obj) {
+        Gson gson = new Gson();
+        String json = gson.toJson(obj);
+        return json;
     }
 }
