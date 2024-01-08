@@ -164,11 +164,14 @@ public class HomeFragment extends Fragment {
         });
         recipeViewModel.getRecipes(null, type,null,intolerances,null,0).observe(getViewLifecycleOwner(),
                 result -> {
+                    Log.d(TAG, "Ciao");
                     if(result.isSuccess())  {
                         RecipesResponse recipesResponse = ((Result.RecipesResponseSuccess) result).getData();
                         recipeList = recipesResponse.getRecipesList();
                         Log.d(TAG,recipeList.toString());
                         recipesRecyclerViewAdapter.notifyItemRangeInserted(0,this.recipeList.size());
+                    }   else {
+                        Log.d(TAG, "error");
                     }
                 });
 

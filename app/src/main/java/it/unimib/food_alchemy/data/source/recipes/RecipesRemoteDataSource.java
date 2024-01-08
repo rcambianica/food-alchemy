@@ -4,6 +4,8 @@ import static it.unimib.food_alchemy.util.Constants.API_KEY_ERROR;
 import static it.unimib.food_alchemy.util.Constants.RECIPES_NUMBER_PARAMETER;
 import static it.unimib.food_alchemy.util.Constants.RETROFIT_ERROR;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import java.util.List;
@@ -28,11 +30,13 @@ public class RecipesRemoteDataSource extends BaseRecipesRemoteDataSource{
     @Override
     public void getRecipes(String query, String diet, Set<String> intolerances, List<String> ingredients, String type, int page) {
 
-        Call<RecipeApiResponse> recipeResponseCall = recipesApiService.searchRecipes(query,diet,intolerances == null ? null:String.join(",", intolerances),ingredients == null ? null:String.join(",",ingredients), type, null, page*RECIPES_NUMBER_PARAMETER, RECIPES_NUMBER_PARAMETER, false, false, false, apiKey);
+        Call<RecipeApiResponse> recipeResponseCall = recipesApiService
+                .searchRecipes(query,diet,intolerances == null ? null:String.join(",", intolerances),ingredients == null ? null:String.join(",",ingredients), type, null, page*RECIPES_NUMBER_PARAMETER, RECIPES_NUMBER_PARAMETER, false, false, false, apiKey);
         recipeResponseCall.enqueue(new Callback<RecipeApiResponse>() {
             @Override
             public void onResponse(@NonNull Call<RecipeApiResponse> call, @NonNull Response<RecipeApiResponse> response) {
                 if(response.body() != null && response.isSuccessful())  {
+                    Log.d("RECIPESREMOTEDATASOURCE", response.body().toString());
                     recipesCallback.onSuccessFromRemote(response.body());
                 }   else {
                     recipesCallback.onFailureFromRemote(new Exception(API_KEY_ERROR));

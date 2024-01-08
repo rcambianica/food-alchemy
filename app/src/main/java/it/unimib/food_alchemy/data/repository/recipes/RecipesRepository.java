@@ -96,8 +96,8 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
     public void onSuccessFromLocal(RecipeApiResponse recipesApiResponse) {
         if (allRecipesMutableLiveData.getValue() != null && allRecipesMutableLiveData.getValue().isSuccess()) {
             List<Recipe> recipesList = ((Result.RecipesResponseSuccess) allRecipesMutableLiveData.getValue()).getData().getRecipesList();
-            recipesList.addAll(recipesApiResponse.getResults());
-            recipesApiResponse.setResults(recipesList);
+            recipesList.addAll(recipesApiResponse.getRecipesList());
+            recipesApiResponse.setRecipeList(recipesList);
             Result.RecipesResponseSuccess result = new Result.RecipesResponseSuccess(recipesApiResponse);
             allRecipesMutableLiveData.postValue(result);
         } else {

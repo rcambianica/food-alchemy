@@ -6,6 +6,8 @@ import static it.unimib.food_alchemy.util.Constants.LAST_UPDATE;
 import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.food_alchemy.util.Constants.UNEXPECTED_ERROR;
 
+import android.util.Log;
+
 import java.util.List;
 
 import it.unimib.food_alchemy.data.database.RecipeDao;
@@ -41,7 +43,7 @@ public class RecipesLocalDataSource extends BaseRecipesLocalDataSource{
         RecipeRoomDatabase.databaseWriteExecutor.execute(() -> {
             //TODO Fix this instruction
             RecipeApiResponse recipesApiResponse = new RecipeApiResponse();
-            recipesApiResponse.setResults(recipesDao.getAll());
+            recipesApiResponse.setRecipeList(recipesDao.getAll());
             recipesCallback.onSuccessFromLocal(recipesApiResponse);
         });
     }
@@ -109,20 +111,19 @@ public class RecipesLocalDataSource extends BaseRecipesLocalDataSource{
             // Reads the recipe from the database
             List<Recipe> allRecipes = recipesDao.getAll();
             List<Recipe> recipesList = recipesApiResponse.getRecipesList();
-
             if (recipesList != null) {
 
-                // Checks if the recipe just downloaded has already been downloaded earlier
-                // in order to preserve the recipe status (marked as favorite or not)
+                // Checks if the news just downloaded has already been downloaded earlier
+                // in order to preserve the news status (marked as favorite or not)
                 for (Recipe recipe : allRecipes) {
-                    // This check works because Recipe and NewsSource classes have their own
+                    // This check works because News and NewsSource classes have their own
                     // implementation of equals(Object) and hashCode() methods
                     if (recipesList.contains(recipe)) {
-                        // The primary key and the favorite status is contained only in the Recipe objects
-                        // retrieved from the database, and not in the Recipe objects downloaded from the
-                        // Web Service. If the same recipe was already downloaded earlier, the following
-                        // line of code replaces the the Recipe object in recipesList with the corresponding
-                        // Recipe object saved in the database, so that it has the primary key and the
+                        // The primary key and the favorite status is contained only in the News objects
+                        // retrieved from the database, and not in the News objects downloaded from the
+                        // Web Service. If the same news was already downloaded earlier, the following
+                        // line of code replaces the the News object in newsList with the corresponding
+                        // News object saved in the database, so that it has the primary key and the
                         // favorite status.
                         recipesList.set(recipesList.indexOf(recipe), recipe);
                     }
@@ -141,6 +142,9 @@ public class RecipesLocalDataSource extends BaseRecipesLocalDataSource{
                         LAST_UPDATE, String.valueOf(System.currentTimeMillis()));
 
                 recipesCallback.onSuccessFromLocal(recipesApiResponse);
+            }
+            else    {
+                Log.d("recipes_local_data_source", "recipesList nulla");
             }
         });
     }
@@ -186,7 +190,7 @@ public class RecipesLocalDataSource extends BaseRecipesLocalDataSource{
                 }
 
                 RecipeApiResponse recipesApiResponse = new RecipeApiResponse();
-                recipesApiResponse.setResults(recipesList);
+                recipesApiResponse.setRecipeList(recipesList);
                 recipesCallback.onSuccessSynchronization();
             }
         });

@@ -17,108 +17,32 @@ import io.swagger.v3.oas.annotations.media.Schema;
  *  Class to represent the API response of NewsAPI.org (https://api.spoonacular.com/)
  *  associated with the endpoint "recipes" - recipes/complexSearch.
  */
-public class RecipeApiResponse extends RecipesResponse implements Parcelable {
+public class RecipeApiResponse extends RecipesResponse{
 
-    private List<Recipe> results = new ArrayList<Recipe>();
-    private Integer totalResults = null;
-
+    private int totalResults;
     public RecipeApiResponse() {
         super();
     }
 
-    public RecipeApiResponse addResultsItem(Recipe resultsItem) {
-        this.results.add(resultsItem);
-        return this;
-    }
-
-    /**
-     * Get results
-     * @return results
-     **/
-    @Schema(required = true, description = "")
-    public List<Recipe> getResults() {
-        return results;
-    }
-
-    public void setResults(List<Recipe> results) {
-        this.results = results;
-    }
-
-    public RecipeApiResponse totalResults(Integer totalResults) {
+    public RecipeApiResponse(int totalResults, List<Recipe> recipes)    {
+        super(recipes);
         this.totalResults = totalResults;
-        return this;
     }
 
-    /**
-     * Get totalResults
-     * @return totalResults
-     **/
-    @Schema(required = true, description = "")
-    public Integer getTotalResults() {
+    public int getTotalResults() {
         return totalResults;
     }
 
-    public void setTotalResults(Integer totalResults) {
+    public void setTotalResults(int totalResults) {
         this.totalResults = totalResults;
     }
 
-
-    @Override
-    public boolean equals(java.lang.Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        RecipeApiResponse recipeApiResponse = (RecipeApiResponse) o;
-        return Objects.equals(this.results, recipeApiResponse.results) &&
-                Objects.equals(this.totalResults, recipeApiResponse.totalResults);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(results, totalResults);
-    }
-
-
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("class RecipeApiResponse {\n");
-        sb.append("    results: ").append(toIndentedString(results)).append("\n");
-        sb.append("    totalResults: ").append(toIndentedString(totalResults)).append("\n");
-        sb.append("}");
-        return sb.toString();
+        return "RecipeApiResponse{" +
+                "totalResults=" + totalResults +
+                '}';
     }
-
-    /**
-     * Convert the given object to string with each line indented by 4 spaces
-     * (except the first line).
-     */
-    private String toIndentedString(java.lang.Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
-    }
-
-    protected RecipeApiResponse(Parcel in) {
-        in.readList(results, Recipe.class.getClassLoader());
-        totalResults = in.readInt();
-    }
-
-    public static final Creator<RecipeApiResponse> CREATOR = new Creator<RecipeApiResponse>() {
-        @Override
-        public RecipeApiResponse createFromParcel(Parcel in) {
-            return new RecipeApiResponse(in);
-        }
-
-        @Override
-        public RecipeApiResponse[] newArray(int size) {
-            return new RecipeApiResponse[size];
-        }
-    };
 
     @Override
     public int describeContents() {
@@ -126,8 +50,30 @@ public class RecipeApiResponse extends RecipesResponse implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(@NonNull Parcel dest, int i) {
-        dest.writeList(results);
-        dest.writeInt(totalResults);
+    public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
+        dest.writeInt(this.totalResults);
     }
+
+    public void readFromParcel(Parcel source) {
+        super.readFromParcel(source);
+        this.totalResults = source.readInt();
+    }
+
+    protected RecipeApiResponse(Parcel in) {
+        super(in);
+        this.totalResults = in.readInt();
+    }
+
+    public static final Creator<RecipeApiResponse> CREATOR = new Creator<RecipeApiResponse>() {
+        @Override
+        public RecipeApiResponse createFromParcel(Parcel source) {
+            return new RecipeApiResponse(source);
+        }
+
+        @Override
+        public RecipeApiResponse[] newArray(int size) {
+            return new RecipeApiResponse[size];
+        }
+    };
 }

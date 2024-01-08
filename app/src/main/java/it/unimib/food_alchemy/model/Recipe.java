@@ -37,7 +37,7 @@ public class Recipe implements Parcelable {
     private String title;
 
     @SerializedName("instructions")
-    @NonNull
+
     private String instructions = null;
 
     @SerializedName("diets")

@@ -11,7 +11,7 @@ public class RecipesResponse implements Parcelable {
 
     private boolean isLoading;
 
-    @SerializedName("recipes")
+    @SerializedName("results")
     private List<Recipe> recipesList;
 
     public RecipesResponse() {}

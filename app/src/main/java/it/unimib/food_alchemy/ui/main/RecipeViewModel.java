@@ -59,7 +59,7 @@ public class RecipeViewModel extends ViewModel {
         recipesRepository.updateRecipe(recipe);
     }
 
-    public void fetchRecipes(String query, String type, String diet, Set<String> intolerances, List<String> ingredients, int page)    {
+    private void fetchRecipes(String query, String type, String diet, Set<String> intolerances, List<String> ingredients, int page)    {
         recipesListLiveData = recipesRepository.fetchRecipes(query, type, diet, intolerances, ingredients, page);
     }
 
