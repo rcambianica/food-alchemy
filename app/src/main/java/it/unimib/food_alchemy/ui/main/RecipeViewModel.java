@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.List;
+import java.util.Set;
 
 import it.unimib.food_alchemy.data.repository.recipes.IRecipesRepository;
 import it.unimib.food_alchemy.model.Recipe;
@@ -31,9 +32,9 @@ public class RecipeViewModel extends ViewModel {
      * Fragment/Activity.
      * @return The LiveData object associated with the recipes list.
      */
-    public MutableLiveData<Result> getRecipes(String query, String type, String diet, List<String> intolerances, List<String> ingredients, int page, long lastUpdate) {
+    public MutableLiveData<Result> getRecipes(String query, String type, String diet, Set<String> intolerances, List<String> ingredients, int page) {
         if(recipesListLiveData == null) {
-            fetchRecipes(query, type, diet, intolerances, ingredients, page, lastUpdate);
+            fetchRecipes(query, type, diet, intolerances, ingredients, page);
         }
         return recipesListLiveData;
     }
@@ -58,8 +59,8 @@ public class RecipeViewModel extends ViewModel {
         recipesRepository.updateRecipe(recipe);
     }
 
-    public void fetchRecipes(String query, String type, String diet, List<String> intolerances, List<String> ingredients, int page, long lastUpdate)    {
-        recipesRepository.fetchRecipes(query, type, diet, intolerances, ingredients, page);
+    public void fetchRecipes(String query, String type, String diet, Set<String> intolerances, List<String> ingredients, int page)    {
+        recipesListLiveData = recipesRepository.fetchRecipes(query, type, diet, intolerances, ingredients, page);
     }
 
     /**

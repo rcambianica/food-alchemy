@@ -18,10 +18,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
  *  associated with the endpoint "recipes" - recipes/complexSearch.
  */
 public class RecipeApiResponse extends RecipesResponse implements Parcelable {
-    @SerializedName("results")
-    private List<Recipe> results = new ArrayList<Recipe>();
 
-    @SerializedName("totalResults")
+    private List<Recipe> results = new ArrayList<Recipe>();
     private Integer totalResults = null;
 
     public RecipeApiResponse() {

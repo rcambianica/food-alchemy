@@ -1,6 +1,7 @@
 package it.unimib.food_alchemy.data.source.recipes;
 
 import java.util.List;
+import java.util.Set;
 
 public abstract class BaseRecipesRemoteDataSource {
     protected RecipesCallback recipesCallback;
@@ -9,7 +10,7 @@ public abstract class BaseRecipesRemoteDataSource {
         this.recipesCallback = recipesCallback;
     }
 
-    public abstract void getRecipes(String query, String type, String diet, List<String> intolerances, List<String> ingredients, int page);
+    public abstract void getRecipes(String query, String diet, Set<String> intolerances, List<String> ingredients, String type, int page);
 
     public abstract void getRecipe(long id);
 

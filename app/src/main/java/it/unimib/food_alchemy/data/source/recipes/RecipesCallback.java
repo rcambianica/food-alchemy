@@ -6,7 +6,7 @@ import it.unimib.food_alchemy.model.Recipe;
 import it.unimib.food_alchemy.model.RecipeApiResponse;
 
 public interface RecipesCallback {
-    void onSuccessFromRemote(RecipeApiResponse recipeApiResponse, long lastUpdate);
+    void onSuccessFromRemote(RecipeApiResponse recipeApiResponse);
     void onFailureFromRemote(Exception exception);
     void onSuccessFromLocal(RecipeApiResponse recipeApiResponse);
     void onFailureFromLocal(Exception exception);

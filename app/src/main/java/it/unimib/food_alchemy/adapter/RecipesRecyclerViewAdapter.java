@@ -26,8 +26,6 @@ public class RecipesRecyclerViewAdapter extends RecyclerView.Adapter<RecipesRecy
      */
     public interface OnItemClickListener {
         void onRecipesItemClick(Recipe recipe);
-
-        void onStarButtonPressed(int position);
     }
 
     private final List<Recipe> recipeList;

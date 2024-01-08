@@ -1,11 +1,13 @@
 package it.unimib.food_alchemy.data.source.recipes;
 
 import static it.unimib.food_alchemy.util.Constants.API_KEY_ERROR;
+import static it.unimib.food_alchemy.util.Constants.RECIPES_NUMBER_PARAMETER;
 import static it.unimib.food_alchemy.util.Constants.RETROFIT_ERROR;
 
 import androidx.annotation.NonNull;
 
 import java.util.List;
+import java.util.Set;
 
 import it.unimib.food_alchemy.data.service.SpoonacularApiService;
 import it.unimib.food_alchemy.model.RecipeApiResponse;
@@ -24,8 +26,24 @@ public class RecipesRemoteDataSource extends BaseRecipesRemoteDataSource{
     }
 
     @Override
-    public void getRecipes(String query, String type, String diet, List<String> intolerances, List<String> ingredients, int page) {
-        //Call<RecipeApiResponse> recipeResponseCall = recipesApiService.searchRecipes(query,diet,intolerances,ingredients,page);
+    public void getRecipes(String query, String diet, Set<String> intolerances, List<String> ingredients, String type, int page) {
+
+        Call<RecipeApiResponse> recipeResponseCall = recipesApiService.searchRecipes(query,diet,intolerances == null ? null:String.join(",", intolerances),ingredients == null ? null:String.join(",",ingredients), type, null, page*RECIPES_NUMBER_PARAMETER, RECIPES_NUMBER_PARAMETER, false, false, false, apiKey);
+        recipeResponseCall.enqueue(new Callback<RecipeApiResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<RecipeApiResponse> call, @NonNull Response<RecipeApiResponse> response) {
+                if(response.body() != null && response.isSuccessful())  {
+                    recipesCallback.onSuccessFromRemote(response.body());
+                }   else {
+                    recipesCallback.onFailureFromRemote(new Exception(API_KEY_ERROR));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<RecipeApiResponse> call, @NonNull Throwable t) {
+                recipesCallback.onFailureFromRemote(new Exception(API_KEY_ERROR));
+            }
+        });
     }
 
     @Override
@@ -37,27 +55,4 @@ public class RecipesRemoteDataSource extends BaseRecipesRemoteDataSource{
     public void getRandomRecipe() {
 
     }
-/*
-    @Override
-    public void getNews(String country, int page) {
-        Call<RecipeApiResponse> newsResponseCall = recipesApiService.getNews(country, TOP_HEADLINES_PAGE_SIZE_VALUE, page, apiKey);
-
-        newsResponseCall.enqueue(new Callback<RecipeApiResponse>() {
-            @Override
-            public void onResponse(@NonNull Call<RecipeApiResponse> call,
-                                   @NonNull Response<RecipeApiResponse> response) {
-
-                if (response.body() != null && response.isSuccessful()) {
-                    recipesCallback.onSuccessFromRemote(response.body(), System.currentTimeMillis());
-                } else {
-                    recipesCallback.onFailureFromRemote(new Exception(API_KEY_ERROR));
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<RecipeApiResponse> call, @NonNull Throwable t) {
-                recipesCallback.onFailureFromRemote(new Exception(RETROFIT_ERROR));
-            }
-        });
-    }*/
 }

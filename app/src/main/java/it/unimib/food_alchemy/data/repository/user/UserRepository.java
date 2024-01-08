@@ -164,7 +164,7 @@ public class UserRepository implements IUserRepository, UserResponseCallback, Re
     }
 
     @Override
-    public void onSuccessFromRemote(RecipeApiResponse recipeApiResponse, long lastUpdate) {
+    public void onSuccessFromRemote(RecipeApiResponse recipeApiResponse) {
 
     }
 

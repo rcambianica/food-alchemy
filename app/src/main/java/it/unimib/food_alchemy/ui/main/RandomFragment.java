@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavBackStackEntry;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,11 +24,6 @@ import it.unimib.food_alchemy.adapter.RecipesRecyclerViewAdapter;
 import it.unimib.food_alchemy.databinding.FragmentRandomBinding;
 import it.unimib.food_alchemy.model.Recipe;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link RandomFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class RandomFragment extends Fragment {
 
     private FragmentRandomBinding fragmentRandomBinding;
@@ -66,21 +64,26 @@ public class RandomFragment extends Fragment {
 
         RecyclerView randomRecipesRecyclerView = fragmentRandomBinding.randomRecyclerview;
 
-
-
         RecipesRecyclerViewAdapter adapter = new RecipesRecyclerViewAdapter(requireActivity().getApplication(), recipeList, new RecipesRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onRecipesItemClick(Recipe recipe) {
                 Navigation.findNavController(requireView()).navigate(R.id.action_randomFragment_to_recipeFragment);
             }
-
-            @Override
-            public void onStarButtonPressed(int position) {
-
-            }
         });
         randomRecipesRecyclerView.setAdapter(adapter);
         randomRecipesRecyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
+
+        NavBackStackEntry navBackStackEntry = Navigation.
+                findNavController(view).getPreviousBackStackEntry();
+
+        // Logic to highlight the correct tab in BottomNavigationView when the user
+        // goes to NewsDetailFragment from a tab which is neither CountryNewsFragment
+        // nor FavoriteNewsFragment
+        if (navBackStackEntry != null &&
+                navBackStackEntry.getDestination().getId() == R.id.searchFragment) {
+            ((BottomNavigationView) requireActivity().findViewById(R.id.bottom_navigation)).
+                    getMenu().findItem(R.id.homeFragment).setChecked(true);
+        }
     }
 
     @Override

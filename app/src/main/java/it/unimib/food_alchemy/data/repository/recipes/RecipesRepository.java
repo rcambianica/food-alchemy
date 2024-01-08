@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import it.unimib.food_alchemy.data.source.recipes.BaseFavoriteRecipesDataSource;
 import it.unimib.food_alchemy.data.source.recipes.BaseRecipesLocalDataSource;
@@ -39,8 +40,9 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
         this.backupDataSource.setRecipesCallback(this);
     }
 
-    public void fetchRecipes(String query, String type, String diet, List<String> intolerances, List<String> ingredients, int page) {
-        recipesRemoteDataSource.getRecipes(query, type, diet, intolerances, ingredients, page);
+    public MutableLiveData<Result> fetchRecipes(String query, String type, String diet, Set<String> intolerances, List<String> ingredients, int page) {
+        recipesRemoteDataSource.getRecipes(query, diet, intolerances, ingredients, type, page);
+        return  allRecipesMutableLiveData;
     }
 
     @Override
@@ -80,7 +82,7 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
     }
 
     @Override
-    public void onSuccessFromRemote(RecipeApiResponse RecipeApiResponse, long lastUpdate) {
+    public void onSuccessFromRemote(RecipeApiResponse RecipeApiResponse) {
         recipesLocalDataSource.insertRecipes(RecipeApiResponse);
     }
 

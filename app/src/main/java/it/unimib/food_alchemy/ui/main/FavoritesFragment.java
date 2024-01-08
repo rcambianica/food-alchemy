@@ -76,10 +76,6 @@ public class FavoritesFragment extends Fragment {
                      public void onRecipesItemClick(Recipe recipe) {
                          Snackbar.make(view,recipe.getTitle(),Snackbar.LENGTH_SHORT).show();
                      }
-                     @Override
-                     public void onStarButtonPressed(int position) {
-                         Snackbar.make(view,"Size"+recipesList.size(),Snackbar.LENGTH_SHORT).show();
-                     }
         });
         recyclerViewFavorites.setAdapter(favoritesRecyclerViewAdapter);
 
