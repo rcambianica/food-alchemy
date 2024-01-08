@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,10 +16,14 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import it.unimib.food_alchemy.R;
-import it.unimib.food_alchemy.model.Ingredient;
 import it.unimib.food_alchemy.model.Recipe;
 
-public class RecipesRecyclerViewAdapter extends RecyclerView.Adapter<RecipesRecyclerViewAdapter.RecipesViewHolder> {
+public class RecipesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    private static final int RECIPES_VIEW_TYPE = 0;
+    private static final int LOADING_VIEW_TYPE = 1;
+
+
 
     /**
      * Interface to associate a click listener with
@@ -38,18 +43,38 @@ public class RecipesRecyclerViewAdapter extends RecyclerView.Adapter<RecipesRecy
         this.onItemClickListener = onItemClickListener;
     }
 
+    @Override
+    public int getItemViewType(int position)    {
+        if(recipeList.get(position) == null)    {
+            return LOADING_VIEW_TYPE;
+        } else {
+            return RECIPES_VIEW_TYPE;
+        }
+    }
+
     @NonNull
     @Override
-    public RecipesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).
-                inflate(R.layout.recipes_home, parent, false);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = null;
 
-        return new RecipesRecyclerViewAdapter.RecipesViewHolder(view);
+        if(viewType == RECIPES_VIEW_TYPE)   {
+            view = LayoutInflater.from(parent.getContext()).
+                    inflate(R.layout.recipes_home, parent, false);
+            return new RecipesViewHolder(view);
+        }   else {
+            view = LayoutInflater.from(parent.getContext()).
+                    inflate(R.layout.recipes_loading_item, parent, false);
+            return new LoadingRecipesViewHolder(view);
+        }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecipesRecyclerViewAdapter.RecipesViewHolder holder, int position) {
-        holder.bind(recipeList.get(position));
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if(holder instanceof  RecipesViewHolder)    {
+            ((RecipesViewHolder) holder).bind(recipeList.get(position));
+        } else if (holder instanceof LoadingRecipesViewHolder)  {
+            ((LoadingRecipesViewHolder) holder).activate();
+        }
     }
 
     @Override
@@ -93,6 +118,18 @@ public class RecipesRecyclerViewAdapter extends RecyclerView.Adapter<RecipesRecy
                     onItemClickListener.onRecipesItemClick(recipeList.get(position));
                 }
             }
+        }
+    }
+    public static class LoadingRecipesViewHolder extends RecyclerView.ViewHolder {
+        private final ProgressBar progressBar;
+
+        LoadingRecipesViewHolder(View view) {
+            super(view);
+            progressBar = view.findViewById(R.id.progressbar_loading_recipes);
+        }
+
+        public void activate() {
+            progressBar.setIndeterminate(true);
         }
     }
 }

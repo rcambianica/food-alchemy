@@ -21,6 +21,8 @@ public class Constants {
     public static final String TREE_NUT = "Tree Nut";
     public static final String WHEAT = "Wheat";
 
+
+
     //Constants for SharedPreferences
     public static final String SHARED_PREFERENCES_FILE_NAME = "it.unimib.food_alchemy.preferences";
     public static final String SHARED_PREFERENCES_DIET = "diet";

@@ -18,12 +18,18 @@ public class RecipeViewModel extends ViewModel {
     private static final String TAG = RecipeViewModel.class.getSimpleName();
 
     private final IRecipesRepository recipesRepository;
+    private int page;
+    private int currentResults;
+    private int totalResults;
+    private boolean isLoading;
     private boolean firstLoading;
     private MutableLiveData<Result> recipesListLiveData;
     private MutableLiveData<Result> favoriteRecipesListLiveData;
 
     public RecipeViewModel(IRecipesRepository recipesRepository)    {
         this.recipesRepository = recipesRepository;
+        this.page = 1;
+        this.totalResults = 0;
         this.firstLoading = true;
     }
 
@@ -59,6 +65,10 @@ public class RecipeViewModel extends ViewModel {
         recipesRepository.updateRecipe(recipe);
     }
 
+    public void fetchRecipes(String query, String type, String diet, Set<String> intolerances, List<String> ingredients)  {
+        recipesRepository.fetchRecipes(query,type,diet,intolerances,ingredients,page);
+    }
+
     private void fetchRecipes(String query, String type, String diet, Set<String> intolerances, List<String> ingredients, int page)    {
         recipesListLiveData = recipesRepository.fetchRecipes(query, type, diet, intolerances, ingredients, page);
     }
@@ -83,6 +93,37 @@ public class RecipeViewModel extends ViewModel {
      */
     public void deleteAllFavoriteRecipes() {
         recipesRepository.deleteFavoriteRecipes();
+    }
+
+    public int getPage() {
+        return page;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
+    }
+
+    public int getTotalResults() {
+        return totalResults;
+    }
+
+    public void setTotalResults(int totalResults) {
+        this.totalResults = totalResults;
+    }
+    public int getCurrentResults() {
+        return currentResults;
+    }
+
+    public void setCurrentResults(int currentResults) {
+        this.currentResults = currentResults;
+    }
+
+    public boolean isLoading() {
+        return isLoading;
+    }
+
+    public void setLoading(boolean loading) {
+        isLoading = loading;
     }
 
     public boolean isFirstLoading() {
