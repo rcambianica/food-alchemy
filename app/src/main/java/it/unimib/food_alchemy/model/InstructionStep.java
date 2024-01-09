@@ -32,6 +32,8 @@ public class InstructionStep implements Parcelable {
         this.step = step;
     }
 
+    public String toString() {return step + "\n";}
+
     @Override
     public int describeContents() {
         return 0;

@@ -39,4 +39,12 @@ public class AnalyzedInstruction implements Parcelable {
             return new AnalyzedInstruction[size];
         }
     };
+
+    public List<InstructionStep> getSteps() {
+        return steps;
+    }
+
+    public void setSteps(List<InstructionStep> steps) {
+        this.steps = steps;
+    }
 }

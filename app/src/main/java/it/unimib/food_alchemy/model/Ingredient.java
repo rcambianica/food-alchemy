@@ -23,14 +23,10 @@ public class Ingredient implements Parcelable {
 
     private String unit;
 
-    private String image = null;
+    private String image;
 
     @NonNull
     private String expiryDate;
-
-    @ColumnInfo(defaultValue = "0")
-    @NonNull
-    private boolean isPresentInFridge;
 
     public String getTitle() {
         return title;
@@ -59,18 +55,18 @@ public class Ingredient implements Parcelable {
         this.expiryDate = expiryDate;
     }
 
-    public Ingredient (String title, String image, String expiryDate, boolean isPresentInFridge) {
+    public Ingredient (String title, String image, String expiryDate) {
         this.title = title;
         this.image = image;
         this.expiryDate = expiryDate;
-        this.isPresentInFridge = isPresentInFridge;
     }
 
     protected Ingredient(Parcel in) {
         title = in.readString();
+        amount = in.readFloat();
+        unit = in.readString();
         image = in.readString();
         expiryDate = in.readString();
-        isPresentInFridge = in.readByte() != 0;
     }
 
     public static final Creator<Ingredient> CREATOR = new Creator<Ingredient>() {
@@ -93,9 +89,10 @@ public class Ingredient implements Parcelable {
     @Override
     public void writeToParcel(@NonNull Parcel parcel, int i) {
         parcel.writeString(title);
+        parcel.writeFloat(amount);
+        parcel.writeString(unit);
         parcel.writeString(image);
         parcel.writeString(expiryDate);
-        parcel.writeByte((byte) (isPresentInFridge ? 1 : 0));
     }
 
     public String getImage() {
@@ -104,14 +101,6 @@ public class Ingredient implements Parcelable {
 
     public void setImage(String image) {
         this.image = image;
-    }
-
-    public boolean getIsPresentInFridge() {
-        return isPresentInFridge;
-    }
-
-    public void setIsPresentInFridge(boolean isPresentInFridge) {
-        this.isPresentInFridge = isPresentInFridge;
     }
 
     public float getAmount() {

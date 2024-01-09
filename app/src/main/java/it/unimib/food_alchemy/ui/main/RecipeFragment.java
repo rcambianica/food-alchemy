@@ -23,6 +23,7 @@ import it.unimib.food_alchemy.R;
 import it.unimib.food_alchemy.databinding.FragmentRecipeBinding;
 import it.unimib.food_alchemy.model.AnalyzedInstruction;
 import it.unimib.food_alchemy.model.Ingredient;
+import it.unimib.food_alchemy.model.InstructionStep;
 import it.unimib.food_alchemy.model.Recipe;
 
 public class RecipeFragment extends Fragment {
@@ -94,7 +95,10 @@ public class RecipeFragment extends Fragment {
     private String formatInstructions(List<AnalyzedInstruction> instructionList)  {
         String out="";
         for (int i = 0; i < instructionList.size(); i++)    {
-
+            List<InstructionStep> steps = instructionList.get(i).getSteps();
+            for (int y = 0; y < steps.size(); y++) {
+                out = String.valueOf(i) + ". " + out.concat(steps.get(y).toString());
+            }
         }
         return out;
     }
