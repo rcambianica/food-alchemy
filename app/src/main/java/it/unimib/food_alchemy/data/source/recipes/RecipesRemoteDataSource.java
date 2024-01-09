@@ -40,7 +40,7 @@ public class RecipesRemoteDataSource extends BaseRecipesRemoteDataSource{
                         offset,
                         RECIPES_NUMBER_PARAMETER,
                         false,
-                        false,
+                        true,
                         true,
                         apiKey);
         recipeResponseCall.enqueue(new Callback<RecipeApiResponse>() {
