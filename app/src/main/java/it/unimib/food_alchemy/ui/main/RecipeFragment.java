@@ -8,37 +8,32 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavBackStackEntry;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import it.unimib.food_alchemy.R;
 import it.unimib.food_alchemy.databinding.FragmentRecipeBinding;
+import it.unimib.food_alchemy.model.AnalyzedInstruction;
+import it.unimib.food_alchemy.model.Ingredient;
+import it.unimib.food_alchemy.model.Recipe;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link RecipeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class RecipeFragment extends Fragment {
+
+    private final String TAG = FragmentRecipeBinding.class.getSimpleName();
     private FragmentRecipeBinding fragmentRecipeBinding;
 
     public RecipeFragment() {
         // Required empty public constructor
     }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment RecipeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static RecipeFragment newInstance(String param1, String param2) {
+    public static RecipeFragment newInstance() {
         return new RecipeFragment();
     }
 
@@ -59,6 +54,17 @@ public class RecipeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
+        Recipe recipe = RecipeFragmentArgs.fromBundle(getArguments()).getRecipe();
+
+        Glide.with(fragmentRecipeBinding.imageRecipe.getContext())
+                .load(recipe.getImageUrl())
+                .placeholder(R.drawable.baseline_access_time_24)
+                .into(fragmentRecipeBinding.imageRecipe);
+
+        fragmentRecipeBinding.bigTitle.setText(recipe.getTitle());
+        fragmentRecipeBinding.ingredients.setText(formatIngredients(recipe.getIngredients()));
+
+        fragmentRecipeBinding.instructions.setText(formatInstructions(recipe.getInstructions()));
 
         fragmentRecipeBinding.backButton.setOnClickListener(v -> {
             Navigation.findNavController(requireView()).navigateUp();
@@ -67,20 +73,31 @@ public class RecipeFragment extends Fragment {
         NavBackStackEntry navBackStackEntry = Navigation.
                 findNavController(view).getPreviousBackStackEntry();
 
-        // Logic to highlight the correct tab in BottomNavigationView when the user
-        // goes to NewsDetailFragment from a tab which is neither CountryNewsFragment
-        // nor FavoriteNewsFragment
         if (navBackStackEntry != null &&
                 navBackStackEntry.getDestination().getId() == R.id.homeFragment) {
             ((BottomNavigationView) requireActivity().findViewById(R.id.bottom_navigation)).
                     getMenu().findItem(R.id.homeFragment).setChecked(true);
-        } /*else if (navBackStackEntry != null &&
-                navBackStackEntry.getDestination().getId() == R.id.fragment_favorite_news) {
+        } else if (navBackStackEntry != null &&
+                navBackStackEntry.getDestination().getId() == R.id.randomFragment) {
             ((BottomNavigationView) requireActivity().findViewById(R.id.bottom_navigation)).
-                    getMenu().findItem(R.id.fragment_favorite_news).setChecked(true);
-        }*/
+                    getMenu().findItem(R.id.homeFragment).setChecked(true);
+        }
     }
 
+    private String formatIngredients(List<Ingredient> ingredientList)  {
+        String out="";
+        for (int i = 0; i < ingredientList.size(); i++)    {
+            out = out.concat(ingredientList.get(i).toString());
+        }
+        return out;
+    }
+    private String formatInstructions(List<AnalyzedInstruction> instructionList)  {
+        String out="";
+        for (int i = 0; i < instructionList.size(); i++)    {
+
+        }
+        return out;
+    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();

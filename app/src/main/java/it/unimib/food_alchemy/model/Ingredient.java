@@ -50,7 +50,7 @@ public class Ingredient implements Parcelable {
 
     @Override
     public String toString() {
-        return getAmount() + " " + getUnit() + " " + getTitle();
+        return getAmount() + " " + getUnit() + " " + getTitle() + '\n';
     }
 
     @Ignore

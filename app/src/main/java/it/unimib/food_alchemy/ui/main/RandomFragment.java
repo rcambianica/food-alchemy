@@ -112,7 +112,9 @@ public class RandomFragment extends Fragment {
          recipesRecyclerViewAdapter = new RecipesRecyclerViewAdapter(requireActivity().getApplication(), recipeList, new RecipesRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onRecipesItemClick(Recipe recipe) {
-                Navigation.findNavController(requireView()).navigate(R.id.action_randomFragment_to_recipeFragment);
+                RandomFragmentDirections.ActionRandomFragmentToRecipeFragment action =
+                        RandomFragmentDirections.actionRandomFragmentToRecipeFragment(recipe);
+                Navigation.findNavController(requireView()).navigate(action);
             }
         });
         randomRecipesRecyclerView.setAdapter(recipesRecyclerViewAdapter);

@@ -102,7 +102,11 @@
     <fragment
         android:id="@+id/recipeFragment"
         android:name="it.unimib.food_alchemy.ui.main.RecipeFragment"
-        android:label="RecipeFragment" />
+        android:label="RecipeFragment">
+        <argument
+            android:name="recipe"
+            app:argType="it.unimib.food_alchemy.model.Recipe"/>
+    </fragment>
     <fragment
         android:id="@+id/randomFragment"
         android:name="it.unimib.food_alchemy.ui.main.RandomFragment"

@@ -2,7 +2,6 @@ package it.unimib.food_alchemy.data.source.recipes;
 
 import static it.unimib.food_alchemy.util.Constants.API_KEY_ERROR;
 import static it.unimib.food_alchemy.util.Constants.RECIPES_NUMBER_PARAMETER;
-import static it.unimib.food_alchemy.util.Constants.RETROFIT_ERROR;
 
 import android.util.Log;
 
@@ -47,7 +46,6 @@ public class RecipesRemoteDataSource extends BaseRecipesRemoteDataSource{
             @Override
             public void onResponse(@NonNull Call<RecipeApiResponse> call, @NonNull Response<RecipeApiResponse> response) {
                 if(response.body() != null && response.isSuccessful())  {
-                    Log.d("RECIPESREMOTEDATASOURCE", response.body().toString());
                     recipesCallback.onSuccessFromRemote(response.body());
                 } else {
                     recipesCallback.onFailureFromRemote(new Exception(API_KEY_ERROR));
