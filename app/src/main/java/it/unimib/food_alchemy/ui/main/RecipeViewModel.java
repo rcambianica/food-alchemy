@@ -65,12 +65,12 @@ public class RecipeViewModel extends ViewModel {
         recipesRepository.updateRecipe(recipe);
     }
 
-    public void fetchRecipes(String query, String type, String diet, Set<String> intolerances, List<String> ingredients)  {
-        recipesRepository.fetchRecipes(query,type,diet,intolerances,ingredients, offset);
+    public void fetchRecipes(String query, String diet, Set<String> intolerances, List<String> ingredients, String type)  {
+        recipesRepository.fetchRecipes(query,diet,intolerances,ingredients, type, offset);
     }
 
     private void fetchRecipes(String query, String type, String diet, Set<String> intolerances, List<String> ingredients, long lastUpdate)    {
-        recipesListLiveData = recipesRepository.fetchRecipes(query, type, diet, intolerances, ingredients, offset, lastUpdate);
+        recipesListLiveData = recipesRepository.fetchRecipes(query,  diet, intolerances, ingredients, type, offset, lastUpdate);
     }
 
     /**

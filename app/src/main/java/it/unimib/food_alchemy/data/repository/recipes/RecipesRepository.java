@@ -42,20 +42,21 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
         this.backupDataSource.setRecipesCallback(this);
     }
 
-    public MutableLiveData<Result> fetchRecipes(String query, String type, String diet, Set<String> intolerances, List<String> ingredients, int offset, long lastUpdate) {
+    public MutableLiveData<Result> fetchRecipes(String query, String diet, Set<String> intolerances, List<String> ingredients, String type, int offset, long lastUpdate) {
         long currentTime = System.currentTimeMillis();
 
         if(currentTime - lastUpdate > FRESH_TIMEOUT)    {
-            recipesRemoteDataSource.getRecipes(query, diet,type,intolerances,ingredients, offset);
+            recipesRemoteDataSource.getRecipes(query, diet,intolerances,ingredients, type, offset);
         } else {
+            Log.d(TAG, "CIAO");
             recipesLocalDataSource.getRecipes();
         }
         return allRecipesMutableLiveData;
     }
 
     @Override
-    public void fetchRecipes(String query, String type, String diet, Set<String> intolerances, List<String> ingredients, int offset) {
-        recipesRemoteDataSource.getRecipes(query, type, diet, intolerances, ingredients, offset);
+    public void fetchRecipes(String query, String diet, Set<String> intolerances, List<String> ingredients, String type, int offset) {
+        recipesRemoteDataSource.getRecipes(query, diet, intolerances, ingredients, type, offset);
     }
     @Override
     public void fetchRandomRecipes() {

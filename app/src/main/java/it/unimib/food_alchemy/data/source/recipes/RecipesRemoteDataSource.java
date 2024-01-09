@@ -28,7 +28,7 @@ public class RecipesRemoteDataSource extends BaseRecipesRemoteDataSource{
     }
 
     @Override
-    public void getRecipes(String query, String type, String diet, Set<String> intolerances, List<String> ingredients,  int offset) {
+    public void getRecipes(String query, String diet, Set<String> intolerances, List<String> ingredients, String type,  int offset) {
 
         Call<RecipeApiResponse> recipeResponseCall = recipesApiService
                 .searchRecipes(query,
