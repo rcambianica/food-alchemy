@@ -37,7 +37,7 @@ public class Recipe implements Parcelable {
     private String title;
 
     @SerializedName("analyzedInstructions")
-    private AnalyzedInstruction instructions;
+    private List<AnalyzedInstruction> instructions;
 
     @SerializedName("diets")
     private List<String> diets = new ArrayList<String>();
@@ -101,7 +101,7 @@ public class Recipe implements Parcelable {
         dest.writeString(this.title);
         dest.writeString(this.imageUrl);
         dest.writeString(this.imageType);
-        dest.writeParcelable(this.instructions, 0);
+        dest.writeList(this.instructions);
         dest.writeList(this.diets);
         dest.writeList(this.intolerances);
         dest.writeList(this.type);
@@ -147,11 +147,11 @@ public class Recipe implements Parcelable {
         isFavorite = favorite;
     }
 
-    public AnalyzedInstruction getInstructions() {
+    public List<AnalyzedInstruction> getInstructions() {
         return instructions;
     }
 
-    public void setInstructions(AnalyzedInstruction instructions) {
+    public void setInstructions(List<AnalyzedInstruction> instructions) {
         this.instructions = instructions;
     }
 

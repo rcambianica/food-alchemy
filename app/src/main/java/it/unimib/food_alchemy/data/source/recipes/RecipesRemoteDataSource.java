@@ -41,7 +41,7 @@ public class RecipesRemoteDataSource extends BaseRecipesRemoteDataSource{
                         RECIPES_NUMBER_PARAMETER,
                         false,
                         false,
-                        false,
+                        true,
                         apiKey);
         recipeResponseCall.enqueue(new Callback<RecipeApiResponse>() {
             @Override
@@ -49,7 +49,7 @@ public class RecipesRemoteDataSource extends BaseRecipesRemoteDataSource{
                 if(response.body() != null && response.isSuccessful())  {
                     Log.d("RECIPESREMOTEDATASOURCE", response.body().toString());
                     recipesCallback.onSuccessFromRemote(response.body());
-                }   else {
+                } else {
                     recipesCallback.onFailureFromRemote(new Exception(API_KEY_ERROR));
                 }
             }
