@@ -1,5 +1,7 @@
 package it.unimib.food_alchemy.data.repository.recipes;
 
+import static it.unimib.food_alchemy.util.Constants.FRESH_TIMEOUT;
+
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
@@ -40,19 +42,24 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
         this.backupDataSource.setRecipesCallback(this);
     }
 
-    public MutableLiveData<Result> fetchRecipes(String query, String type, String diet, Set<String> intolerances, List<String> ingredients, int page) {
-        recipesRemoteDataSource.getRecipes(query, diet, intolerances, ingredients, type, page);
-        return  allRecipesMutableLiveData;
+    public MutableLiveData<Result> fetchRecipes(String query, String type, String diet, Set<String> intolerances, List<String> ingredients, int offset, long lastUpdate) {
+        long currentTime = System.currentTimeMillis();
+
+        if(currentTime - lastUpdate > FRESH_TIMEOUT)    {
+            recipesRemoteDataSource.getRecipes(query, diet,type,intolerances,ingredients, offset);
+        } else {
+            recipesLocalDataSource.getRecipes();
+        }
+        return allRecipesMutableLiveData;
     }
 
     @Override
-    public void fetchRandomRecipe() {
+    public void fetchRecipes(String query, String type, String diet, Set<String> intolerances, List<String> ingredients, int offset) {
+        recipesRemoteDataSource.getRecipes(query, type, diet, intolerances, ingredients, offset);
+    }
+    @Override
+    public void fetchRandomRecipes() {
         recipesRemoteDataSource.getRandomRecipe();
-    }
-
-    @Override
-    public void fetchRecipe(long id) {
-        recipesRemoteDataSource.getRecipe(id);
     }
 
     @Override

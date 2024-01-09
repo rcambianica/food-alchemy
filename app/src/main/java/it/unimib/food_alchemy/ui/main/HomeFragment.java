@@ -55,7 +55,7 @@ public class HomeFragment extends Fragment {
     private static final String TAG = HomeFragment.class.getSimpleName();
     private FragmentHomeBinding fragmentHomeBinding;
     private List<Recipe> recipeList;
-    private String type = "appetizer";
+    private String type = "main course";
     private RecipeViewModel recipeViewModel;
     private RecipesRecyclerViewAdapter recipesRecyclerViewAdapter;
     private SharedPreferencesUtil sharedPreferencesUtil;
@@ -213,7 +213,7 @@ public class HomeFragment extends Fragment {
                                     recipeList.remove(recipeList.get(i));
                                 }
                             }
-                            int startIndex = (recipeViewModel.getPage()*RECIPES_NUMBER_PARAMETER) - RECIPES_NUMBER_PARAMETER;
+                            int startIndex = recipeViewModel.getOffset();
 
                             for(int i = startIndex; i < fetchedRecipes.size(); i++) {
                                 recipeList.add(fetchedRecipes.get(i));
@@ -258,8 +258,8 @@ public class HomeFragment extends Fragment {
                             recipesRecyclerViewAdapter.notifyItemRangeInserted(recipeList.size(),
                                     recipeList.size() + 1);
 
-                            int page = recipeViewModel.getPage() + 1;
-                            recipeViewModel.setPage(page);
+                            int offset = recipeViewModel.getOffset() + RECIPES_NUMBER_PARAMETER;
+                            recipeViewModel.setOffset(offset);
                             recipeViewModel.fetchRecipes(null,type,null,null,null);
                         }
                     }

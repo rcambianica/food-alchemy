@@ -18,7 +18,7 @@ public class RecipeViewModel extends ViewModel {
     private static final String TAG = RecipeViewModel.class.getSimpleName();
 
     private final IRecipesRepository recipesRepository;
-    private int page;
+    private int offset;
     private int currentResults;
     private int totalResults;
     private boolean isLoading;
@@ -28,7 +28,7 @@ public class RecipeViewModel extends ViewModel {
 
     public RecipeViewModel(IRecipesRepository recipesRepository)    {
         this.recipesRepository = recipesRepository;
-        this.page = 1;
+        this.offset = 0;
         this.totalResults = 0;
         this.firstLoading = true;
     }
@@ -38,9 +38,9 @@ public class RecipeViewModel extends ViewModel {
      * Fragment/Activity.
      * @return The LiveData object associated with the recipes list.
      */
-    public MutableLiveData<Result> getRecipes(String query, String type, String diet, Set<String> intolerances, List<String> ingredients, int page) {
+    public MutableLiveData<Result> getRecipes(String query, String type, String diet, Set<String> intolerances, List<String> ingredients, long lastUpdate) {
         if(recipesListLiveData == null) {
-            fetchRecipes(query, type, diet, intolerances, ingredients, page);
+            fetchRecipes(query, type, diet, intolerances, ingredients, lastUpdate);
         }
         return recipesListLiveData;
     }
@@ -66,11 +66,11 @@ public class RecipeViewModel extends ViewModel {
     }
 
     public void fetchRecipes(String query, String type, String diet, Set<String> intolerances, List<String> ingredients)  {
-        recipesRepository.fetchRecipes(query,type,diet,intolerances,ingredients,page);
+        recipesRepository.fetchRecipes(query,type,diet,intolerances,ingredients, offset);
     }
 
-    private void fetchRecipes(String query, String type, String diet, Set<String> intolerances, List<String> ingredients, int page)    {
-        recipesListLiveData = recipesRepository.fetchRecipes(query, type, diet, intolerances, ingredients, page);
+    private void fetchRecipes(String query, String type, String diet, Set<String> intolerances, List<String> ingredients, long lastUpdate)    {
+        recipesListLiveData = recipesRepository.fetchRecipes(query, type, diet, intolerances, ingredients, offset, lastUpdate);
     }
 
     /**
@@ -95,12 +95,12 @@ public class RecipeViewModel extends ViewModel {
         recipesRepository.deleteFavoriteRecipes();
     }
 
-    public int getPage() {
-        return page;
+    public int getOffset() {
+        return offset;
     }
 
-    public void setPage(int page) {
-        this.page = page;
+    public void setOffset(int offset) {
+        this.offset = offset;
     }
 
     public int getTotalResults() {

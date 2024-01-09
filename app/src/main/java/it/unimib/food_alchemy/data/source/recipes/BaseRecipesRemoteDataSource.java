@@ -10,7 +10,7 @@ public abstract class BaseRecipesRemoteDataSource {
         this.recipesCallback = recipesCallback;
     }
 
-    public abstract void getRecipes(String query, String diet, Set<String> intolerances, List<String> ingredients, String type, int page);
+    public abstract void getRecipes(String query, String type, String diet, Set<String> intolerances, List<String> ingredients, int offset);
 
     public abstract void getRecipe(long id);
 

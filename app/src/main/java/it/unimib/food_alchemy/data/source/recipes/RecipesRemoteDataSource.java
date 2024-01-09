@@ -28,7 +28,7 @@ public class RecipesRemoteDataSource extends BaseRecipesRemoteDataSource{
     }
 
     @Override
-    public void getRecipes(String query, String diet, Set<String> intolerances, List<String> ingredients, String type, int page) {
+    public void getRecipes(String query, String type, String diet, Set<String> intolerances, List<String> ingredients,  int offset) {
 
         Call<RecipeApiResponse> recipeResponseCall = recipesApiService
                 .searchRecipes(query,
@@ -37,11 +37,11 @@ public class RecipesRemoteDataSource extends BaseRecipesRemoteDataSource{
                         ingredients == null ? null : String.join(",",ingredients),
                         type,
                         null,
-                        page * RECIPES_NUMBER_PARAMETER,
+                        offset,
                         RECIPES_NUMBER_PARAMETER,
                         false,
                         false,
-                        true,
+                        false,
                         apiKey);
         recipeResponseCall.enqueue(new Callback<RecipeApiResponse>() {
             @Override

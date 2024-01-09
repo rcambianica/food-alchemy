@@ -53,6 +53,7 @@ public class Constants {
     public static final int RECIPES_NUMBER_PARAMETER = 10;
 
     public static final String LAST_UPDATE = "last_update";
+    public static final int FRESH_TIMEOUT = 60*60*1000;
 
     // Constants for Room database
     public static final String RECIPES_DATABASE_NAME = "recipes_db";
