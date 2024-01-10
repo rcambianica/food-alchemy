@@ -38,7 +38,7 @@ public class RecipesRemoteDataSource extends BaseRecipesRemoteDataSource{
                         null,
                         offset,
                         RECIPES_NUMBER_PARAMETER,
-                        false,
+                        true,
                         true,
                         true,
                         apiKey);
