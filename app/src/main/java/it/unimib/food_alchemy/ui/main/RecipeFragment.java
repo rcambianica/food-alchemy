@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavBackStackEntry;
 import androidx.navigation.Navigation;
 
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +18,9 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
+
 import java.util.List;
+
 
 import it.unimib.food_alchemy.R;
 import it.unimib.food_alchemy.databinding.FragmentRecipeBinding;
@@ -45,7 +48,7 @@ public class RecipeFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         fragmentRecipeBinding = FragmentRecipeBinding.inflate(inflater,container,false);
@@ -56,20 +59,19 @@ public class RecipeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
         Recipe recipe = RecipeFragmentArgs.fromBundle(getArguments()).getRecipe();
-
+        List<String> strings = formatIngredients(recipe.getIngredients());
+        Log.d(TAG, strings.toString());
         Glide.with(fragmentRecipeBinding.imageRecipe.getContext())
                 .load(recipe.getImageUrl())
                 .placeholder(R.drawable.baseline_access_time_24)
                 .into(fragmentRecipeBinding.imageRecipe);
 
         fragmentRecipeBinding.bigTitle.setText(recipe.getTitle());
-        fragmentRecipeBinding.ingredients.setText(formatIngredients(recipe.getIngredients()));
-
+        fragmentRecipeBinding.quantity.setText(strings.get(0));
+        fragmentRecipeBinding.ingredients.setText(strings.get(1));
         fragmentRecipeBinding.instructions.setText(formatInstructions(recipe.getInstructions()));
 
-        fragmentRecipeBinding.backButton.setOnClickListener(v -> {
-            Navigation.findNavController(requireView()).navigateUp();
-        });
+        fragmentRecipeBinding.backButton.setOnClickListener(v -> Navigation.findNavController(requireView()).navigateUp());
 
         NavBackStackEntry navBackStackEntry = Navigation.
                 findNavController(view).getPreviousBackStackEntry();
@@ -85,19 +87,25 @@ public class RecipeFragment extends Fragment {
         }
     }
 
-    private String formatIngredients(List<Ingredient> ingredientList)  {
-        String out="";
+    private List<String> formatIngredients(List<Ingredient> ingredientList)  {
+        List<String> strings = new ArrayList<>();
+        String amountAndUnit = "";
+        String name="";
         for (int i = 0; i < ingredientList.size(); i++)    {
-            out = out.concat(ingredientList.get(i).toString());
+            amountAndUnit = amountAndUnit.concat(ingredientList.get(i).getAmount() + " " + ingredientList.get(i).getUnit() + "\n");
+
+            name = name.concat(ingredientList.get(i).getTitle() + "\n");
         }
-        return out;
+        strings.add(amountAndUnit);
+        strings.add(name);
+        return strings;
     }
     private String formatInstructions(List<AnalyzedInstruction> instructionList)  {
         String out="";
         for (int i = 0; i < instructionList.size(); i++)    {
             List<InstructionStep> steps = instructionList.get(i).getSteps();
-            for (int y = 0; y < steps.size(); y++) {
-                out = String.valueOf(i) + ". " + out.concat(steps.get(y).toString());
+            for (int y = 1; y < steps.size(); y++) {
+                out = out.concat(y + ". " + steps.get(y).toString());
             }
         }
         return out;
