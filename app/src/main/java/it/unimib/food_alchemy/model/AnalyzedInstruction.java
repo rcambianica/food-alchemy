@@ -14,6 +14,7 @@ import java.util.List;
 public class AnalyzedInstruction implements Parcelable {
     private List<InstructionStep> steps;
 
+    public AnalyzedInstruction(){}
     protected AnalyzedInstruction(Parcel in) {
         steps = in.createTypedArrayList(InstructionStep.CREATOR);
     }

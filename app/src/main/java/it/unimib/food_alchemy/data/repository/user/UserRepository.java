@@ -18,7 +18,7 @@ import it.unimib.food_alchemy.data.source.user.BaseUserAuthenticationRemoteDataS
 import it.unimib.food_alchemy.data.source.user.BaseUserDataRemoteDataSource;
 
 /**
- * Manca implementazione repository recipes, di conseguenza anche recipeCallback etc...
+ * Repository class to get the user information.
  */
 public class UserRepository implements IUserRepository, UserResponseCallback, RecipesCallback {
 
@@ -138,7 +138,7 @@ public class UserRepository implements IUserRepository, UserResponseCallback, Re
 
     @Override
     public void onSuccessFromRemoteDatabase(List<Recipe> recipeList) {
-
+        recipesLocalDataSource.insertRecipes(recipeList);
     }
 
     @Override
@@ -159,8 +159,24 @@ public class UserRepository implements IUserRepository, UserResponseCallback, Re
 
     @Override
     public void onSuccessLogout() {
-        userMutableLiveData.postValue(new Result.UserResponseSuccess(null));
         recipesLocalDataSource.deleteAll();
+    }
+
+    @Override
+    public void onSuccessFromLocal(RecipeApiResponse recipeApiResponse) {
+        Result.RecipesResponseSuccess result = new Result.RecipesResponseSuccess(recipeApiResponse);
+        userFavoriteRecipesMutableLiveData.postValue(result);
+    }
+
+    @Override
+    public void onSuccessDeletion() {
+        Result.UserResponseSuccess result = new Result.UserResponseSuccess(null);
+        userMutableLiveData.postValue(result);
+    }
+
+    @Override
+    public void onSuccessSynchronization() {
+        userFavoriteRecipesMutableLiveData.postValue(new Result.RecipesResponseSuccess(null));
     }
 
     @Override
@@ -170,11 +186,6 @@ public class UserRepository implements IUserRepository, UserResponseCallback, Re
 
     @Override
     public void onFailureFromRemote(Exception exception) {
-
-    }
-
-    @Override
-    public void onSuccessFromLocal(RecipeApiResponse recipeApiResponse) {
 
     }
 
@@ -210,16 +221,6 @@ public class UserRepository implements IUserRepository, UserResponseCallback, Re
 
     @Override
     public void onFailureFromCloud(Exception exception) {
-
-    }
-
-    @Override
-    public void onSuccessSynchronization() {
-
-    }
-
-    @Override
-    public void onSuccessDeletion() {
 
     }
 }

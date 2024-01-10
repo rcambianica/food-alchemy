@@ -49,6 +49,7 @@ public class Ingredient implements Parcelable {
         return getAmount() + " " + getUnit() + " " + getTitle() + '\n';
     }
 
+    public Ingredient() {}
     @Ignore
     public Ingredient (String title, String expiryDate)   {
         this.title = title;

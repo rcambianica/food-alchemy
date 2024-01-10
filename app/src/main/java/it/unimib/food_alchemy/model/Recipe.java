@@ -194,4 +194,21 @@ public class Recipe implements Parcelable {
     public void setSynchronized(boolean aSynchronized) {
         isSynchronized = aSynchronized;
     }
+
+    @Override
+    public String toString() {
+        return "Recipe{" +
+                "id=" + id +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", imageType='" + imageType + '\'' +
+                ", title='" + title + '\'' +
+                ", instructions=" + instructions +
+                ", diets=" + diets +
+                ", intolerances=" + intolerances +
+                ", type=" + type +
+                ", ingredients=" + ingredients +
+                ", isFavorite=" + isFavorite +
+                ", isSynchronized=" + isSynchronized +
+                '}';
+    }
 }

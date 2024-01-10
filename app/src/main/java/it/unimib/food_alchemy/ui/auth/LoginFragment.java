@@ -33,13 +33,10 @@ import android.view.ViewGroup;
 
 
 import com.google.android.gms.auth.api.identity.BeginSignInRequest;
-import com.google.android.gms.auth.api.identity.BeginSignInResult;
 import com.google.android.gms.auth.api.identity.Identity;
 import com.google.android.gms.auth.api.identity.SignInClient;
 import com.google.android.gms.auth.api.identity.SignInCredential;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
 
 
@@ -47,6 +44,7 @@ import org.apache.commons.validator.routines.EmailValidator;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.Objects;
 
 import it.unimib.food_alchemy.R;
 import it.unimib.food_alchemy.data.repository.user.IUserRepository;
@@ -68,6 +66,7 @@ public class LoginFragment extends Fragment {
     private static final String TAG = LoginFragment.class.getSimpleName();
     private static final boolean USE_NAVIGATION_COMPONENT = true;
     private ActivityResultLauncher<IntentSenderRequest> activityResultLauncher;
+    private ActivityResultContracts.StartIntentSenderForResult startIntentSenderForResult;
     private FragmentLoginBinding fragmentLoginBinding;
 
     private UserViewModel userViewModel;
@@ -116,7 +115,7 @@ public class LoginFragment extends Fragment {
                 .setAutoSelectEnabled(true)
                 .build();
 
-        ActivityResultContracts.StartIntentSenderForResult startIntentSenderForResult = new ActivityResultContracts.StartIntentSenderForResult();
+        startIntentSenderForResult = new ActivityResultContracts.StartIntentSenderForResult();
 
         activityResultLauncher = registerForActivityResult(startIntentSenderForResult, activityResult -> {
             if (activityResult.getResultCode() == Activity.RESULT_OK) {
@@ -131,8 +130,7 @@ public class LoginFragment extends Fragment {
                                 User user = ((Result.UserResponseSuccess) authenticationResult).getData();
                                 saveLoginData(user.getEmail(), null, user.getIdToken());
                                 userViewModel.setAuthenticationError(false);
-                                Navigation.findNavController(requireView()).navigate(R.id.navigate_to_preferencesActivity);
-                                //retrieveUserInformationAndStartActivity(user, R.id.navigate_to_newsPreferencesActivity);
+                                retrieveUserInformationAndStartActivity(user, R.id.navigate_to_preferencesActivity);
                             } else {
                                 userViewModel.setAuthenticationError(true);
 
@@ -150,7 +148,14 @@ public class LoginFragment extends Fragment {
             }
         });
     }
+    private void retrieveUserInformationAndStartActivity(User user, int destination) {
 
+        userViewModel.getUserFavoriteRecipesMutableLiveData(user.getIdToken()).observe(
+                getViewLifecycleOwner(), userFavoriteRecipesRetrievalResult -> {
+                    startActivityBasedOnCondition(PreferencesActivity.class, destination);
+                }
+        );
+    }
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -162,7 +167,6 @@ public class LoginFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
 
         if (userViewModel.getLoggedUser() != null) {
             SharedPreferencesUtil sharedPreferencesUtil =
@@ -187,6 +191,7 @@ public class LoginFragment extends Fragment {
 
             String email = fragmentLoginBinding.textInputEditTextEmail.getText().toString().trim();
             String password = fragmentLoginBinding.textInputEditTextPassword.getText().toString().trim();
+
             //start login if email and password are ok
             if(isEmailOk(email) & isPasswordOk(password))   {
                 if (!userViewModel.isAuthenticationError()) {
@@ -197,7 +202,6 @@ public class LoginFragment extends Fragment {
                                     saveLoginData(email, password, user.getIdToken());
                                     userViewModel.setAuthenticationError(false);
                                     retrieveUserInformationAndStartActivity(user, R.id.navigate_to_preferencesActivity);
-                                    startActivityBasedOnCondition(PreferencesActivity.class,R.id.navigate_to_preferencesActivity);
                                 } else {
                                     userViewModel.setAuthenticationError(true);
                                     Snackbar.make(requireActivity().findViewById(android.R.id.content),
@@ -215,38 +219,28 @@ public class LoginFragment extends Fragment {
         });
 
         fragmentLoginBinding.buttonGoogleLogin.setOnClickListener(v -> oneTapClient.beginSignIn(signInRequest)
-                .addOnSuccessListener(requireActivity(), new OnSuccessListener<BeginSignInResult>() {
-                    @Override
-                    public void onSuccess(BeginSignInResult result) {
-                        Log.d(TAG, "onSuccess from oneTapClient.beginSignIn(BeginSignInRequest)");
-                        IntentSenderRequest intentSenderRequest =
-                                new IntentSenderRequest.Builder(result.getPendingIntent()).build();
-                        activityResultLauncher.launch(intentSenderRequest);
-                    }
+                .addOnSuccessListener(requireActivity(), result -> {
+                    Log.d(TAG, "onSuccess from oneTapClient.beginSignIn(BeginSignInRequest)");
+                    IntentSenderRequest intentSenderRequest =
+                            new IntentSenderRequest.Builder(result.getPendingIntent()).build();
+                    activityResultLauncher.launch(intentSenderRequest);
                 })
-                .addOnFailureListener(requireActivity(), new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        // No saved credentials found. Launch the One Tap sign-up flow, or
-                        // do nothing and continue presenting the signed-out UI.
-                        Log.d(TAG, e.getLocalizedMessage());
+                .addOnFailureListener(requireActivity(), e -> {
+                    // No saved credentials found. Launch the One Tap sign-up flow, or
+                    // do nothing and continue presenting the signed-out UI.
+                    Log.d(TAG, Objects.requireNonNull(e.getLocalizedMessage()));
 
-                        Snackbar.make(requireActivity().findViewById(android.R.id.content),
-                                requireActivity().getString(R.string.error_no_google_account_found_message),
-                                Snackbar.LENGTH_SHORT).show();
-                    }
+                    Snackbar.make(requireActivity().findViewById(android.R.id.content),
+                            requireActivity().getString(R.string.error_no_google_account_found_message),
+                            Snackbar.LENGTH_SHORT).show();
                 }));
 
 
         //listener bottone password dimenticata
-        fragmentLoginBinding.buttonForgotPassword.setOnClickListener(v -> {
-            Navigation.findNavController(requireView()).navigate(R.id.navigate_to_forgotPasswordFragment);
-        });
+        fragmentLoginBinding.buttonForgotPassword.setOnClickListener(v -> Navigation.findNavController(requireView()).navigate(R.id.navigate_to_forgotPasswordFragment));
 
         //listener bottone registrazione
-        fragmentLoginBinding.buttonSignup.setOnClickListener(v -> {
-            Navigation.findNavController(requireView()).navigate(R.id.navigate_to_registrationFragment);
-        });
+        fragmentLoginBinding.buttonSignup.setOnClickListener(v -> Navigation.findNavController(requireView()).navigate(R.id.navigate_to_registrationFragment));
     }
 
     @Override
@@ -287,14 +281,7 @@ public class LoginFragment extends Fragment {
     }
 
 
-    private void retrieveUserInformationAndStartActivity(User user, int destination) {
 
-        userViewModel.getUserFavoriteRecipesMutableLiveData(user.getIdToken()).observe(
-                getViewLifecycleOwner(), userFavoriteRecipesRetrievalResult -> {
-                    startActivityBasedOnCondition(PreferencesActivity.class, destination);
-                }
-        );
-    }
 
     /**
      * Checks if the email address has a correct format.

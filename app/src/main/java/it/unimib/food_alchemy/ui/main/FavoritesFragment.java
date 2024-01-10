@@ -6,9 +6,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavGraph;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,12 +72,15 @@ public class FavoritesFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(requireContext());
         recyclerViewFavorites.setLayoutManager(layoutManager);
 
-
+        Log.d(TAG, "recipeslist: " + recipesList.toString());
          favoritesRecyclerViewAdapter =
                  new RecipesRecyclerViewAdapter(requireActivity().getApplication(), recipesList, new RecipesRecyclerViewAdapter.OnItemClickListener() {
                      @Override
                      public void onRecipesItemClick(Recipe recipe) {
-                         Snackbar.make(view,recipe.getTitle(),Snackbar.LENGTH_SHORT).show();
+                         Log.d(TAG, "ricetta singola" + recipe.toString());
+                         FavoritesFragmentDirections.ActionFavoritesFragmentToRecipeFragment action =
+                                 FavoritesFragmentDirections.actionFavoritesFragmentToRecipeFragment(recipe);
+                         Navigation.findNavController(requireView()).navigate(action);
                      }
         });
         recyclerViewFavorites.setAdapter(favoritesRecyclerViewAdapter);
@@ -97,6 +103,7 @@ public class FavoritesFragment extends Fragment {
                 if (result.isSuccess()) {
                     recipesList.clear();
                     recipesList.addAll(((Result.RecipesResponseSuccess)result).getData().getRecipesList());
+                    Log.d(TAG, "OBSERVER: " + recipesList.toString());
                     favoritesRecyclerViewAdapter.notifyDataSetChanged();
                     if (isFirstLoading) {
                         sharedPreferencesUtil.writeBooleanData(Constants.SHARED_PREFERENCES_FILE_NAME,
@@ -111,6 +118,8 @@ public class FavoritesFragment extends Fragment {
                 }
             }
         });
+
+        Log.d(TAG, recipesList.toString());
     }
 
     @Override

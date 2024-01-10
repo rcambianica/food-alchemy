@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 public class InstructionStep implements Parcelable {
     private String step;
 
+    public InstructionStep()    {}
     protected InstructionStep(Parcel in) {
         step = in.readString();
     }

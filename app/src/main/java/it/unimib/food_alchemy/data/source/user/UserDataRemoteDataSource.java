@@ -14,23 +14,19 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.checkerframework.common.reflection.qual.NewInstance;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import it.unimib.food_alchemy.model.Ingredient;
@@ -61,18 +57,8 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource{
                 } else {
                     Log.d(TAG, "User not present in Firebase Realtime Database");
                     databaseReference.child(FIREBASE_USERS_COLLECTION).child(user.getIdToken()).setValue(user)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    userResponseCallback.onSuccessFromRemoteDatabase(user);
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    userResponseCallback.onFailureFromRemoteDatabase(e.getLocalizedMessage());
-                                }
-                            });
+                            .addOnSuccessListener(aVoid -> userResponseCallback.onSuccessFromRemoteDatabase(user))
+                            .addOnFailureListener(e -> userResponseCallback.onFailureFromRemoteDatabase(e.getLocalizedMessage()));
                 }
             }
 
@@ -89,7 +75,7 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource{
                 child(FIREBASE_FAVORITE_RECIPES_COLLECTION).get().addOnCompleteListener(task -> {
                     if (!task.isSuccessful()) {
                         Log.d(TAG, "Error getting data", task.getException());
-                        userResponseCallback.onFailureFromRemoteDatabase(task.getException().getLocalizedMessage());
+                        userResponseCallback.onFailureFromRemoteDatabase(Objects.requireNonNull(task.getException()).getLocalizedMessage());
                     }
                     else {
                         Log.d(TAG, "Successful read: " + task.getResult().getValue());
@@ -117,27 +103,24 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource{
                                 diet);
 
                         databaseReference.child(FIREBASE_USERS_COLLECTION).child(idToken).
-                                child(SHARED_PREFERENCES_INTOLERANCES).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                        if (task.isSuccessful()) {
-                                            List<String> intolerances = new ArrayList<>();
-                                            for(DataSnapshot ds : task.getResult().getChildren()) {
-                                                String intolerance = ds.getValue(String.class);
-                                                intolerances.add(intolerance);
-                                            }
-
-                                            if (intolerances.size() > 0) {
-                                                Set<String> intolerancesSet = new HashSet<>(intolerances);
-                                                intolerancesSet.addAll(intolerances);
-
-                                                sharedPreferencesUtil.writeStringSetData(
-                                                        SHARED_PREFERENCES_FILE_NAME,
-                                                        SHARED_PREFERENCES_INTOLERANCES,
-                                                        intolerancesSet);
-                                            }
-                                            userResponseCallback.onSuccessFromGettingUserPreferences();
+                                child(SHARED_PREFERENCES_INTOLERANCES).get().addOnCompleteListener(task1 -> {
+                                    if (task1.isSuccessful()) {
+                                        List<String> intolerances = new ArrayList<>();
+                                        for(DataSnapshot ds : task1.getResult().getChildren()) {
+                                            String intolerance = ds.getValue(String.class);
+                                            intolerances.add(intolerance);
                                         }
+
+                                        if (intolerances.size() > 0) {
+                                            Set<String> intolerancesSet = new HashSet<>(intolerances);
+                                            intolerancesSet.addAll(intolerances);
+
+                                            sharedPreferencesUtil.writeStringSetData(
+                                                    SHARED_PREFERENCES_FILE_NAME,
+                                                    SHARED_PREFERENCES_INTOLERANCES,
+                                                    intolerancesSet);
+                                        }
+                                        userResponseCallback.onSuccessFromGettingUserPreferences();
                                     }
                                 });
                     }
@@ -159,27 +142,24 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource{
                 child(SHARED_FRIDGE_ITEMS_FRIDGE).get().addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         databaseReference.child(FIREBASE_USERS_COLLECTION).child(idToken).
-                                child(SHARED_FRIDGE_ITEMS_FRIDGE).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                        if (task.isSuccessful()) {
-                                            List<Ingredient> ingredientList = new ArrayList<>();
-                                            for(DataSnapshot ds: task.getResult().getChildren())    {
-                                                ingredientList.add(new Ingredient(ds.child(SHARED_FRIDGE_ITEMS_TITLE).getValue(String.class),
-                                                        ds.child(SHARED_FRIGDE_ITEMS_EXPIRY_DATE).getValue(String.class)));
-                                            }
-                                            if (ingredientList.size() > 0) {
-                                                Set<String> fridgeItemsSet = new LinkedHashSet<>();
-                                                for (Ingredient i: ingredientList) {
-                                                    fridgeItemsSet.add(i.getTitle() + " - " + i.getExpiryDate());
-                                                }
-                                                sharedPreferencesUtil.writeStringSetData(
-                                                        SHARED_FRIDGE_ITEMS_FILE_NAME,
-                                                        SHARED_FRIDGE_ITEMS_FRIDGE,
-                                                        fridgeItemsSet);
-                                            }
-                                            userResponseCallback.onSuccessFromGettingUserFridgeItems();
+                                child(SHARED_FRIDGE_ITEMS_FRIDGE).get().addOnCompleteListener(task1 -> {
+                                    if (task1.isSuccessful()) {
+                                        List<Ingredient> ingredientList = new ArrayList<>();
+                                        for(DataSnapshot ds: task1.getResult().getChildren())    {
+                                            ingredientList.add(new Ingredient(ds.child(SHARED_FRIDGE_ITEMS_TITLE).getValue(String.class),
+                                                    ds.child(SHARED_FRIGDE_ITEMS_EXPIRY_DATE).getValue(String.class)));
                                         }
+                                        if (ingredientList.size() > 0) {
+                                            Set<String> fridgeItemsSet = new LinkedHashSet<>();
+                                            for (Ingredient i: ingredientList) {
+                                                fridgeItemsSet.add(i.getTitle() + " - " + i.getExpiryDate());
+                                            }
+                                            sharedPreferencesUtil.writeStringSetData(
+                                                    SHARED_FRIDGE_ITEMS_FILE_NAME,
+                                                    SHARED_FRIDGE_ITEMS_FRIDGE,
+                                                    fridgeItemsSet);
+                                        }
+                                        userResponseCallback.onSuccessFromGettingUserFridgeItems();
                                     }
                                 });
                     }
