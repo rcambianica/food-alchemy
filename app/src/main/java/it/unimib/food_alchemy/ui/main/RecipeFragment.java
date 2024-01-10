@@ -23,6 +23,7 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.ArrayList;
 
 import java.util.List;
+import java.util.Set;
 
 
 import it.unimib.food_alchemy.R;
@@ -43,6 +44,7 @@ public class RecipeFragment extends Fragment {
     public RecipeFragment() {
         // Required empty public constructor
     }
+
     public static RecipeFragment newInstance() {
         return new RecipeFragment();
     }
@@ -53,11 +55,11 @@ public class RecipeFragment extends Fragment {
         IRecipesRepository recipesRepository =
                 ServiceLocator.getInstance().getRecipesRepository(requireActivity().getApplication());
 
-        if(recipesRepository != null)   {
+        if (recipesRepository != null) {
             recipeViewModel = new ViewModelProvider(
                     requireActivity(),
                     new RecipeViewModelFactory(recipesRepository)).get(RecipeViewModel.class);
-        }   else {
+        } else {
             Snackbar.make(requireActivity().findViewById(android.R.id.content),
                     getString(R.string.unexpected_error), Snackbar.LENGTH_SHORT).show();
         }
@@ -68,12 +70,12 @@ public class RecipeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        fragmentRecipeBinding = FragmentRecipeBinding.inflate(inflater,container,false);
+        fragmentRecipeBinding = FragmentRecipeBinding.inflate(inflater, container, false);
         return fragmentRecipeBinding.getRoot();
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Recipe recipe = RecipeFragmentArgs.fromBundle(getArguments()).getRecipe();
         Log.d(TAG, recipe.toString());
@@ -114,39 +116,42 @@ public class RecipeFragment extends Fragment {
         });
 
     }
+
     private void setCheck(Recipe recipe) {
-        if(recipe.isFavorite()) {
-            fragmentRecipeBinding.favoritesButton.setImageDrawable(AppCompatResources.getDrawable(requireContext(),R.drawable.baseline_star_24));
+        if (recipe.isFavorite()) {
+            fragmentRecipeBinding.favoritesButton.setImageDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.baseline_star_24));
         } else {
-            fragmentRecipeBinding.favoritesButton.setImageDrawable(AppCompatResources.getDrawable(requireContext(),R.drawable.star_fill0_wght400_grad0_opsz24));
+            fragmentRecipeBinding.favoritesButton.setImageDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.star_fill0_wght400_grad0_opsz24));
         }
     }
 
-    private List<String> formatIngredients(List<Ingredient> ingredientList)  {
+    private List<String> formatIngredients(Set<Ingredient> ingredientList) {
         List<String> strings = new ArrayList<>();
         String amountAndUnit = "";
-        String name="";
-        for (int i = 0; i < ingredientList.size(); i++)    {
-            amountAndUnit = amountAndUnit.concat(ingredientList.get(i).getAmount() + " " + ingredientList.get(i).getUnit() + "\n");
-            name = name.concat(ingredientList.get(i).getTitle() + "\n");
+        String name = "";
+        for (Ingredient ingredient: ingredientList) {
+            amountAndUnit = amountAndUnit.concat(ingredient.getAmount() + " " + ingredient.getUnit() + "\n");
+            name = name.concat(ingredient.getTitle() + "\n");
         }
         strings.add(amountAndUnit);
         strings.add(name);
         return strings;
     }
-    private String formatInstructions(List<AnalyzedInstruction> instructionList)  {
-        String out="";
-        for (int i = 0; i < instructionList.size(); i++)    {
+
+    private String formatInstructions(List<AnalyzedInstruction> instructionList) {
+        String out = "";
+        for (int i = 0; i < instructionList.size(); i++) {
             List<InstructionStep> steps = instructionList.get(i).getSteps();
-            for (int y = 1; y < steps.size(); y++) {
-                out = out.concat(y + ". " + steps.get(y).toString());
+            for (int y = 0; y < steps.size(); y++) {
+                out = out.concat((y + 1) + ". " + steps.get(y).toString());
             }
         }
         if (out.length() == 0) {
-            out = "No instructions available";
+            out = getResources().getString(R.string.no_instructions_availables);
         }
         return out;
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();

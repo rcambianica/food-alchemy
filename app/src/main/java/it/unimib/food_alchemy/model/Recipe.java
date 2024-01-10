@@ -12,7 +12,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  *  Class to  represent the recipes of SpoonacularAPI
@@ -40,17 +42,17 @@ public class Recipe implements Parcelable {
     private List<AnalyzedInstruction> instructions;
 
     @SerializedName("diets")
-    private List<String> diets = new ArrayList<String>();
+    private Set<String> diets = new HashSet<>();
 
     @SerializedName("intolerances")
-    private List<String> intolerances;
+    private Set<String> intolerances;
 
     @SerializedName("dishTypes")
-    private List<String> type = new ArrayList<String>();
+    private Set<String> type = new HashSet<>();
 
     @SerializedName("extendedIngredients")
     @NonNull
-    private List<Ingredient> ingredients = new ArrayList<Ingredient>();
+    private Set<Ingredient> ingredients = new HashSet<>();
 
     @ColumnInfo(name = "is_favorite", defaultValue = "0")
     @NonNull
@@ -101,11 +103,11 @@ public class Recipe implements Parcelable {
         dest.writeString(this.title);
         dest.writeString(this.imageUrl);
         dest.writeString(this.imageType);
-        dest.writeList(this.instructions);
-        dest.writeList(this.diets);
-        dest.writeList(this.intolerances);
-        dest.writeList(this.type);
-        dest.writeList(this.ingredients);
+        dest.writeArray(new List[]{this.instructions});
+        dest.writeList((List) this.diets);
+        dest.writeList((List) this.intolerances);
+        dest.writeList((List) this.type);
+        dest.writeList((List) this.ingredients);
         dest.writeByte((byte) (this.isFavorite ? 1 : 0));
     }
 
@@ -115,10 +117,10 @@ public class Recipe implements Parcelable {
         this.imageUrl = source.readString();
         this.imageType = source.readString();
         this.instructions = source.readParcelable(AnalyzedInstruction.class.getClassLoader());
-        source.readStringList(this.diets);
-        source.readStringList(this.intolerances);
-        source.readStringList(this.type);
-        source.readList(this.ingredients, Ingredient.class.getClassLoader());
+        source.readStringList((List<String>) this.diets);
+        source.readStringList((List<String>) this.intolerances);
+        source.readStringList((List<String>) this.type);
+        source.readList((List) this.ingredients, Ingredient.class.getClassLoader());
         this.isFavorite = source.readByte() != 0;
     }
 
@@ -155,35 +157,35 @@ public class Recipe implements Parcelable {
         this.instructions = instructions;
     }
 
-    public List<String> getDiets() {
+    public Set<String> getDiets() {
         return diets;
     }
 
-    public void setDiets(List<String> diets) {
+    public void setDiets(Set<String> diets) {
         this.diets = diets;
     }
 
-    public List<String> getIntolerances() {
+    public Set<String> getIntolerances() {
         return intolerances;
     }
 
-    public void setIntolerances(List<String> intolerances) {
+    public void setIntolerances(Set<String> intolerances) {
         this.intolerances = intolerances;
     }
 
-    public List<String> getType() {
+    public Set<String> getType() {
         return type;
     }
 
-    public void setType(List<String> type) {
+    public void setType(Set<String> type) {
         this.type = type;
     }
 
-    public List<Ingredient> getIngredients() {
+    public Set<Ingredient> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(List<Ingredient> ingredients) {
+    public void setIngredients(Set<Ingredient> ingredients) {
         this.ingredients = ingredients;
     }
 
