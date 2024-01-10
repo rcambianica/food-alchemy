@@ -108,6 +108,9 @@ public class RecipeFragment extends Fragment {
                 out = out.concat(y + ". " + steps.get(y).toString());
             }
         }
+        if (out.length() == 0) {
+            out = "No instructions available";
+        }
         return out;
     }
     @Override
