@@ -45,7 +45,7 @@ public class Converters {
 
     @TypeConverter
     public static List<AnalyzedInstruction> instructionFromString(String value) {
-        Type listType = new TypeToken<List<InstructionStep>>() {
+        Type listType = new TypeToken<List<AnalyzedInstruction>>() {
         }.getType();
         return new Gson().fromJson(value, listType);
     }
