@@ -9,7 +9,6 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Set;
 
 import it.unimib.food_alchemy.model.AnalyzedInstruction;
 import it.unimib.food_alchemy.model.Ingredient;
@@ -17,29 +16,29 @@ import it.unimib.food_alchemy.model.InstructionStep;
 
 public class Converters {
     @TypeConverter
-    public static Set<String> stringsFromString(String value) {
-        Type listType = new TypeToken<Set<String>>() {
+    public static List<String> stringsFromString(String value) {
+        Type listType = new TypeToken<List<String>>() {
         }.getType();
         return new Gson().fromJson(value, listType);
     }
 
     @TypeConverter
-    public static String fromSet(Set<String> list) {
+    public static String fromList(List<String> list) {
         Gson gson = new Gson();
         String json = gson.toJson(list);
         return json;
     }
 
     @TypeConverter
-    public static String fromIngredients(Set<Ingredient> ingredients) {
+    public static String fromIngredients(List<Ingredient> ingredients) {
         Gson gson = new Gson();
         String json = gson.toJson(ingredients);
         return json;
     }
 
     @TypeConverter
-    public static Set<Ingredient> ingredientsFromString(String value) {
-        Type listType = new TypeToken<Set<Ingredient>>() {
+    public static List<Ingredient> ingredientsFromString(String value) {
+        Type listType = new TypeToken<List<Ingredient>>() {
         }.getType();
         return new Gson().fromJson(value, listType);
     }

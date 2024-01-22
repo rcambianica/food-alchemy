@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Set;
 
 import it.unimib.food_alchemy.data.service.SpoonacularApiService;
-import it.unimib.food_alchemy.model.Recipe;
 import it.unimib.food_alchemy.model.RecipeApiResponse;
 import it.unimib.food_alchemy.util.ServiceLocator;
 import retrofit2.Call;
@@ -46,12 +45,8 @@ public class RecipesRemoteDataSource extends BaseRecipesRemoteDataSource{
         recipeResponseCall.enqueue(new Callback<RecipeApiResponse>() {
             @Override
             public void onResponse(@NonNull Call<RecipeApiResponse> call, @NonNull Response<RecipeApiResponse> response) {
-                if(response.body() != null && response.isSuccessful()) {
-                    RecipeApiResponse response_body = response.body();
-                    for (Recipe recipe : response_body.getRecipesList()) {
-                        recipe.setIntolerances(intolerances);
-                    }
-                    recipesCallback.onSuccessFromRemote(response_body);
+                if(response.body() != null && response.isSuccessful())  {
+                    recipesCallback.onSuccessFromRemote(response.body());
                 } else {
                     recipesCallback.onFailureFromRemote(new Exception(API_KEY_ERROR));
                 }

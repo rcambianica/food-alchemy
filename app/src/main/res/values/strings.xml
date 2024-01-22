@@ -37,7 +37,6 @@
 
     <!-- RECIPES REPOSITORY -->
     <string name="error_retrieving_recipes">Unable to contact the server. Please try again later</string>
-    <string name="no_instructions_availables">No instructions available</string>
 
     <!--ADD AN INGREDIENT-->
     <string name="error_ingredient_message">The ingredient cannot be null!</string>
