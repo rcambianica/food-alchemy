@@ -16,9 +16,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/random_recyclerview" />
+        app:layout_constraintBottom_toTopOf="@id/results_search_recyclerview" />
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/random_recyclerview"
+        android:id="@+id/results_search_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"

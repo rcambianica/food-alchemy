@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/search_nav_graph"
+    app:startDestination="@id/searchFragment">
+
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="it.unimib.food_alchemy.ui.search.SearchFragment"
+        android:label="SearchFragment"
+        tools:layout="@layout/fragment_search">
+        <action
+            android:id="@+id/action_searchFragment_to_resultsSearchFragment"
+            app:destination="@id/resultsSearchFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@id/searchFragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/resultsSearchFragment"
+        android:name="it.unimib.food_alchemy.ui.search.ResultsSearchFragment"
+        android:label="fragment_results_search"
+        tools:layout="@layout/fragment_results_search" >
+        <action
+            android:id="@+id/action_resultsSearchFragment_to_recipeFragment2"
+            app:destination="@id/recipeFragment2"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@id/resultsSearchFragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/recipeFragment2"
+        android:name="it.unimib.food_alchemy.ui.main.RecipeFragment"
+        android:label="RecipeFragment"
+        tools:layout="@layout/fragment_recipe"/>
+</navigation>

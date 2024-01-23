@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import com.google.android.material.snackbar.Snackbar;
 
 import it.unimib.food_alchemy.R;
+import it.unimib.food_alchemy.data.repository.recipes.IRecipesRepository;
 import it.unimib.food_alchemy.data.repository.user.IUserRepository;
 import it.unimib.food_alchemy.databinding.FragmentAccountBinding;
 import it.unimib.food_alchemy.ui.auth.UserViewModel;
@@ -51,9 +52,16 @@ public class AccountFragment extends Fragment {
     public static AccountFragment newInstance() { return new AccountFragment();}
 
     private UserViewModel userViewModel;
+    private RecipeViewModel recipeViewModel;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        IRecipesRepository recipesRepository = ServiceLocator.getInstance()
+                .getRecipesRepository(requireActivity().getApplication());
+        recipeViewModel = new ViewModelProvider(
+                requireActivity(),
+                new RecipeViewModelFactory(recipesRepository)).get(RecipeViewModel.class);
 
         IUserRepository userRepository = ServiceLocator.getInstance().
                 getUserRepository(requireActivity().getApplication());
@@ -87,6 +95,10 @@ public class AccountFragment extends Fragment {
 
         fragmentAccountBinding.buttonEdit.setOnClickListener(v -> {
             Navigation.findNavController(requireView()).navigate((R.id.action_accountFragment_to_preferencesActivity));
+        });
+
+        fragmentAccountBinding.buttonDeleteFavorites.setOnClickListener(view1 -> {
+            recipeViewModel.deleteAllFavoriteRecipes();
         });
 
         fragmentAccountBinding.buttonLogout.setOnClickListener(v -> {

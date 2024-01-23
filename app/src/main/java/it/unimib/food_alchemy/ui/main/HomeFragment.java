@@ -121,7 +121,7 @@ public class HomeFragment extends Fragment {
 
         super.onViewCreated(view, savedInstanceState);
         fragmentHomeBinding.searchButton.setOnClickListener(v ->
-                Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_searchFragment));
+                Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_searchActivity));
         fragmentHomeBinding.bottoneMainCourse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

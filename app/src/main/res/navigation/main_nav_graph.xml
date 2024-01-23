@@ -10,14 +10,6 @@
         android:label="@string/home"
         tools:layout="@layout/fragment_home" >
         <action
-            android:id="@+id/action_homeFragment_to_searchFragment"
-            app:destination="@id/searchFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim"
-            app:popUpTo="@id/homeFragment"/>
-        <action
             android:id="@+id/action_homeFragment_to_recipeFragment"
             app:destination="@id/recipeFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
@@ -28,6 +20,14 @@
         <action
             android:id="@+id/action_homeFragment_to_randomFragment"
             app:destination="@id/randomFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@id/homeFragment"/>
+        <action
+            android:id="@+id/action_homeFragment_to_searchActivity"
+            app:destination="@id/searchActivity"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
@@ -100,15 +100,6 @@
         android:label="@string/fragment_add_ingredient"
         tools:layout="@layout/fragment_add_ingredient" />
     <fragment
-        android:id="@+id/searchFragment"
-        android:name="it.unimib.food_alchemy.ui.main.SearchFragment"
-        android:label="fragment_search"
-        tools:layout="@layout/fragment_search" >
-        <action
-            android:id="@+id/action_searchFragment_to_randomFragment"
-            app:destination="@id/randomFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/recipeFragment"
         android:name="it.unimib.food_alchemy.ui.main.RecipeFragment"
         android:label="RecipeFragment">
@@ -132,4 +123,9 @@
             android:name="type"
             app:argType="string"/>
     </fragment>
+    <activity
+        android:id="@+id/searchActivity"
+        android:name="it.unimib.food_alchemy.ui.search.SearchActivity"
+        android:label="activity_search"
+        tools:layout="@layout/activity_search" />
 </navigation>

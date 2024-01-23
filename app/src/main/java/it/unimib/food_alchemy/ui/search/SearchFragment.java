@@ -1,4 +1,4 @@
-package it.unimib.food_alchemy.ui.main;
+package it.unimib.food_alchemy.ui.search;
 
 import static it.unimib.food_alchemy.util.Constants.DAIRY;
 import static it.unimib.food_alchemy.util.Constants.EGG;
@@ -19,35 +19,27 @@ import static it.unimib.food_alchemy.util.Constants.VEGAN;
 import static it.unimib.food_alchemy.util.Constants.VEGETARIAN;
 import static it.unimib.food_alchemy.util.Constants.WHEAT;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavBackStackEntry;
-import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.chip.ChipGroup;
 
 import java.util.Set;
 
 import it.unimib.food_alchemy.R;
 import it.unimib.food_alchemy.databinding.FragmentSearchBinding;
+import it.unimib.food_alchemy.ui.main.MainActivity;
 import it.unimib.food_alchemy.util.SharedPreferencesUtil;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SearchFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class SearchFragment extends Fragment {
 
     private FragmentSearchBinding fragmentSearchBinding;
@@ -91,28 +83,20 @@ public class SearchFragment extends Fragment {
         fragmentSearchBinding.searchButtonDirect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Navigation.findNavController(requireView()).navigate(R.id.action_searchFragment_to_randomFragment);
+                Navigation.findNavController(requireView()).navigate(R.id.action_searchFragment_to_resultsSearchFragment);
             }
         });
 
         fragmentSearchBinding.returnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Navigation.findNavController(requireView()).navigateUp();
+                Intent intent = new Intent(requireContext(), MainActivity.class);
+                startActivity(intent);
+                requireActivity().finish();
+
             }
         });
 
-        NavBackStackEntry navBackStackEntry = Navigation.
-                findNavController(view).getPreviousBackStackEntry();
-
-        // Logic to highlight the correct tab in BottomNavigationView when the user
-        // goes to NewsDetailFragment from a tab which is neither CountryNewsFragment
-        // nor FavoriteNewsFragment
-        if (navBackStackEntry != null &&
-                navBackStackEntry.getDestination().getId() == R.id.homeFragment) {
-            ((BottomNavigationView) requireActivity().findViewById(R.id.bottom_navigation)).
-                    getMenu().findItem(R.id.homeFragment).setChecked(true);
-        }
     }
 
     private void setViewsChecked()  {
