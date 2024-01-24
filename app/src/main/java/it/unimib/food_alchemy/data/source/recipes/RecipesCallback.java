@@ -19,4 +19,14 @@ public interface RecipesCallback {
     void onFailureFromCloud(Exception exception);
     void onSuccessSynchronization();
     void onSuccessDeletion();
+
+    /**
+     * Ingredients methods
+     */
+
+    void onSuccessFromLocal(List<Ingredient> ingredients);
+    void onSuccessFromLocal(Ingredient ingredient);
+    void onFridgeItemsStatusChanged(Ingredient ingredient, List<Ingredient> fridgeItems);
+    void onFridgeItemsStatusChanged(List<Ingredient> ingredients);
+    void onDeleteFridgeItemsSuccess(List<Ingredient> fridgeItems);
 }

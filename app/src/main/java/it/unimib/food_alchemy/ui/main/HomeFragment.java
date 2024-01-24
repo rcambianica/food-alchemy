@@ -72,7 +72,7 @@ public class HomeFragment extends Fragment {
             Snackbar.make(requireActivity().findViewById(android.R.id.content),
                     getString(R.string.unexpected_error), Snackbar.LENGTH_SHORT).show();
         }
-
+        recipeViewModel.setOffset(ran);
     }
 
 

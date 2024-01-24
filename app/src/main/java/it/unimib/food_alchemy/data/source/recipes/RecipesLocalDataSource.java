@@ -113,30 +113,8 @@ public class RecipesLocalDataSource extends BaseRecipesLocalDataSource{
             List<Recipe> recipesList = recipesApiResponse.getRecipesList();
             if (recipesList != null) {
 
-                // Checks if the news just downloaded has already been downloaded earlier
-                // in order to preserve the news status (marked as favorite or not)
-                for (Recipe recipe : allRecipes) {
-                    // This check works because News and NewsSource classes have their own
-                    // implementation of equals(Object) and hashCode() methods
-                    if (recipesList.contains(recipe)) {
-                        // The primary key and the favorite status is contained only in the News objects
-                        // retrieved from the database, and not in the News objects downloaded from the
-                        // Web Service. If the same news was already downloaded earlier, the following
-                        // line of code replaces the the News object in newsList with the corresponding
-                        // News object saved in the database, so that it has the primary key and the
-                        // favorite status.
-                        recipesList.set(recipesList.indexOf(recipe), recipe);
-                    }
-                }
+                recipesDao.insertRecipesList(recipesList);
 
-                // Writes the recipe in the database and gets the associated primary keys
-                List<Long> insertedRecipesIds = recipesDao.insertRecipesList(recipesList);
-                for (int i = 0; i < recipesList.size(); i++) {
-                    // Adds the primary key to the corresponding object Recipe just downloaded so that
-                    // if the user marks the recipe as favorite (and vice-versa), we can use its id
-                    // to know which recipe in the database must be marked as favorite/not favorite
-                    recipesList.get(i).setId(insertedRecipesIds.get(i));
-                }
 
                 sharedPreferencesUtil.writeStringData(SHARED_PREFERENCES_FILE_NAME,
                         LAST_UPDATE, String.valueOf(System.currentTimeMillis()));
@@ -163,31 +141,7 @@ public class RecipesLocalDataSource extends BaseRecipesLocalDataSource{
                 // Reads the recipe from the database
                 List<Recipe> allRecipes = recipesDao.getAllRecipes();
 
-                // Checks if the recipe just downloaded has already been downloaded earlier
-                // in order to preserve the recipe status (marked as favorite or not)
-                for (Recipe recipe : allRecipes) {
-                    // This check works because Recipe and NewsSource classes have their own
-                    // implementation of equals(Object) and hashCode() methods
-                    if (recipesList.contains(recipe)) {
-                        // The primary key and the favorite status is contained only in the Recipe objects
-                        // retrieved from the database, and not in the Recipe objects downloaded from the
-                        // Web Service. If the same recipe was already downloaded earlier, the following
-                        // line of code replaces the the Recipe object in recipesList with the corresponding
-                        // Recipe object saved in the database, so that it has the primary key and the
-                        // favorite status.
-                        recipe.setSynchronized(true);
-                        recipesList.set(recipesList.indexOf(recipe), recipe);
-                    }
-                }
-
-                // Writes the recipe in the database and gets the associated primary keys
-                List<Long> insertedRecipesIds = recipesDao.insertRecipesList(recipesList);
-                for (int i = 0; i < recipesList.size(); i++) {
-                    // Adds the primary key to the corresponding object Recipe just downloaded so that
-                    // if the user marks the recipe as favorite (and vice-versa), we can use its id
-                    // to know which recipe in the database must be marked as favorite/not favorite
-                    recipesList.get(i).setId(insertedRecipesIds.get(i));
-                }
+                recipesDao.insertRecipesList(recipesList);
 
                 RecipeApiResponse recipesApiResponse = new RecipeApiResponse();
                 recipesApiResponse.setRecipeList(recipesList);
@@ -207,6 +161,68 @@ public class RecipesLocalDataSource extends BaseRecipesLocalDataSource{
                 sharedPreferencesUtil.deleteAll(SHARED_PREFERENCES_FILE_NAME);
                 dataEncryptionUtil.deleteAll(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, ENCRYPTED_DATA_FILE_NAME);
                 recipesCallback.onSuccessDeletion();
+            }
+        });
+    }
+
+    @Override
+    public void getIngredients() {
+        RecipeRoomDatabase.databaseWriteExecutor.execute(() -> {
+            recipesCallback.onSuccessFromLocal(recipesDao.getAllIngredients());
+        });
+    }
+
+    @Override
+    public void getFridgeItems() {
+        RecipeRoomDatabase.databaseWriteExecutor.execute(() -> {
+            List<Ingredient> fridgeItems = recipesDao.getFridgeItems();
+            recipesCallback.onFridgeItemsStatusChanged(fridgeItems);
+        });
+    }
+
+    @Override
+    public void updateIngredient(Ingredient ingredient) {
+        RecipeRoomDatabase.databaseWriteExecutor.execute(() -> {
+            int rowUpdatedCounter = recipesDao.updateSingleFridgeItem(ingredient);
+
+            if(rowUpdatedCounter == 1)  {
+                Ingredient updatedIngredient = recipesDao.getIngredient(ingredient.getId());
+                recipesCallback.onFridgeItemsStatusChanged(updatedIngredient, recipesDao.getFridgeItems());
+            } else {
+                recipesCallback.onFailureFromLocal(new Exception(UNEXPECTED_ERROR));
+            }
+        });
+    }
+
+    @Override
+    public void deleteFridgeItems() {
+        RecipeRoomDatabase.databaseWriteExecutor.execute(() -> {
+            List<Ingredient> fridgeItems = recipesDao.getFridgeItems();
+            for(Ingredient ingredient : fridgeItems)    {
+                ingredient.setFridgeItem(false);
+            }
+            int updatedRowsNumber = recipesDao.updateListFridgeItems(fridgeItems);
+
+            if(updatedRowsNumber == fridgeItems.size()) {
+                recipesCallback.onDeleteFridgeItemsSuccess(fridgeItems);
+            } else {
+                recipesCallback.onFailureFromLocal(new Exception(UNEXPECTED_ERROR));
+            }
+        });
+    }
+
+    @Override
+    public void insertIngredient(Ingredient ingredient) {
+        RecipeRoomDatabase.databaseWriteExecutor.execute(() -> {
+
+            List<Ingredient> allIngredients = recipesDao.getAllIngredients();
+            if(ingredient != null)  {
+
+                long insertedIngredientId = recipesDao.insertIngredient(ingredient);
+                sharedPreferencesUtil.writeStringData(SHARED_PREFERENCES_FILE_NAME,
+                        LAST_UPDATE, String.valueOf(System.currentTimeMillis()));
+
+                recipesCallback.onSuccessFromLocal(ingredient);
             }
         });
     }

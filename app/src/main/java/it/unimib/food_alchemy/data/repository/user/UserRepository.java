@@ -157,6 +157,35 @@ public class UserRepository implements IUserRepository, UserResponseCallback, Re
         userMutableLiveData.postValue(result);
     }
 
+    /**
+     * Ingredients methods
+     */
+
+    @Override
+    public void onSuccessFromLocal(List<Ingredient> ingredients) {
+
+    }
+
+    @Override
+    public void onSuccessFromLocal(Ingredient ingredient) {
+
+    }
+
+    @Override
+    public void onFridgeItemsStatusChanged(Ingredient ingredient, List<Ingredient> fridgeItems) {
+
+    }
+
+    @Override
+    public void onFridgeItemsStatusChanged(List<Ingredient> ingredients) {
+
+    }
+
+    @Override
+    public void onDeleteFridgeItemsSuccess(List<Ingredient> fridgeItems) {
+
+    }
+
     @Override
     public void onSuccessSynchronization() {
         userFavoriteRecipesMutableLiveData.postValue(new Result.RecipesResponseSuccess(null));

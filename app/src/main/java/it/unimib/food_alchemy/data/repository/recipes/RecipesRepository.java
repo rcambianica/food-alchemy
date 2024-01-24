@@ -213,4 +213,33 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
     public void onSuccessDeletion() {
 
     }
+
+    /**
+     * Ingredients methods
+     */
+
+    @Override
+    public void onSuccessFromLocal(List<Ingredient> ingredients) {
+
+    }
+
+    @Override
+    public void onSuccessFromLocal(Ingredient ingredient) {
+
+    }
+
+    @Override
+    public void onFridgeItemsStatusChanged(Ingredient ingredient, List<Ingredient> fridgeItems) {
+
+    }
+
+    @Override
+    public void onFridgeItemsStatusChanged(List<Ingredient> ingredients) {
+
+    }
+
+    @Override
+    public void onDeleteFridgeItemsSuccess(List<Ingredient> fridgeItems) {
+
+    }
 }
