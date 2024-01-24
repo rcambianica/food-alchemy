@@ -46,4 +46,41 @@ public interface RecipeDao {
 
     @Query("DELETE FROM recipes WHERE is_favorite = 0")
     void deleteNotFavoriteRecipes();
+
+    /**
+     * Query per la tabella degli ingredienti
+     */
+
+    @Query("SELECT * FROM ingredients")
+    List<Ingredient> getAllIngredients();
+
+    @Query("SELECT * FROM ingredients WHERE id = :id")
+    Ingredient getIngredient(long id);
+
+    @Query("SELECT * FROM ingredients WHERE is_fridge_item = 1")
+    List<Ingredient> getFridgeItems();
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    long insertIngredient(Ingredient ingredient);
+
+    @Insert
+    void insertAllIngredients(Ingredient... ingredients);
+
+    @Update
+    int updateSingleFridgeItem(Ingredient ingredient);
+
+    @Update
+    int updateListFridgeItems(List<Ingredient> ingredients);
+
+    @Delete
+    void deleteIngredient(Ingredient ingredient);
+
+    @Delete
+    void deleteAllIngredientsWithoutQuery(Ingredient... ingredients);
+
+    @Query("DELETE FROM ingredients")
+    int deleteAllIngredients();
+
+    @Query("DELETE FROM ingredients WHERE is_fridge_item = 0")
+    void deleteNotFridgeItems();
 }

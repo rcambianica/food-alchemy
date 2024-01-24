@@ -14,6 +14,8 @@ import it.unimib.food_alchemy.data.source.recipes.BaseFavoriteRecipesDataSource;
 import it.unimib.food_alchemy.data.source.recipes.BaseRecipesLocalDataSource;
 import it.unimib.food_alchemy.data.source.recipes.BaseRecipesRemoteDataSource;
 import it.unimib.food_alchemy.data.source.recipes.RecipesCallback;
+import it.unimib.food_alchemy.data.source.user.BaseUserDataRemoteDataSource;
+import it.unimib.food_alchemy.model.Ingredient;
 import it.unimib.food_alchemy.model.Recipe;
 import it.unimib.food_alchemy.model.RecipeApiResponse;
 import it.unimib.food_alchemy.model.RecipesResponse;
@@ -26,7 +28,8 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
     private final MutableLiveData<Result> favoriteRecipesMutableLiveData;
     private final BaseRecipesRemoteDataSource recipesRemoteDataSource;
     private final BaseRecipesLocalDataSource recipesLocalDataSource;
-    private final BaseFavoriteRecipesDataSource backupDataSource;
+    private final BaseFavoriteRecipesDataSource backupFavoriteRecipesDataSource;
+
 
     public RecipesRepository(BaseRecipesRemoteDataSource recipesRemoteDataSource,
                              BaseRecipesLocalDataSource recipesLocalDataSource,
@@ -36,10 +39,10 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
         favoriteRecipesMutableLiveData = new MutableLiveData<>();
         this.recipesRemoteDataSource = recipesRemoteDataSource;
         this.recipesLocalDataSource = recipesLocalDataSource;
-        this.backupDataSource = favoriteRecipesDataSource;
+        this.backupFavoriteRecipesDataSource = favoriteRecipesDataSource;
         this.recipesRemoteDataSource.setRecipesCallback(this);
         this.recipesLocalDataSource.setRecipesCallback(this);
-        this.backupDataSource.setRecipesCallback(this);
+        this.backupFavoriteRecipesDataSource.setRecipesCallback(this);
     }
 
     public MutableLiveData<Result> fetchRecipes(String query, String diet, Set<String> intolerances, List<String> ingredients, String type, int offset, long lastUpdate) {
@@ -65,7 +68,7 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
         // The first time the user launches the app, check if she
         // has previously saved favorite recipes on the cloud
         if (isFirstLoading) {
-            backupDataSource.getFavoriteRecipes();
+            backupFavoriteRecipesDataSource.getFavoriteRecipes();
         } else {
             recipesLocalDataSource.getFavoriteRecipes();
         }
@@ -77,9 +80,9 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
     public void updateRecipe(Recipe recipe) {
         recipesLocalDataSource.updateRecipe(recipe);
         if (recipe.isFavorite()) {
-            backupDataSource.addFavoriteRecipe(recipe);
+            backupFavoriteRecipesDataSource.addFavoriteRecipe(recipe);
         } else {
-            backupDataSource.deleteFavoriteRecipe(recipe);
+            backupFavoriteRecipesDataSource.deleteFavoriteRecipe(recipe);
         }
     }
 
@@ -146,7 +149,7 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
         }
 
         if (!notSynchronizedRecipesList.isEmpty()) {
-            backupDataSource.synchronizeFavoriteRecipes(notSynchronizedRecipesList);
+            backupFavoriteRecipesDataSource.synchronizeFavoriteRecipes(notSynchronizedRecipesList);
         }
 
         favoriteRecipesMutableLiveData.postValue(new Result.RecipesResponseSuccess(new RecipesResponse(recipesList)));
@@ -173,7 +176,7 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
             favoriteRecipesMutableLiveData.postValue(result);
         }
 
-        backupDataSource.deleteAllFavoriteRecipes();
+        backupFavoriteRecipesDataSource.deleteAllFavoriteRecipes();
     }
 
     @Override
@@ -194,7 +197,7 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
             recipes.setSynchronized(false);
         }
         recipesLocalDataSource.updateRecipe(recipes);
-        backupDataSource.getFavoriteRecipes();
+        backupFavoriteRecipesDataSource.getFavoriteRecipes();
     }
 
     @Override
@@ -210,5 +213,4 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
     public void onSuccessDeletion() {
 
     }
-
 }

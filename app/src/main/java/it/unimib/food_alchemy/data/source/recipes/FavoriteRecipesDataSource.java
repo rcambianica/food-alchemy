@@ -81,7 +81,7 @@ public class FavoriteRecipesDataSource extends BaseFavoriteRecipesDataSource    
                         for (Recipe recipe : recipesList) {
                             databaseReference.child(FIREBASE_USERS_COLLECTION).child(idToken).
                                     child(FIREBASE_FAVORITE_RECIPES_COLLECTION).
-                                    child(String.valueOf(recipe.hashCode())).setValue(recipe).addOnSuccessListener(
+                                    child(String.valueOf(recipe.getId())).setValue(recipe).addOnSuccessListener(
                                             unused -> recipe.setSynchronized(true)
                                     );
                         }

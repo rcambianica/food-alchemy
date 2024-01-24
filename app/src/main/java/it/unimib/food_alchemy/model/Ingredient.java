@@ -26,7 +26,7 @@ public class Ingredient implements Parcelable {
 
     private String unit;
 
-    @NonNull
+
     private String expiryDate;
 
     @ColumnInfo(name = "is_fridge_item", defaultValue = "0")

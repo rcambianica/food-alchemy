@@ -61,9 +61,6 @@
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim"
             app:popUpTo="@id/fridgeFragment"/>
-        <argument
-            android:name="ingredient"
-            app:argType="it.unimib.food_alchemy.model.Ingredient"/>
     </fragment>
     <fragment
         android:id="@+id/accountFragment"

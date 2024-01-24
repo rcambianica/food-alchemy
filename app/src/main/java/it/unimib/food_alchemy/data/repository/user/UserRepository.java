@@ -74,12 +74,6 @@ public class UserRepository implements IUserRepository, UserResponseCallback, Re
     }
 
     @Override
-    public MutableLiveData<Result> getUserFridgeItems(String idToken)    {
-        userDataRemoteDataSource.getUserFridgeItems(idToken);
-        return userFridgeItemsMutableLiveData;
-    }
-
-    @Override
     public MutableLiveData<Result> logout() {
         userRemoteDataSource.logout();
         return userMutableLiveData;
@@ -111,12 +105,6 @@ public class UserRepository implements IUserRepository, UserResponseCallback, Re
     }
 
     @Override
-    public void saveUserFridgeItems(List<Ingredient> ingredientList, String idToken)    {
-        //TODO:fix this
-        //userDataRemoteDataSource.saveUserFridgeItems(ingredientList, idToken);
-    }
-
-    @Override
     public void onSuccessFromAuthentication(User user) {
         if (user != null) {
             userDataRemoteDataSource.saveUserData(user);
@@ -136,7 +124,7 @@ public class UserRepository implements IUserRepository, UserResponseCallback, Re
     }
 
     @Override
-    public void onSuccessFromRemoteDatabase(List<Recipe> recipeList) {
+    public void onSuccessFromGettingUserFavoritesRecipes(List<Recipe> recipeList) {
         recipesLocalDataSource.insertRecipes(recipeList);
     }
 
@@ -145,10 +133,6 @@ public class UserRepository implements IUserRepository, UserResponseCallback, Re
         userPreferencesMutableLiveData.postValue(new Result.UserResponseSuccess(null));
     }
 
-    @Override
-    public void onSuccessFromGettingUserFridgeItems()   {
-        userFridgeItemsMutableLiveData.postValue(new Result.UserResponseSuccess(null));
-    }
 
     @Override
     public void onFailureFromRemoteDatabase(String message) {

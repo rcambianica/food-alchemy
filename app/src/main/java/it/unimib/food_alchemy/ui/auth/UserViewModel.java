@@ -17,7 +17,6 @@ public class UserViewModel extends ViewModel {
     private MutableLiveData<Result> userMutableLiveData;
     private MutableLiveData<Result> userFavoriteRecipesMutableLiveData;
     private MutableLiveData<Result> userPreferencesMutableLiveData;
-    private MutableLiveData<Result> userFridgeItemsMutableLiveData;
     private boolean authenticationError;
 
     public UserViewModel(IUserRepository userRepository) {
@@ -59,19 +58,6 @@ public class UserViewModel extends ViewModel {
             userPreferencesMutableLiveData = userRepository.getUserPreferences(idToken);
         }
         return userPreferencesMutableLiveData;
-    }
-
-    public void saveUserFridgeItems(List<Ingredient> ingredientList, String idToken)    {
-        if(idToken != null) {
-            userRepository.saveUserFridgeItems(ingredientList, idToken);
-        }
-    }
-
-    public MutableLiveData<Result> getUserFridgeItems(String idToken)    {
-        if(idToken != null) {
-            userFridgeItemsMutableLiveData = userRepository.getUserFridgeItems(idToken);
-        }
-        return userFridgeItemsMutableLiveData;
     }
 
     public User getLoggedUser() {

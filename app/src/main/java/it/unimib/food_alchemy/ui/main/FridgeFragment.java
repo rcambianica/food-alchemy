@@ -98,8 +98,6 @@ public class FridgeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        String[] ingredients = sharedPreferencesUtil.readStringSetData(SHARED_FRIDGE_ITEMS_FILE_NAME,SHARED_FRIDGE_ITEMS_FRIDGE).toArray(new String[0]);
-
         RecyclerView recyclerViewIngredients = fragmentFridgeBinding.recyclerviewIngredients;
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(requireContext(),
                 LinearLayoutManager.VERTICAL, false);
@@ -120,19 +118,6 @@ public class FridgeFragment extends Fragment {
 
         fragmentFridgeBinding.addIngredientButton.setOnClickListener(v -> {
             Navigation.findNavController(requireView()).navigate(R.id.action_fridgeFragment_to_addIngredientFragment);
-        });
-        //saveInformation();
-        userViewModel.getUserFridgeItems(userViewModel.getLoggedUser().getIdToken()).observe(getViewLifecycleOwner(),
-                result -> {
-                    if(result.isSuccess())  {
-                        //qua devo capire come aggiornare la recycler view
-
-                    }
-                    else {
-                        Snackbar.make(view,
-                                requireActivity().getString(R.string.unexpected_error),
-                                Snackbar.LENGTH_SHORT).show();
-                    }
         });
     }
 
@@ -193,7 +178,6 @@ public class FridgeFragment extends Fragment {
         } catch (GeneralSecurityException | IOException e) {
             e.printStackTrace();
         }
-        userViewModel.saveUserFridgeItems(ingredientList,idToken);
     }
 
     @Override
