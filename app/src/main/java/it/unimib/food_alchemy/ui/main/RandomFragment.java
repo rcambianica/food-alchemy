@@ -1,6 +1,7 @@
 package it.unimib.food_alchemy.ui.main;
 
 import static it.unimib.food_alchemy.util.Constants.RECIPES_NUMBER_PARAMETER;
+import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_DIET;
 import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_INTOLERANCES;
 
@@ -84,6 +85,7 @@ public class RandomFragment extends Fragment {
                     getString(R.string.unexpected_error), Snackbar.LENGTH_SHORT).show();
         }
         recipeList = new ArrayList<>();
+        recipeViewModel.setOffset(0);
     }
 
     @Override
@@ -97,7 +99,9 @@ public class RandomFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
+        String diet;
         Set<String> intolerances;
+        diet = sharedPreferencesUtil.readStringData(SHARED_PREFERENCES_FILE_NAME,SHARED_PREFERENCES_DIET);
         intolerances = sharedPreferencesUtil.readStringSetData(SHARED_PREFERENCES_FILE_NAME, SHARED_PREFERENCES_INTOLERANCES);
 
         RecyclerView randomRecipesRecyclerView = view.findViewById(R.id.results_search_recyclerview);
@@ -119,7 +123,7 @@ public class RandomFragment extends Fragment {
 
         fragmentRandomBinding.progressBar.setVisibility(View.VISIBLE);
 
-        recipeViewModel.getRecipes(null, type,null,intolerances,null,0).observe(getViewLifecycleOwner(),
+        recipeViewModel.getRecipes(null, diet,intolerances,null,type,0).observe(getViewLifecycleOwner(),
                 result -> {
                     if(result.isSuccess())  {
                         RecipesResponse recipesResponse = ((Result.RecipesResponseSuccess) result).getData();
@@ -194,10 +198,11 @@ public class RandomFragment extends Fragment {
                             recipeList.add(null);
                             recipesRecyclerViewAdapter.notifyItemRangeInserted(recipeList.size(),
                                     recipeList.size() + 1);
-
+                            //TODO: capire se è necessaria
+                            recipesRecyclerViewAdapter.notifyDataSetChanged();
                             int offset = recipeViewModel.getOffset() + RECIPES_NUMBER_PARAMETER;
                             recipeViewModel.setOffset(offset);
-                            recipeViewModel.fetchRecipes(null,null,intolerances,null,type);
+                            recipeViewModel.fetchRecipes(null,diet,intolerances,null,type);
                         }
                     }
                 }

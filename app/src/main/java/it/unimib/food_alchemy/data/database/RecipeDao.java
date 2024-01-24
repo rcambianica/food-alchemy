@@ -15,29 +15,35 @@ import it.unimib.food_alchemy.model.Recipe;
 @Dao
 public interface RecipeDao {
     @Query("SELECT * FROM recipes")
-    List<Recipe> getAll();
+    List<Recipe> getAllRecipes();
 
     @Query("SELECT * FROM recipes WHERE id = :id")
-    Recipe getRecipeById(long id);
+    Recipe getRecipe(long id);
 
-    @Query("SELECT * FROM recipes ORDER BY RANDOM() LIMIT 1")
-    Recipe getRandomRecipe();
-
-    @Query("SELECT * FROM recipes WHERE is_favorite = true ORDER BY title")
+    @Query("SELECT * FROM recipes WHERE is_favorite = 1")
     List<Recipe> getFavoriteRecipes();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    List<Long> insertAll(List<Recipe> recipes);
+    List<Long> insertRecipesList(List<Recipe> recipes);
+
+    @Insert
+    void insertAllRecipes(Recipe... recipes);
 
     @Update
-    int updateRecipe(Recipe recipe);
+    int updateSingleFavoriteRecipe(Recipe recipe);
 
     @Update
-    int updateRecipes(List<Recipe> recipes);
+    int updateListFavoritesRecipes(List<Recipe> recipes);
 
-    @Query("UPDATE recipes SET is_favorite = false WHERE is_favorite = true")
-    void deleteFavoriteRecipes();
+    @Delete
+    void deleteRecipe(Recipe recipe);
+
+    @Delete
+    void deleteAllRecipesWithoutQuery(Recipe... recipes);
 
     @Query("DELETE FROM recipes")
-    int deleteAll();
+    int deleteAllRecipes();
+
+    @Query("DELETE FROM recipes WHERE is_favorite = 0")
+    void deleteNotFavoriteRecipes();
 }

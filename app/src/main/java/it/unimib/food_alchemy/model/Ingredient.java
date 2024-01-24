@@ -14,8 +14,11 @@ import com.google.gson.annotations.SerializedName;
 @Entity(tableName = "ingredients")
 public class Ingredient implements Parcelable {
 
-    @SerializedName("name")
+    @SerializedName("id")
     @PrimaryKey
+    private long id;
+
+    @SerializedName("name")
     @NonNull
     private String title;
 
@@ -23,51 +26,29 @@ public class Ingredient implements Parcelable {
 
     private String unit;
 
-    private String image;
-
     @NonNull
     private String expiryDate;
 
-    public String getTitle() {
-        return title;
-    }
+    @ColumnInfo(name = "is_fridge_item", defaultValue = "0")
+    private boolean isFridgeItem;
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getExpiryDate() {
-        return expiryDate;
-    }
-
-    public void setExpiryDate(String expiryDate) {
-        this.expiryDate = expiryDate;
-    }
-
-    @Override
-    public String toString() {
-        return getAmount() + " " + getUnit() + " " + getTitle() + '\n';
-    }
+    @ColumnInfo(name = "is_synchronized")
+    private boolean isSynchronized;
 
     public Ingredient() {}
-    @Ignore
-    public Ingredient (String title, String expiryDate)   {
+
+    public Ingredient (@NonNull String title, @NonNull String expiryDate)   {
         this.title = title;
         this.expiryDate = expiryDate;
     }
-
-    public Ingredient (String title, String image, String expiryDate) {
-        this.title = title;
-        this.image = image;
-        this.expiryDate = expiryDate;
-    }
-
     protected Ingredient(Parcel in) {
+        id = in.readLong();
         title = in.readString();
         amount = in.readFloat();
         unit = in.readString();
-        image = in.readString();
         expiryDate = in.readString();
+        isFridgeItem = in.readByte() != 0;
+        isSynchronized = in.readByte() != 0;
     }
 
     public static final Creator<Ingredient> CREATOR = new Creator<Ingredient>() {
@@ -82,26 +63,21 @@ public class Ingredient implements Parcelable {
         }
     };
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public long getId() {
+        return id;
     }
 
-    @Override
-    public void writeToParcel(@NonNull Parcel parcel, int i) {
-        parcel.writeString(title);
-        parcel.writeFloat(amount);
-        parcel.writeString(unit);
-        parcel.writeString(image);
-        parcel.writeString(expiryDate);
+    public void setId(long id) {
+        this.id = id;
     }
 
-    public String getImage() {
-        return image;
+    @NonNull
+    public String getTitle() {
+        return title;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setTitle(@NonNull String title) {
+        this.title = title;
     }
 
     public float getAmount() {
@@ -118,5 +94,46 @@ public class Ingredient implements Parcelable {
 
     public void setUnit(String unit) {
         this.unit = unit;
+    }
+
+    @NonNull
+    public String getExpiryDate() {
+        return expiryDate;
+    }
+
+    public void setExpiryDate(@NonNull String expiryDate) {
+        this.expiryDate = expiryDate;
+    }
+
+    public boolean isFridgeItem() {
+        return isFridgeItem;
+    }
+
+    public void setFridgeItem(boolean fridgeItem) {
+        isFridgeItem = fridgeItem;
+    }
+
+    public boolean isSynchronized() {
+        return isSynchronized;
+    }
+
+    public void setSynchronized(boolean aSynchronized) {
+        isSynchronized = aSynchronized;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel parcel, int i) {
+        parcel.writeLong(id);
+        parcel.writeString(title);
+        parcel.writeFloat(amount);
+        parcel.writeString(unit);
+        parcel.writeString(expiryDate);
+        parcel.writeByte((byte) (isFridgeItem ? 1 : 0));
+        parcel.writeByte((byte) (isSynchronized ? 1 : 0));
     }
 }

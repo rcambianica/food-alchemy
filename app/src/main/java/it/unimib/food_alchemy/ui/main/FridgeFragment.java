@@ -59,8 +59,8 @@ public class FridgeFragment extends Fragment {
     //serve per recuperare un ingrediente eliminato per sbaglio con lo swipe a sinistra
     private Ingredient deletedIngredient = null;
     private IngredientsRecyclerViewAdapter ingredientsRecyclerViewAdapter;
-
     private UserViewModel userViewModel;
+    private SharedPreferencesUtil sharedPreferencesUtil;
     public FridgeFragment() {
         // Required empty public constructor
     }
@@ -83,6 +83,7 @@ public class FridgeFragment extends Fragment {
         userViewModel = new ViewModelProvider(
                 this, new UserViewModelFactory(userRepository)).get(UserViewModel.class);
         ingredientList = new ArrayList<>();
+        sharedPreferencesUtil = new SharedPreferencesUtil(requireActivity().getApplication());
     }
 
     @Override
@@ -97,11 +98,11 @@ public class FridgeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        String[] ingredients = sharedPreferencesUtil.readStringSetData(SHARED_FRIDGE_ITEMS_FILE_NAME,SHARED_FRIDGE_ITEMS_FRIDGE).toArray(new String[0]);
+
         RecyclerView recyclerViewIngredients = fragmentFridgeBinding.recyclerviewIngredients;
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(requireContext(),
                 LinearLayoutManager.VERTICAL, false);
-
-
 
 
         ingredientsRecyclerViewAdapter =

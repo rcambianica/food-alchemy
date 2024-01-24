@@ -8,9 +8,9 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.google.firebase.database.Exclude;
 import com.google.gson.annotations.SerializedName;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,9 +42,6 @@ public class Recipe implements Parcelable {
     @SerializedName("diets")
     private List<String> diets = new ArrayList<String>();
 
-    @SerializedName("intolerances")
-    private List<String> intolerances;
-
     @SerializedName("dishTypes")
     private List<String> type = new ArrayList<String>();
 
@@ -53,11 +50,36 @@ public class Recipe implements Parcelable {
     private List<Ingredient> ingredients = new ArrayList<Ingredient>();
 
     @ColumnInfo(name = "is_favorite", defaultValue = "0")
-    @NonNull
     private boolean isFavorite;
 
     @ColumnInfo(name = "is_synchronized")
     private boolean isSynchronized;
+
+    public Recipe(){}
+    protected Recipe(Parcel in) {
+        id = in.readLong();
+        imageUrl = in.readString();
+        imageType = in.readString();
+        title = in.readString();
+        instructions = in.createTypedArrayList(AnalyzedInstruction.CREATOR);
+        diets = in.createStringArrayList();
+        type = in.createStringArrayList();
+        ingredients = in.createTypedArrayList(Ingredient.CREATOR);
+        isFavorite = in.readByte() != 0;
+        isSynchronized = in.readByte() != 0;
+    }
+
+    public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
+        @Override
+        public Recipe createFromParcel(Parcel in) {
+            return new Recipe(in);
+        }
+
+        @Override
+        public Recipe[] newArray(int size) {
+            return new Recipe[size];
+        }
+    };
 
     public long getId() {
         return id;
@@ -67,18 +89,13 @@ public class Recipe implements Parcelable {
         this.id = id;
     }
 
-
-    public String getTitle() {
-        return title;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setTitle(String title) {this.title = title;}
-
-
-    public String getImageUrl() {return imageUrl;}
-
-    public void setImageUrl(String imageUrl) {this.imageUrl = imageUrl;}
-
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 
     public String getImageType() {
         return imageType;
@@ -88,63 +105,13 @@ public class Recipe implements Parcelable {
         this.imageType = imageType;
     }
 
-    public Recipe() {}
-
-    @Override
-    public int describeContents() {
-        return 0;
+    @NonNull
+    public String getTitle() {
+        return title;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(this.id);
-        dest.writeString(this.title);
-        dest.writeString(this.imageUrl);
-        dest.writeString(this.imageType);
-        dest.writeList(this.instructions);
-        dest.writeList(this.diets);
-        dest.writeList(this.intolerances);
-        dest.writeList(this.type);
-        dest.writeList(this.ingredients);
-        dest.writeByte((byte) (this.isFavorite ? 1 : 0));
-    }
-
-    public void readFromParcel(Parcel source) {
-        this.id = source.readLong();
-        this.title = source.readString();
-        this.imageUrl = source.readString();
-        this.imageType = source.readString();
-        this.instructions = source.readParcelable(AnalyzedInstruction.class.getClassLoader());
-        source.readStringList(this.diets);
-        source.readStringList(this.intolerances);
-        source.readStringList(this.type);
-        source.readList(this.ingredients, Ingredient.class.getClassLoader());
-        this.isFavorite = source.readByte() != 0;
-    }
-
-    protected Recipe(Parcel in) {
-        super();
-        readFromParcel(in);
-    }
-
-    public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
-        @Override
-        public Recipe createFromParcel(Parcel source) {
-            return new Recipe(source);
-        }
-
-        @Override
-        public Recipe[] newArray(int size) {
-            return new Recipe[size];
-        }
-    };
-
-    public boolean isFavorite() {
-        return isFavorite;
-    }
-
-    public void setFavorite(boolean favorite) {
-        isFavorite = favorite;
+    public void setTitle(@NonNull String title) {
+        this.title = title;
     }
 
     public List<AnalyzedInstruction> getInstructions() {
@@ -163,14 +130,6 @@ public class Recipe implements Parcelable {
         this.diets = diets;
     }
 
-    public List<String> getIntolerances() {
-        return intolerances;
-    }
-
-    public void setIntolerances(List<String> intolerances) {
-        this.intolerances = intolerances;
-    }
-
     public List<String> getType() {
         return type;
     }
@@ -179,14 +138,24 @@ public class Recipe implements Parcelable {
         this.type = type;
     }
 
+    @NonNull
     public List<Ingredient> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(List<Ingredient> ingredients) {
+    public void setIngredients(@NonNull List<Ingredient> ingredients) {
         this.ingredients = ingredients;
     }
 
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
+    }
+
+    @Exclude
     public boolean isSynchronized() {
         return isSynchronized;
     }
@@ -194,21 +163,22 @@ public class Recipe implements Parcelable {
     public void setSynchronized(boolean aSynchronized) {
         isSynchronized = aSynchronized;
     }
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
     @Override
-    public String toString() {
-        return "Recipe{" +
-                "id=" + id +
-                ", imageUrl='" + imageUrl + '\'' +
-                ", imageType='" + imageType + '\'' +
-                ", title='" + title + '\'' +
-                ", instructions=" + instructions +
-                ", diets=" + diets +
-                ", intolerances=" + intolerances +
-                ", type=" + type +
-                ", ingredients=" + ingredients +
-                ", isFavorite=" + isFavorite +
-                ", isSynchronized=" + isSynchronized +
-                '}';
+    public void writeToParcel(@NonNull Parcel parcel, int i) {
+        parcel.writeLong(id);
+        parcel.writeString(imageUrl);
+        parcel.writeString(imageType);
+        parcel.writeString(title);
+        parcel.writeTypedList(instructions);
+        parcel.writeStringList(diets);
+        parcel.writeStringList(type);
+        parcel.writeTypedList(ingredients);
+        parcel.writeByte((byte) (isFavorite ? 1 : 0));
+        parcel.writeByte((byte) (isSynchronized ? 1 : 0));
     }
 }

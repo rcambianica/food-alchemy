@@ -1,43 +1,33 @@
 package it.unimib.food_alchemy.ui.main;
 
-import static it.unimib.food_alchemy.util.Constants.RECIPES_NUMBER_PARAMETER;
+import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_DIET;
 import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_INTOLERANCES;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.widget.Button;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
+
+import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import it.unimib.food_alchemy.R;
-import it.unimib.food_alchemy.adapter.RecipesRecyclerViewAdapter;
 import it.unimib.food_alchemy.data.repository.recipes.IRecipesRepository;
+import it.unimib.food_alchemy.data.service.SpoonacularApiService;
 import it.unimib.food_alchemy.databinding.FragmentHomeBinding;
 import it.unimib.food_alchemy.model.Recipe;
-import it.unimib.food_alchemy.model.RecipeApiResponse;
 import it.unimib.food_alchemy.model.RecipesResponse;
 import it.unimib.food_alchemy.model.Result;
 import it.unimib.food_alchemy.util.ErrorMessagesUtil;
@@ -56,9 +46,9 @@ public class HomeFragment extends Fragment {
     private static final String TAG = HomeFragment.class.getSimpleName();
     private FragmentHomeBinding fragmentHomeBinding;
     private RecipeViewModel recipeViewModel;
+    private int ran;
+    private List<Recipe> randomRecipes;
     private SharedPreferencesUtil sharedPreferencesUtil;
-
-
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -68,10 +58,12 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sharedPreferencesUtil = new SharedPreferencesUtil(requireActivity().getApplication());
 
+        sharedPreferencesUtil = new SharedPreferencesUtil(requireActivity().getApplication());
         IRecipesRepository recipesRepository =
                 ServiceLocator.getInstance().getRecipesRepository(requireActivity().getApplication());
+
+        ran = (int)Math.floor(Math.random()*(30));
 
         if(recipesRepository != null)   {
             recipeViewModel = new ViewModelProvider(requireActivity(),
@@ -80,6 +72,7 @@ public class HomeFragment extends Fragment {
             Snackbar.make(requireActivity().findViewById(android.R.id.content),
                     getString(R.string.unexpected_error), Snackbar.LENGTH_SHORT).show();
         }
+
     }
 
 
@@ -120,6 +113,39 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
 
         super.onViewCreated(view, savedInstanceState);
+
+        String diet;
+        Set<String> intolerances;
+        diet = sharedPreferencesUtil.readStringData(SHARED_PREFERENCES_FILE_NAME,SHARED_PREFERENCES_DIET);
+        intolerances = sharedPreferencesUtil.readStringSetData(SHARED_PREFERENCES_FILE_NAME, SHARED_PREFERENCES_INTOLERANCES);
+        recipeViewModel.getRecipes(null,diet,intolerances,null,null,0).observe(getViewLifecycleOwner(),
+                result -> {
+                    if(result.isSuccess())  {
+                        RecipesResponse recipesResponse = ((Result.RecipesResponseSuccess) result).getData();
+                        randomRecipes = recipesResponse.getRecipesList();
+                        ran = (int)Math.floor(Math.random()*(randomRecipes.size()-1));
+                        Glide.with(fragmentHomeBinding.dayImage.getContext())
+                                .load(randomRecipes.get(ran).getImageUrl())
+                                .placeholder(R.drawable.baseline_access_time_24)
+                                .into(fragmentHomeBinding.dayImage);
+                        fragmentHomeBinding.dayTitle.setText(randomRecipes.get(ran).getTitle());
+
+                    }   else {
+                        ErrorMessagesUtil errorMessagesUtil =
+                                new ErrorMessagesUtil(requireActivity().getApplication());
+                        Snackbar.make(view, errorMessagesUtil.
+                                        getErrorMessage(((Result.Error)result).getMessage()),
+                                Snackbar.LENGTH_SHORT).show();
+                    }
+                });
+
+
+        fragmentHomeBinding.dayImage.setOnClickListener(v -> {
+            HomeFragmentDirections.ActionHomeFragmentToRecipeFragment action =
+                    HomeFragmentDirections.actionHomeFragmentToRecipeFragment(randomRecipes.get(ran));
+            Navigation.findNavController(view).navigate(action);
+        });
+
         fragmentHomeBinding.searchButton.setOnClickListener(v ->
                 Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_searchActivity));
         fragmentHomeBinding.bottoneMainCourse.setOnClickListener(new View.OnClickListener() {

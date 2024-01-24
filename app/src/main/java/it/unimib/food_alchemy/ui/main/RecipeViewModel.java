@@ -1,5 +1,7 @@
 package it.unimib.food_alchemy.ui.main;
 
+import android.util.Log;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -38,9 +40,9 @@ public class RecipeViewModel extends ViewModel {
      * Fragment/Activity.
      * @return The LiveData object associated with the recipes list.
      */
-    public MutableLiveData<Result> getRecipes(String query, String type, String diet, Set<String> intolerances, List<String> ingredients, long lastUpdate) {
+    public MutableLiveData<Result> getRecipes(String query, String diet, Set<String> intolerances, List<String> ingredients, String type, long lastUpdate) {
         if(recipesListLiveData == null) {
-            fetchRecipes(query, type, diet, intolerances, ingredients, lastUpdate);
+            fetchRecipes(query, diet, intolerances, ingredients,type, lastUpdate);
         }
         return recipesListLiveData;
     }
@@ -69,8 +71,8 @@ public class RecipeViewModel extends ViewModel {
         recipesRepository.fetchRecipes(query,diet,intolerances,ingredients, type, offset);
     }
 
-    private void fetchRecipes(String query, String type, String diet, Set<String> intolerances, List<String> ingredients, long lastUpdate)    {
-        recipesListLiveData = recipesRepository.fetchRecipes(query,  diet, intolerances, ingredients, type, offset, lastUpdate);
+    private void fetchRecipes(String query, String diet, Set<String> intolerances, List<String> ingredients, String type, long lastUpdate)    {
+        recipesListLiveData = recipesRepository.fetchRecipes(query, diet, intolerances, ingredients, type, offset, lastUpdate);
     }
 
     /**
@@ -79,13 +81,6 @@ public class RecipeViewModel extends ViewModel {
      */
     private void getFavoriteRecipes(boolean firstLoading)   {
         favoriteRecipesListLiveData = recipesRepository.getFavoriteRecipes(firstLoading);
-    }
-    /**
-     * Removes the recipe from the list of favorite recipes.
-     * @param recipe The recipe to be removed from the list of favorite recipes.
-     */
-    public void removeFromFavorite(Recipe recipe) {
-        recipesRepository.updateRecipe(recipe);
     }
 
     /**

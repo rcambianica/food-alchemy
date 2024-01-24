@@ -13,11 +13,14 @@ public abstract class BaseRecipesLocalDataSource {
         this.recipesCallback = recipesCallback;
     }
 
+    /**
+     * Recipes methods
+     */
     public abstract void getRecipes();
     public abstract void getFavoriteRecipes();
-    public abstract void updateRecipes(Recipe recipe);
+    public abstract void updateRecipe(Recipe recipe);
     public abstract void deleteFavoriteRecipes();
     public abstract void insertRecipes(RecipeApiResponse recipesApiResponse);
     public abstract void insertRecipes(List<Recipe> recipes);
-    public abstract void deleteAll();
+    public abstract void deleteAllRecipes();
 }

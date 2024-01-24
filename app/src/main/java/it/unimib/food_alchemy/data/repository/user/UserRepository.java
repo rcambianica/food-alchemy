@@ -1,7 +1,5 @@
 package it.unimib.food_alchemy.data.repository.user;
 
-import android.util.Log;
-
 import androidx.lifecycle.MutableLiveData;
 
 import java.util.List;
@@ -114,7 +112,8 @@ public class UserRepository implements IUserRepository, UserResponseCallback, Re
 
     @Override
     public void saveUserFridgeItems(List<Ingredient> ingredientList, String idToken)    {
-        userDataRemoteDataSource.saveUserFridgeItems(ingredientList, idToken);
+        //TODO:fix this
+        //userDataRemoteDataSource.saveUserFridgeItems(ingredientList, idToken);
     }
 
     @Override
@@ -159,7 +158,7 @@ public class UserRepository implements IUserRepository, UserResponseCallback, Re
 
     @Override
     public void onSuccessLogout() {
-        recipesLocalDataSource.deleteAll();
+        recipesLocalDataSource.deleteAllRecipes();
     }
 
     @Override

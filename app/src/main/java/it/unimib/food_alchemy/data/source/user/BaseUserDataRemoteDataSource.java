@@ -20,8 +20,10 @@ public abstract class BaseUserDataRemoteDataSource {
     public abstract void saveUserData(User user);
     public abstract void getUserFavoriteRecipes(String idToken);
     public abstract void getUserPreferences(String idToken);
-    public abstract void getUserFridgeItems(String idToken);
     public abstract void saveUserPreferences(String diet, Set<String> intolerances, String idToken);
-    public abstract void saveUserFridgeItems(List<Ingredient> ingredientList, String idToken);
+    public abstract void getUserFridgeItems(String idToken);
+    public abstract void addUserFridgeItem(String idToken, Ingredient ingredient);
+    public abstract void DeleteUserFridgeItem(String idToken, Ingredient ingredient);
+    public abstract void deleteAllUserFridgeItems(String idToken);
 }
 

@@ -72,12 +72,10 @@ public class FavoritesFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(requireContext());
         recyclerViewFavorites.setLayoutManager(layoutManager);
 
-        Log.d(TAG, "recipeslist: " + recipesList.toString());
          favoritesRecyclerViewAdapter =
                  new RecipesRecyclerViewAdapter(requireActivity().getApplication(), recipesList, new RecipesRecyclerViewAdapter.OnItemClickListener() {
                      @Override
                      public void onRecipesItemClick(Recipe recipe) {
-                         Log.d(TAG, "ricetta singola" + recipe.toString());
                          FavoritesFragmentDirections.ActionFavoritesFragmentToRecipeFragment action =
                                  FavoritesFragmentDirections.actionFavoritesFragmentToRecipeFragment(recipe);
                          Navigation.findNavController(requireView()).navigate(action);
@@ -103,7 +101,6 @@ public class FavoritesFragment extends Fragment {
                 if (result.isSuccess()) {
                     recipesList.clear();
                     recipesList.addAll(((Result.RecipesResponseSuccess)result).getData().getRecipesList());
-                    Log.d(TAG, "OBSERVER: " + recipesList.toString());
                     favoritesRecyclerViewAdapter.notifyDataSetChanged();
                     if (isFirstLoading) {
                         sharedPreferencesUtil.writeBooleanData(Constants.SHARED_PREFERENCES_FILE_NAME,
@@ -118,8 +115,6 @@ public class FavoritesFragment extends Fragment {
                 }
             }
         });
-
-        Log.d(TAG, recipesList.toString());
     }
 
     @Override

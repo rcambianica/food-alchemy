@@ -57,16 +57,11 @@ public class AddIngredientFragment extends Fragment {
     private FragmentAddIngredientBinding fragmentAddIngredientBinding;
     private DatePickerDialog datePickerDialog;
     private UserViewModel userViewModel;
+    private SharedPreferencesUtil sharedPreferencesUtil;
     public AddIngredientFragment()  {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     * @return A new instance of fragment AddIngredientFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static AddIngredientFragment newInstance() {
         return new AddIngredientFragment();
     }
@@ -93,6 +88,8 @@ public class AddIngredientFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        sharedPreferencesUtil = new SharedPreferencesUtil(getActivity().getApplication());
+
         initDatePicker();
 
         fragmentAddIngredientBinding.spinnerButton.setText(getTodaysDate());
@@ -104,7 +101,7 @@ public class AddIngredientFragment extends Fragment {
             String ingredientName = fragmentAddIngredientBinding.textInputEditTextIngredient.getText().toString().trim();
             String expiryDate = fragmentAddIngredientBinding.spinnerButton.getText().toString().trim();
             if(isIngredientOk(ingredientName))  {
-                addIngredient(ingredientName, expiryDate);
+
                 Navigation.findNavController(requireView()).navigateUp();
             }
         });
@@ -178,28 +175,6 @@ public class AddIngredientFragment extends Fragment {
             fragmentAddIngredientBinding.textInputLayoutIngredient.setError(null);
             return true;
         }
-    }
-
-    private void addIngredient(String ingredientName, String expiryDate)  {
-
-        List<Ingredient> ingredientList = new ArrayList<>();
-        ingredientList.add(new Ingredient(ingredientName,expiryDate));
-        Log.d(TAG, ingredientList.toString());
-        SharedPreferencesUtil sharedPreferencesUtil = new SharedPreferencesUtil(requireActivity().getApplication());
-        sharedPreferencesUtil.writeStringData(
-                SHARED_FRIDGE_ITEMS_FILE_NAME, SHARED_FRIDGE_ITEMS_FRIDGE, ingredientName+ " - " + expiryDate);
-        sharedPreferencesUtil.writeBooleanData(SHARED_FRIDGE_ITEMS_FILE_NAME,
-                SHARED_FRIDGE_ITEMS_FIRST_LOADING, true);
-
-        DataEncryptionUtil dataEncryptionUtil = new DataEncryptionUtil(getActivity());
-        String idToken = null;
-        try {
-            idToken = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(
-                    ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, ID_TOKEN);
-        } catch (GeneralSecurityException | IOException e) {
-            e.printStackTrace();
-        }
-        userViewModel.saveUserFridgeItems(ingredientList,idToken);
     }
 
     @Override

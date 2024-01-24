@@ -146,8 +146,11 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource{
                                     if (task1.isSuccessful()) {
                                         List<Ingredient> ingredientList = new ArrayList<>();
                                         for(DataSnapshot ds: task1.getResult().getChildren())    {
+                                            /*
                                             ingredientList.add(new Ingredient(ds.child(SHARED_FRIDGE_ITEMS_TITLE).getValue(String.class),
                                                     ds.child(SHARED_FRIGDE_ITEMS_EXPIRY_DATE).getValue(String.class)));
+
+                                             */
                                         }
                                         if (ingredientList.size() > 0) {
                                             Set<String> fridgeItemsSet = new LinkedHashSet<>();
@@ -167,8 +170,18 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource{
     }
 
     @Override
-    public void saveUserFridgeItems(List<Ingredient> ingredientList, String idToken)   {
-        databaseReference.child(FIREBASE_USERS_COLLECTION).child(idToken).
-                child(SHARED_FRIDGE_ITEMS_FRIDGE).setValue(new ArrayList<>(ingredientList));
+    public void addUserFridgeItem(String idToken, Ingredient ingredient) {
+        /*databaseReference.child(FIREBASE_USERS_COLLECTION).child(idToken).
+                child(SHARED_FRIDGE_ITEMS_FRIDGE).child(String.valueOf(ingredient.ge))*/
+    }
+
+    @Override
+    public void DeleteUserFridgeItem(String idToken, Ingredient ingredient) {
+
+    }
+
+    @Override
+    public void deleteAllUserFridgeItems(String idToken) {
+
     }
 }

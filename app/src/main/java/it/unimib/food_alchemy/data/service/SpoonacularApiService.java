@@ -77,4 +77,10 @@ public interface SpoonacularApiService {
             @retrofit2.http.Query("number") Integer number,
             @retrofit2.http.Query("apiKey") String apiKey
     );
+
+    @GET("recipes/random")
+    Call<RecipeApiResponse> getRecipeOfTheDay(
+            @retrofit2.http.Query("number") Integer number,
+            @retrofit2.http.Query("apiKey") String apiKey
+    );
 }

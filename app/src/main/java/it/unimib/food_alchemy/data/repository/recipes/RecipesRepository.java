@@ -44,23 +44,20 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
 
     public MutableLiveData<Result> fetchRecipes(String query, String diet, Set<String> intolerances, List<String> ingredients, String type, int offset, long lastUpdate) {
         long currentTime = System.currentTimeMillis();
-
         if(currentTime - lastUpdate > FRESH_TIMEOUT)    {
             recipesRemoteDataSource.getRecipes(query, diet,intolerances,ingredients, type, offset);
         } else {
-            Log.d(TAG, "CIAO");
             recipesLocalDataSource.getRecipes();
         }
+
+
+
         return allRecipesMutableLiveData;
     }
 
     @Override
     public void fetchRecipes(String query, String diet, Set<String> intolerances, List<String> ingredients, String type, int offset) {
         recipesRemoteDataSource.getRecipes(query, diet, intolerances, ingredients, type, offset);
-    }
-    @Override
-    public void fetchRandomRecipes() {
-        recipesRemoteDataSource.getRandomRecipe();
     }
 
     @Override
@@ -75,8 +72,10 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
         return favoriteRecipesMutableLiveData;
     }
 
+
+
     public void updateRecipe(Recipe recipe) {
-        recipesLocalDataSource.updateRecipes(recipe);
+        recipesLocalDataSource.updateRecipe(recipe);
         if (recipe.isFavorite()) {
             backupDataSource.addFavoriteRecipe(recipe);
         } else {
@@ -194,7 +193,7 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
         if (recipes != null && !recipes.isFavorite()) {
             recipes.setSynchronized(false);
         }
-        recipesLocalDataSource.updateRecipes(recipes);
+        recipesLocalDataSource.updateRecipe(recipes);
         backupDataSource.getFavoriteRecipes();
     }
 

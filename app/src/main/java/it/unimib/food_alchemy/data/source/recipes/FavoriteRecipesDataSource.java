@@ -92,7 +92,7 @@ public class FavoriteRecipesDataSource extends BaseFavoriteRecipesDataSource    
     @Override
     public void deleteFavoriteRecipe(Recipe recipe) {
         databaseReference.child(FIREBASE_USERS_COLLECTION).child(idToken).
-                child(FIREBASE_FAVORITE_RECIPES_COLLECTION).child(String.valueOf(recipe.hashCode())).
+                child(FIREBASE_FAVORITE_RECIPES_COLLECTION).child(String.valueOf(recipe.getId())).
                 removeValue().addOnSuccessListener(unused -> {
                     recipe.setSynchronized(false);
                     recipesCallback.onSuccessFromCloudWriting(recipe);

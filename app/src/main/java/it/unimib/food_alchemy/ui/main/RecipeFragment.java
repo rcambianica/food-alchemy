@@ -76,7 +76,6 @@ public class RecipeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
         Recipe recipe = RecipeFragmentArgs.fromBundle(getArguments()).getRecipe();
-        Log.d(TAG, recipe.toString());
         List<String> strings = formatIngredients(recipe.getIngredients());
         Glide.with(fragmentRecipeBinding.imageRecipe.getContext())
                 .load(recipe.getImageUrl())
@@ -110,7 +109,10 @@ public class RecipeFragment extends Fragment {
         fragmentRecipeBinding.favoritesButton.setOnClickListener(v -> {
             recipe.setFavorite(!recipe.isFavorite());
             setCheck(recipe);
-            recipeViewModel.removeFromFavorite(recipe);
+            recipeViewModel.updateRecipe(recipe);
+            //TODO decidere se vogliamo tenerlo
+            if(!recipe.isFavorite())
+                Navigation.findNavController(requireView()).navigateUp();
         });
 
     }

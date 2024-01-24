@@ -12,6 +12,7 @@ import java.util.List;
 
 import it.unimib.food_alchemy.data.database.RecipeDao;
 import it.unimib.food_alchemy.data.database.RecipeRoomDatabase;
+import it.unimib.food_alchemy.model.Ingredient;
 import it.unimib.food_alchemy.model.Recipe;
 import it.unimib.food_alchemy.model.RecipeApiResponse;
 import it.unimib.food_alchemy.util.DataEncryptionUtil;
@@ -41,9 +42,8 @@ public class RecipesLocalDataSource extends BaseRecipesLocalDataSource{
     @Override
     public void getRecipes() {
         RecipeRoomDatabase.databaseWriteExecutor.execute(() -> {
-            //TODO Fix this instruction
             RecipeApiResponse recipesApiResponse = new RecipeApiResponse();
-            recipesApiResponse.setRecipeList(recipesDao.getAll());
+            recipesApiResponse.setRecipeList(recipesDao.getAllRecipes());
             recipesCallback.onSuccessFromLocal(recipesApiResponse);
         });
     }
@@ -57,13 +57,13 @@ public class RecipesLocalDataSource extends BaseRecipesLocalDataSource{
     }
 
     @Override
-    public void updateRecipes(Recipe recipe) {
+    public void updateRecipe(Recipe recipe) {
         RecipeRoomDatabase.databaseWriteExecutor.execute(() -> {
             if (recipe != null) {
-                int rowUpdatedCounter = recipesDao.updateRecipe(recipe);
+                int rowUpdatedCounter = recipesDao.updateSingleFavoriteRecipe(recipe);
                 // It means that the update succeeded because only one row had to be updated
                 if (rowUpdatedCounter == 1) {
-                    Recipe updatedRecipe = recipesDao.getRecipeById(recipe.getId());
+                    Recipe updatedRecipe = recipesDao.getRecipe(recipe.getId());
                     recipesCallback.onRecipesFavoriteStatusChanged(updatedRecipe, recipesDao.getFavoriteRecipes());
                 } else {
                     recipesCallback.onFailureFromLocal(new Exception(UNEXPECTED_ERROR));
@@ -71,10 +71,10 @@ public class RecipesLocalDataSource extends BaseRecipesLocalDataSource{
             } else {
                 // When the user deleted all favorite recipe from remote
                 //TODO Check if it works fine and there are not drawbacks
-                List<Recipe> allRecipes = recipesDao.getAll();
-                for (Recipe n : allRecipes) {
-                    n.setSynchronized(false);
-                    recipesDao.updateRecipe(n);
+                List<Recipe> allRecipes = recipesDao.getAllRecipes();
+                for (Recipe r : allRecipes) {
+                    r.setSynchronized(false);
+                    recipesDao.updateSingleFavoriteRecipe(r);
                 }
             }
         });
@@ -87,7 +87,7 @@ public class RecipesLocalDataSource extends BaseRecipesLocalDataSource{
             for (Recipe recipe : favoriteRecipes) {
                 recipe.setFavorite(false);
             }
-            int updatedRowsNumber = recipesDao.updateRecipes(favoriteRecipes);
+            int updatedRowsNumber = recipesDao.updateListFavoritesRecipes(favoriteRecipes);
 
             // It means that the update succeeded because the number of updated rows is
             // equal to the number of the original favorite recipe
@@ -109,7 +109,7 @@ public class RecipesLocalDataSource extends BaseRecipesLocalDataSource{
     public void insertRecipes(RecipeApiResponse recipesApiResponse) {
         RecipeRoomDatabase.databaseWriteExecutor.execute(() -> {
             // Reads the recipe from the database
-            List<Recipe> allRecipes = recipesDao.getAll();
+            List<Recipe> allRecipes = recipesDao.getAllRecipes();
             List<Recipe> recipesList = recipesApiResponse.getRecipesList();
             if (recipesList != null) {
 
@@ -130,7 +130,7 @@ public class RecipesLocalDataSource extends BaseRecipesLocalDataSource{
                 }
 
                 // Writes the recipe in the database and gets the associated primary keys
-                List<Long> insertedRecipesIds = recipesDao.insertAll(recipesList);
+                List<Long> insertedRecipesIds = recipesDao.insertRecipesList(recipesList);
                 for (int i = 0; i < recipesList.size(); i++) {
                     // Adds the primary key to the corresponding object Recipe just downloaded so that
                     // if the user marks the recipe as favorite (and vice-versa), we can use its id
@@ -161,7 +161,7 @@ public class RecipesLocalDataSource extends BaseRecipesLocalDataSource{
             if (recipesList != null) {
 
                 // Reads the recipe from the database
-                List<Recipe> allRecipes = recipesDao.getAll();
+                List<Recipe> allRecipes = recipesDao.getAllRecipes();
 
                 // Checks if the recipe just downloaded has already been downloaded earlier
                 // in order to preserve the recipe status (marked as favorite or not)
@@ -181,7 +181,7 @@ public class RecipesLocalDataSource extends BaseRecipesLocalDataSource{
                 }
 
                 // Writes the recipe in the database and gets the associated primary keys
-                List<Long> insertedRecipesIds = recipesDao.insertAll(recipesList);
+                List<Long> insertedRecipesIds = recipesDao.insertRecipesList(recipesList);
                 for (int i = 0; i < recipesList.size(); i++) {
                     // Adds the primary key to the corresponding object Recipe just downloaded so that
                     // if the user marks the recipe as favorite (and vice-versa), we can use its id
@@ -197,10 +197,10 @@ public class RecipesLocalDataSource extends BaseRecipesLocalDataSource{
     }
 
     @Override
-    public void deleteAll() {
+    public void deleteAllRecipes() {
         RecipeRoomDatabase.databaseWriteExecutor.execute(() -> {
-            int recipesCounter = recipesDao.getAll().size();
-            int recipesDeletedRecipes = recipesDao.deleteAll();
+            int recipesCounter = recipesDao.getAllRecipes().size();
+            int recipesDeletedRecipes = recipesDao.deleteAllRecipes();
 
             // It means that everything has been deleted
             if (recipesCounter == recipesDeletedRecipes) {
