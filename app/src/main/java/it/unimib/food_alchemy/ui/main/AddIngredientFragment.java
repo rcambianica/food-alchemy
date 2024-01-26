@@ -23,10 +23,13 @@ import androidx.navigation.NavBackStackEntry;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
@@ -35,6 +38,7 @@ import java.util.Locale;
 import java.util.Set;
 
 import it.unimib.food_alchemy.R;
+import it.unimib.food_alchemy.data.repository.recipes.IRecipesRepository;
 import it.unimib.food_alchemy.data.repository.user.IUserRepository;
 import it.unimib.food_alchemy.data.repository.user.UserRepository;
 import it.unimib.food_alchemy.databinding.FragmentAddIngredientBinding;
@@ -56,7 +60,7 @@ public class AddIngredientFragment extends Fragment {
     private static final String TAG = AddIngredientFragment.class.getSimpleName();
     private FragmentAddIngredientBinding fragmentAddIngredientBinding;
     private DatePickerDialog datePickerDialog;
-    private UserViewModel userViewModel;
+    private RecipeViewModel recipeViewModel;
     private SharedPreferencesUtil sharedPreferencesUtil;
     public AddIngredientFragment()  {
         // Required empty public constructor
@@ -70,11 +74,16 @@ public class AddIngredientFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        IUserRepository userRepository = ServiceLocator.getInstance().
-                getUserRepository(requireActivity().getApplication());
-        userViewModel = new ViewModelProvider(
-                requireActivity(),
-                new UserViewModelFactory(userRepository)).get(UserViewModel.class);
+        IRecipesRepository recipesRepository =
+        ServiceLocator.getInstance().getRecipesRepository(requireActivity().getApplication());
+
+        if(recipesRepository != null)   {
+            recipeViewModel = new ViewModelProvider(requireActivity(),
+                    new RecipeViewModelFactory(recipesRepository)).get(RecipeViewModel.class);
+        }   else {
+            Snackbar.make(requireActivity().findViewById(android.R.id.content),
+                    getString(R.string.unexpected_error), Snackbar.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -99,9 +108,11 @@ public class AddIngredientFragment extends Fragment {
         });
         fragmentAddIngredientBinding.saveButton.setOnClickListener(v -> {
             String ingredientName = fragmentAddIngredientBinding.textInputEditTextIngredient.getText().toString().trim();
-            String expiryDate = fragmentAddIngredientBinding.spinnerButton.getText().toString().trim();
+            String expiryDate = formatDate(fragmentAddIngredientBinding.spinnerButton.getText().toString());
             if(isIngredientOk(ingredientName))  {
-
+                long ran = (long)Math.floor(Math.random()*(30));;
+                Ingredient fridgeItem = new Ingredient(ran,ingredientName,expiryDate,false,false);
+                recipeViewModel.insertFridgeItem(fridgeItem);
                 Navigation.findNavController(requireView()).navigateUp();
             }
         });
@@ -131,7 +142,7 @@ public class AddIngredientFragment extends Fragment {
     private void initDatePicker() {
         DatePickerDialog.OnDateSetListener dateSetListener = (datePicker, year, month, day) -> {
             month = month + 1;
-            String date = makeDateString(day, month, year);
+            String date = makeDateString(day,month,year);
             fragmentAddIngredientBinding.spinnerButton.setText(date);
         };
 
@@ -148,7 +159,7 @@ public class AddIngredientFragment extends Fragment {
         } else {
             style = AlertDialog.THEME_HOLO_LIGHT;
         }
-        datePickerDialog = new DatePickerDialog(requireContext(), style, dateSetListener, year, month, day);
+        datePickerDialog = new DatePickerDialog(requireContext(), style, dateSetListener, day, month, year);
         datePickerDialog.getDatePicker().setMinDate(cal.getTimeInMillis());
     }
 
@@ -163,9 +174,18 @@ public class AddIngredientFragment extends Fragment {
             m = "0" + month;
         else
             m = String.valueOf(month);
-        return year + m + d;
+        return d + "/" +  m + "/" + year;
     }
-
+    private String formatDate(String date) {
+        String formattedString = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            DateTimeFormatter initialFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate localDate = LocalDate.parse(date, initialFormatter);
+            DateTimeFormatter targetFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+            formattedString = localDate.format(targetFormatter);
+        }
+        return formattedString;
+    }
     private boolean isIngredientOk(String ingredient) {
         // Check if the ingredient is null
         if (ingredient.isEmpty()) {

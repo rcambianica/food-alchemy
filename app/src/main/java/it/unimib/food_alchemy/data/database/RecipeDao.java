@@ -51,14 +51,14 @@ public interface RecipeDao {
      * Query per la tabella degli ingredienti
      */
 
-    @Query("SELECT * FROM ingredients")
-    List<Ingredient> getAllIngredients();
+    @Query("SELECT * FROM fridge_items")
+    List<Ingredient> getAllFridgeItems();
 
-    @Query("SELECT * FROM ingredients WHERE id = :id")
-    Ingredient getIngredient(long id);
+    @Query("SELECT * FROM fridge_items WHERE id = :id")
+    Ingredient getFridgeItem(long id);
 
-    @Query("SELECT * FROM ingredients WHERE is_fridge_item = 1")
-    List<Ingredient> getFridgeItems();
+    @Query("SELECT * FROM fridge_items WHERE is_selected = 1")
+    List<Ingredient> getFridgeItemsSelected();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insertIngredient(Ingredient ingredient);
@@ -78,9 +78,6 @@ public interface RecipeDao {
     @Delete
     void deleteAllIngredientsWithoutQuery(Ingredient... ingredients);
 
-    @Query("DELETE FROM ingredients")
-    int deleteAllIngredients();
-
-    @Query("DELETE FROM ingredients WHERE is_fridge_item = 0")
-    void deleteNotFridgeItems();
+    @Query("DELETE FROM fridge_items")
+    int deleteAllFridgeItems();
 }

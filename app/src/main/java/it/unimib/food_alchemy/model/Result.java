@@ -4,7 +4,7 @@ public abstract class Result {
     private Result() {}
 
     public boolean isSuccess()  {
-        if(this instanceof RecipesResponseSuccess || this instanceof UserResponseSuccess) {
+        if(this instanceof IngredientsResponseSuccess || this instanceof RecipesResponseSuccess || this instanceof UserResponseSuccess) {
             return true;
         } else {
             return false;
@@ -21,10 +21,16 @@ public abstract class Result {
         }
     }
 
-    /**
-     * Class that represents a successful action during the interaction
-     * with a Web Service or a local database.
-     */
+    public static final class IngredientsResponseSuccess extends Result {
+        private final IngredientsResponse ingredientsResponse;
+        public IngredientsResponseSuccess(IngredientsResponse ingredientsResponse)  {
+            this.ingredientsResponse = ingredientsResponse;
+        }
+        public IngredientsResponse getData()    {
+            return ingredientsResponse;
+        }
+    }
+
     public static final class UserResponseSuccess extends Result {
         private final User user;
         public UserResponseSuccess(User user) {
@@ -35,10 +41,6 @@ public abstract class Result {
         }
     }
 
-    /**
-     * Class that represents an error occurred during the interaction
-     * with a Web Service or a local database.
-     */
     public static final class Error extends Result {
         private final String message;
         public Error(String message) {

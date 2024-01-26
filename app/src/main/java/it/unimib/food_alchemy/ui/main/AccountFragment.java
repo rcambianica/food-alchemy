@@ -97,6 +97,10 @@ public class AccountFragment extends Fragment {
             Navigation.findNavController(requireView()).navigate((R.id.action_accountFragment_to_preferencesActivity));
         });
 
+        fragmentAccountBinding.deleteIngredients.setOnClickListener(view12 -> {
+            recipeViewModel.deleteAllFridgeItems();
+        });
+
         fragmentAccountBinding.buttonDeleteFavorites.setOnClickListener(view1 -> {
             recipeViewModel.deleteAllFavoriteRecipes();
         });

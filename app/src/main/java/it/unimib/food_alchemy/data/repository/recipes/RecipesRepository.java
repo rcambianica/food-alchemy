@@ -14,8 +14,8 @@ import it.unimib.food_alchemy.data.source.recipes.BaseFavoriteRecipesDataSource;
 import it.unimib.food_alchemy.data.source.recipes.BaseRecipesLocalDataSource;
 import it.unimib.food_alchemy.data.source.recipes.BaseRecipesRemoteDataSource;
 import it.unimib.food_alchemy.data.source.recipes.RecipesCallback;
-import it.unimib.food_alchemy.data.source.user.BaseUserDataRemoteDataSource;
 import it.unimib.food_alchemy.model.Ingredient;
+import it.unimib.food_alchemy.model.IngredientsResponse;
 import it.unimib.food_alchemy.model.Recipe;
 import it.unimib.food_alchemy.model.RecipeApiResponse;
 import it.unimib.food_alchemy.model.RecipesResponse;
@@ -26,6 +26,8 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
 
     private final MutableLiveData<Result> allRecipesMutableLiveData;
     private final MutableLiveData<Result> favoriteRecipesMutableLiveData;
+    private final MutableLiveData<Result> allFridgeItemsMutableLiveData;
+    private final MutableLiveData<Result> fridgeItemsSelectedMutableLiveData;
     private final BaseRecipesRemoteDataSource recipesRemoteDataSource;
     private final BaseRecipesLocalDataSource recipesLocalDataSource;
     private final BaseFavoriteRecipesDataSource backupFavoriteRecipesDataSource;
@@ -37,6 +39,8 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
 
         allRecipesMutableLiveData = new MutableLiveData<>();
         favoriteRecipesMutableLiveData = new MutableLiveData<>();
+        allFridgeItemsMutableLiveData = new MutableLiveData<>();
+        fridgeItemsSelectedMutableLiveData = new MutableLiveData<>();
         this.recipesRemoteDataSource = recipesRemoteDataSource;
         this.recipesLocalDataSource = recipesLocalDataSource;
         this.backupFavoriteRecipesDataSource = favoriteRecipesDataSource;
@@ -89,6 +93,38 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
     @Override
     public void deleteFavoriteRecipes() {
         recipesLocalDataSource.deleteFavoriteRecipes();
+    }
+
+    @Override
+    public MutableLiveData<Result> fetchFridgeItems() {
+        recipesLocalDataSource.getFridgeItems();
+        return allFridgeItemsMutableLiveData;
+    }
+
+    @Override
+    public MutableLiveData<Result> getFridgeItemsSelected() {
+        recipesLocalDataSource.getFridgeItemsSelected();
+        return fridgeItemsSelectedMutableLiveData;
+    }
+
+    @Override
+    public void insertFridgeItem(Ingredient ingredient) {
+        recipesLocalDataSource.insertFridgeItem(ingredient);
+    }
+
+    @Override
+    public void deleteFridgeItem(Ingredient ingredient) {
+        recipesLocalDataSource.deleteFridgeItem(ingredient);
+    }
+
+    @Override
+    public void updateFridgeItem(Ingredient ingredient) {
+        recipesLocalDataSource.updateFridgeItem(ingredient);
+    }
+
+    @Override
+    public void deleteFridgeItems() {
+        recipesLocalDataSource.deleteAllFridgeItems();
     }
 
     @Override
@@ -220,26 +256,25 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
 
     @Override
     public void onSuccessFromLocal(List<Ingredient> ingredients) {
-
-    }
-
-    @Override
-    public void onSuccessFromLocal(Ingredient ingredient) {
-
+        Result.IngredientsResponseSuccess result = new Result.IngredientsResponseSuccess(new IngredientsResponse(ingredients));
+        allFridgeItemsMutableLiveData.postValue(result);
     }
 
     @Override
     public void onFridgeItemsStatusChanged(Ingredient ingredient, List<Ingredient> fridgeItems) {
+        Result allIngredientsResult = allFridgeItemsMutableLiveData.getValue();
 
+        if(allIngredientsResult != null && allIngredientsResult.isSuccess())    {
+            allFridgeItemsMutableLiveData.postValue(allIngredientsResult);
+        } else {
+            Log.d(TAG, "ELSE");
+        }
+        fridgeItemsSelectedMutableLiveData.postValue(new Result.IngredientsResponseSuccess(new IngredientsResponse(fridgeItems)));
     }
 
     @Override
     public void onFridgeItemsStatusChanged(List<Ingredient> ingredients) {
-
-    }
-
-    @Override
-    public void onDeleteFridgeItemsSuccess(List<Ingredient> fridgeItems) {
-
+        Result.IngredientsResponseSuccess result = new Result.IngredientsResponseSuccess(new IngredientsResponse(ingredients));
+        fridgeItemsSelectedMutableLiveData.postValue(result);
     }
 }

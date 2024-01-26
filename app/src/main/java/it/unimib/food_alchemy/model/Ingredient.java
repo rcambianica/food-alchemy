@@ -11,7 +11,7 @@ import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
 
-@Entity(tableName = "ingredients")
+@Entity(tableName = "fridge_items")
 public class Ingredient implements Parcelable {
 
     @SerializedName("id")
@@ -22,46 +22,28 @@ public class Ingredient implements Parcelable {
     @NonNull
     private String title;
 
+    @Ignore
     private float amount;
 
+    @Ignore
     private String unit;
 
-
     private String expiryDate;
-
-    @ColumnInfo(name = "is_fridge_item", defaultValue = "0")
-    private boolean isFridgeItem;
 
     @ColumnInfo(name = "is_synchronized")
     private boolean isSynchronized;
 
+    @ColumnInfo(name = "is_selected", defaultValue = "0")
+    private boolean isSelected;
     public Ingredient() {}
 
-    public Ingredient (@NonNull String title, @NonNull String expiryDate)   {
+    public Ingredient(long id, String title, String expiryDate, boolean isSynchronized, boolean isSelected) {
+        this.id = id;
         this.title = title;
         this.expiryDate = expiryDate;
+        this.isSynchronized = isSynchronized;
+        this.isSelected = isSelected;
     }
-    protected Ingredient(Parcel in) {
-        id = in.readLong();
-        title = in.readString();
-        amount = in.readFloat();
-        unit = in.readString();
-        expiryDate = in.readString();
-        isFridgeItem = in.readByte() != 0;
-        isSynchronized = in.readByte() != 0;
-    }
-
-    public static final Creator<Ingredient> CREATOR = new Creator<Ingredient>() {
-        @Override
-        public Ingredient createFromParcel(Parcel in) {
-            return new Ingredient(in);
-        }
-
-        @Override
-        public Ingredient[] newArray(int size) {
-            return new Ingredient[size];
-        }
-    };
 
     public long getId() {
         return id;
@@ -96,21 +78,12 @@ public class Ingredient implements Parcelable {
         this.unit = unit;
     }
 
-    @NonNull
     public String getExpiryDate() {
         return expiryDate;
     }
 
-    public void setExpiryDate(@NonNull String expiryDate) {
+    public void setExpiryDate(String expiryDate) {
         this.expiryDate = expiryDate;
-    }
-
-    public boolean isFridgeItem() {
-        return isFridgeItem;
-    }
-
-    public void setFridgeItem(boolean fridgeItem) {
-        isFridgeItem = fridgeItem;
     }
 
     public boolean isSynchronized() {
@@ -119,6 +92,27 @@ public class Ingredient implements Parcelable {
 
     public void setSynchronized(boolean aSynchronized) {
         isSynchronized = aSynchronized;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
+
+    @Override
+    public String toString() {
+        return "Ingredient{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", amount=" + amount +
+                ", unit='" + unit + '\'' +
+                ", expiryDate='" + expiryDate + '\'' +
+                ", isSynchronized=" + isSynchronized +
+                ", isSelected=" + isSelected +
+                '}';
     }
 
     @Override
@@ -133,7 +127,29 @@ public class Ingredient implements Parcelable {
         parcel.writeFloat(amount);
         parcel.writeString(unit);
         parcel.writeString(expiryDate);
-        parcel.writeByte((byte) (isFridgeItem ? 1 : 0));
         parcel.writeByte((byte) (isSynchronized ? 1 : 0));
+        parcel.writeByte((byte) (isSelected ? 1 : 0));
     }
+
+    protected Ingredient(Parcel in) {
+        id = in.readLong();
+        title = in.readString();
+        amount = in.readFloat();
+        unit = in.readString();
+        expiryDate = in.readString();
+        isSynchronized = in.readByte() != 0;
+        isSelected = in.readByte() != 0;
+    }
+
+    public static final Creator<Ingredient> CREATOR = new Creator<Ingredient>() {
+        @Override
+        public Ingredient createFromParcel(Parcel in) {
+            return new Ingredient(in);
+        }
+
+        @Override
+        public Ingredient[] newArray(int size) {
+            return new Ingredient[size];
+        }
+    };
 }

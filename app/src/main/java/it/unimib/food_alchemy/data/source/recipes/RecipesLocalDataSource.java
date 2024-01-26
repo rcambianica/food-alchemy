@@ -8,6 +8,7 @@ import static it.unimib.food_alchemy.util.Constants.UNEXPECTED_ERROR;
 
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import it.unimib.food_alchemy.data.database.RecipeDao;
@@ -138,9 +139,6 @@ public class RecipesLocalDataSource extends BaseRecipesLocalDataSource{
         RecipeRoomDatabase.databaseWriteExecutor.execute(() -> {
             if (recipesList != null) {
 
-                // Reads the recipe from the database
-                List<Recipe> allRecipes = recipesDao.getAllRecipes();
-
                 recipesDao.insertRecipesList(recipesList);
 
                 RecipeApiResponse recipesApiResponse = new RecipeApiResponse();
@@ -166,28 +164,27 @@ public class RecipesLocalDataSource extends BaseRecipesLocalDataSource{
     }
 
     @Override
-    public void getIngredients() {
-        RecipeRoomDatabase.databaseWriteExecutor.execute(() -> {
-            recipesCallback.onSuccessFromLocal(recipesDao.getAllIngredients());
-        });
-    }
-
-    @Override
     public void getFridgeItems() {
         RecipeRoomDatabase.databaseWriteExecutor.execute(() -> {
-            List<Ingredient> fridgeItems = recipesDao.getFridgeItems();
-            recipesCallback.onFridgeItemsStatusChanged(fridgeItems);
+            recipesCallback.onSuccessFromLocal(recipesDao.getAllFridgeItems());
         });
     }
 
     @Override
-    public void updateIngredient(Ingredient ingredient) {
+    public void getFridgeItemsSelected() {
+        RecipeRoomDatabase.databaseWriteExecutor.execute(() -> {
+            recipesCallback.onFridgeItemsStatusChanged(recipesDao.getFridgeItemsSelected());
+        });
+    }
+
+    @Override
+    public void updateFridgeItem(Ingredient ingredient) {
         RecipeRoomDatabase.databaseWriteExecutor.execute(() -> {
             int rowUpdatedCounter = recipesDao.updateSingleFridgeItem(ingredient);
 
             if(rowUpdatedCounter == 1)  {
-                Ingredient updatedIngredient = recipesDao.getIngredient(ingredient.getId());
-                recipesCallback.onFridgeItemsStatusChanged(updatedIngredient, recipesDao.getFridgeItems());
+                Ingredient updatedIngredient = recipesDao.getFridgeItem(ingredient.getId());
+                recipesCallback.onFridgeItemsStatusChanged(updatedIngredient, recipesDao.getFridgeItemsSelected());
             } else {
                 recipesCallback.onFailureFromLocal(new Exception(UNEXPECTED_ERROR));
             }
@@ -195,34 +192,45 @@ public class RecipesLocalDataSource extends BaseRecipesLocalDataSource{
     }
 
     @Override
-    public void deleteFridgeItems() {
+    public void deleteAllFridgeItems() {
         RecipeRoomDatabase.databaseWriteExecutor.execute(() -> {
-            List<Ingredient> fridgeItems = recipesDao.getFridgeItems();
-            for(Ingredient ingredient : fridgeItems)    {
-                ingredient.setFridgeItem(false);
-            }
-            int updatedRowsNumber = recipesDao.updateListFridgeItems(fridgeItems);
+            int fridgeItemsCounter = recipesDao.getAllFridgeItems().size();
+            int deletedFridgeItems = recipesDao.deleteAllFridgeItems();
 
-            if(updatedRowsNumber == fridgeItems.size()) {
-                recipesCallback.onDeleteFridgeItemsSuccess(fridgeItems);
-            } else {
-                recipesCallback.onFailureFromLocal(new Exception(UNEXPECTED_ERROR));
+            // It means that everything has been deleted
+            if (fridgeItemsCounter == deletedFridgeItems) {
+                List<Ingredient> emptyList = new ArrayList<>();
+                recipesCallback.onSuccessFromLocal(recipesDao.getAllFridgeItems());
             }
         });
     }
 
     @Override
-    public void insertIngredient(Ingredient ingredient) {
+    public void insertFridgeItem(Ingredient ingredient) {
         RecipeRoomDatabase.databaseWriteExecutor.execute(() -> {
 
-            List<Ingredient> allIngredients = recipesDao.getAllIngredients();
+            List<Ingredient> allIngredients = recipesDao.getAllFridgeItems();
             if(ingredient != null)  {
+                recipesDao.insertIngredient(ingredient);
+                List<Ingredient> results = new ArrayList<>(allIngredients);
+                results.add(ingredient);
+                recipesCallback.onSuccessFromLocal(results);
+            }
+        });
+    }
 
-                long insertedIngredientId = recipesDao.insertIngredient(ingredient);
-                sharedPreferencesUtil.writeStringData(SHARED_PREFERENCES_FILE_NAME,
-                        LAST_UPDATE, String.valueOf(System.currentTimeMillis()));
-
-                recipesCallback.onSuccessFromLocal(ingredient);
+    @Override
+    public void deleteFridgeItem(Ingredient ingredient) {
+        RecipeRoomDatabase.databaseWriteExecutor.execute(() -> {
+            List<Ingredient> allIngredients = recipesDao.getAllFridgeItems();
+            if(ingredient != null)  {
+                recipesDao.deleteIngredient(ingredient);
+                for(int pos = 0; pos < allIngredients.size(); pos++)   {
+                    if(allIngredients.get(pos).getId() == ingredient.getId())    {
+                        allIngredients.remove(pos);
+                    }
+                }
+                recipesCallback.onSuccessFromLocal(allIngredients);
             }
         });
     }

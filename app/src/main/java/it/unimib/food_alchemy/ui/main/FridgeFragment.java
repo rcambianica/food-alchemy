@@ -1,17 +1,12 @@
 package it.unimib.food_alchemy.ui.main;
 
-import static it.unimib.food_alchemy.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
-import static it.unimib.food_alchemy.util.Constants.ID_TOKEN;
-import static it.unimib.food_alchemy.util.Constants.SHARED_FRIDGE_ITEMS_FILE_NAME;
-import static it.unimib.food_alchemy.util.Constants.SHARED_FRIDGE_ITEMS_FIRST_LOADING;
-import static it.unimib.food_alchemy.util.Constants.SHARED_FRIDGE_ITEMS_FRIDGE;
-
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,22 +20,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import it.unimib.food_alchemy.R;
 import it.unimib.food_alchemy.adapter.IngredientsRecyclerViewAdapter;
-import it.unimib.food_alchemy.data.repository.user.IUserRepository;
+import it.unimib.food_alchemy.data.repository.recipes.IRecipesRepository;
 import it.unimib.food_alchemy.databinding.FragmentFridgeBinding;
 import it.unimib.food_alchemy.model.Ingredient;
+import it.unimib.food_alchemy.model.RecipesResponse;
 import it.unimib.food_alchemy.model.Result;
-import it.unimib.food_alchemy.ui.auth.UserViewModel;
-import it.unimib.food_alchemy.ui.auth.UserViewModelFactory;
-import it.unimib.food_alchemy.util.DataEncryptionUtil;
+import it.unimib.food_alchemy.util.ErrorMessagesUtil;
 import it.unimib.food_alchemy.util.ServiceLocator;
 import it.unimib.food_alchemy.util.SharedPreferencesUtil;
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
@@ -59,7 +49,7 @@ public class FridgeFragment extends Fragment {
     //serve per recuperare un ingrediente eliminato per sbaglio con lo swipe a sinistra
     private Ingredient deletedIngredient = null;
     private IngredientsRecyclerViewAdapter ingredientsRecyclerViewAdapter;
-    private UserViewModel userViewModel;
+    private RecipeViewModel recipeViewModel;
     private SharedPreferencesUtil sharedPreferencesUtil;
     public FridgeFragment() {
         // Required empty public constructor
@@ -77,12 +67,17 @@ public class FridgeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        IUserRepository userRepository = ServiceLocator.getInstance().
-                getUserRepository(requireActivity().getApplication());
-        userViewModel = new ViewModelProvider(
-                this, new UserViewModelFactory(userRepository)).get(UserViewModel.class);
         ingredientList = new ArrayList<>();
+        IRecipesRepository recipesRepository =
+                ServiceLocator.getInstance().getRecipesRepository(requireActivity().getApplication());
+        if(recipesRepository != null)   {
+            recipeViewModel = new ViewModelProvider(requireActivity(),
+                    new RecipeViewModelFactory(recipesRepository)).get(RecipeViewModel.class);
+        }   else {
+            Snackbar.make(requireActivity().findViewById(android.R.id.content),
+                    getString(R.string.unexpected_error), Snackbar.LENGTH_SHORT).show();
+        }
+
         sharedPreferencesUtil = new SharedPreferencesUtil(requireActivity().getApplication());
     }
 
@@ -102,12 +97,17 @@ public class FridgeFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(requireContext(),
                 LinearLayoutManager.VERTICAL, false);
 
-
         ingredientsRecyclerViewAdapter =
                 new IngredientsRecyclerViewAdapter(ingredientList, new IngredientsRecyclerViewAdapter.OnItemClickListener() {
                     @Override
                     public void onIngredientsItemClick(Ingredient ingredient) {
                         Snackbar.make(view, ingredient.getTitle(), Snackbar.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onSelectedButtonPressed(int position) {
+                        //ingredientList.get(position).setSelected(!ingredientList.get(position).isSelected());
+                        //recipeViewModel.updateFridgeItem(ingredientList.get(position));
                     }
                 });
         recyclerViewIngredients.setLayoutManager(layoutManager);
@@ -116,9 +116,25 @@ public class FridgeFragment extends Fragment {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(recyclerViewIngredients);
 
-        fragmentFridgeBinding.addIngredientButton.setOnClickListener(v -> {
-            Navigation.findNavController(requireView()).navigate(R.id.action_fridgeFragment_to_addIngredientFragment);
-        });
+        recipeViewModel.getFridgeItems().observe(getViewLifecycleOwner(),
+                result -> {
+                        if(result.isSuccess())  {
+                            ingredientList.clear();
+                            ingredientList.addAll(((Result.IngredientsResponseSuccess)result).getData().getIngredientsList());
+                            Log.d(TAG, "result: " + ((Result.IngredientsResponseSuccess)result).getData().getIngredientsList().toString());
+                            Log.d(TAG, "lista " + ingredientList);
+                            ingredientsRecyclerViewAdapter.notifyDataSetChanged();
+                        } else {
+                            ErrorMessagesUtil errorMessagesUtil =
+                                    new ErrorMessagesUtil(requireActivity().getApplication());
+                            Snackbar.make(view, errorMessagesUtil.
+                                            getErrorMessage(((Result.Error)result).getMessage()),
+                                    Snackbar.LENGTH_SHORT).show();
+                        }
+                });
+
+
+        fragmentFridgeBinding.addIngredientButton.setOnClickListener(v -> Navigation.findNavController(requireView()).navigate(R.id.action_fridgeFragment_to_addIngredientFragment));
     }
 
     ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -130,15 +146,14 @@ public class FridgeFragment extends Fragment {
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
             int pos = viewHolder.getBindingAdapterPosition();
-            deletedIngredient = new Ingredient(ingredientList.get(pos).getTitle(), ingredientList.get(pos).getExpiryDate());
+            recipeViewModel.deleteFridgeItem(ingredientList.get(pos));
+            deletedIngredient = new Ingredient(ingredientList.get(pos).getId(),ingredientList.get(pos).getTitle(), ingredientList.get(pos).getExpiryDate(),false,false);
             ingredientList.remove(pos);
-            ingredientsRecyclerViewAdapter.notifyItemRemoved(pos);
-            Snackbar.make(requireView(),deletedIngredient.getTitle(),Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    ingredientList.add(pos,deletedIngredient);
-                    ingredientsRecyclerViewAdapter.notifyItemInserted(pos);
-                }
+            ingredientsRecyclerViewAdapter.notifyDataSetChanged();
+            Snackbar.make(requireView(),deletedIngredient.getTitle(),Snackbar.LENGTH_LONG).setAction("Undo", view -> {
+                ingredientList.add(pos,deletedIngredient);
+                ingredientsRecyclerViewAdapter.notifyItemInserted(pos);
+                recipeViewModel.insertFridgeItem(deletedIngredient);
             }).show();
         }
 
@@ -156,29 +171,6 @@ public class FridgeFragment extends Fragment {
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         }
     };
-
-
-    private void saveInformation()  {
-        Set<String> fridgeItems = new HashSet<>();
-        for(int i = 0; i < ingredientList.size(); i++)  {
-            fridgeItems.add(ingredientList.get(i).getTitle()+" - "+ingredientList.get(i).getExpiryDate());
-        }
-
-        SharedPreferencesUtil sharedPreferencesUtil = new SharedPreferencesUtil(requireActivity().getApplication());
-        sharedPreferencesUtil.writeStringSetData(
-                SHARED_FRIDGE_ITEMS_FILE_NAME, SHARED_FRIDGE_ITEMS_FRIDGE, fridgeItems);
-        sharedPreferencesUtil.writeBooleanData(SHARED_FRIDGE_ITEMS_FILE_NAME,
-                SHARED_FRIDGE_ITEMS_FIRST_LOADING, true);
-
-        DataEncryptionUtil dataEncryptionUtil = new DataEncryptionUtil(getActivity());
-        String idToken = null;
-        try {
-            idToken = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(
-                    ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, ID_TOKEN);
-        } catch (GeneralSecurityException | IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     public void onDestroyView() {

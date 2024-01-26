@@ -24,9 +24,10 @@ public abstract class BaseRecipesLocalDataSource {
     public abstract void insertRecipes(RecipeApiResponse recipesApiResponse);
     public abstract void insertRecipes(List<Recipe> recipes);
     public abstract void deleteAllRecipes();
-    public abstract void getIngredients();
     public abstract void getFridgeItems();
-    public abstract void updateIngredient(Ingredient ingredient);
-    public abstract void deleteFridgeItems();
-    public abstract void insertIngredient(Ingredient ingredient);
+    public abstract void getFridgeItemsSelected();
+    public abstract void updateFridgeItem(Ingredient ingredient);
+    public abstract void deleteAllFridgeItems();
+    public abstract void insertFridgeItem(Ingredient ingredient);
+    public abstract void deleteFridgeItem(Ingredient ingredient);
 }

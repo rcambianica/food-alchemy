@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import java.util.List;
 import java.util.Set;
 
+import it.unimib.food_alchemy.model.Ingredient;
 import it.unimib.food_alchemy.model.Recipe;
 import it.unimib.food_alchemy.model.Result;
 
@@ -18,4 +19,15 @@ public interface IRecipesRepository {
     void updateRecipe(Recipe recipe);
 
     void deleteFavoriteRecipes();
+
+    /**
+     * Ingredients methods
+     */
+
+    MutableLiveData<Result> fetchFridgeItems();
+    MutableLiveData<Result> getFridgeItemsSelected();
+    void insertFridgeItem(Ingredient ingredient);
+    void deleteFridgeItem(Ingredient ingredient);
+    void updateFridgeItem(Ingredient ingredient);
+    void deleteFridgeItems();
 }

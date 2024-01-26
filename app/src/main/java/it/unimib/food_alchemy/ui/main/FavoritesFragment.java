@@ -1,20 +1,18 @@
 package it.unimib.food_alchemy.ui.main;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavGraph;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -58,7 +56,7 @@ public class FavoritesFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         fragmentFavoritesBinding = FragmentFavoritesBinding.inflate(inflater,container,false);
@@ -73,14 +71,11 @@ public class FavoritesFragment extends Fragment {
         recyclerViewFavorites.setLayoutManager(layoutManager);
 
          favoritesRecyclerViewAdapter =
-                 new RecipesRecyclerViewAdapter(requireActivity().getApplication(), recipesList, new RecipesRecyclerViewAdapter.OnItemClickListener() {
-                     @Override
-                     public void onRecipesItemClick(Recipe recipe) {
-                         FavoritesFragmentDirections.ActionFavoritesFragmentToRecipeFragment action =
-                                 FavoritesFragmentDirections.actionFavoritesFragmentToRecipeFragment(recipe);
-                         Navigation.findNavController(requireView()).navigate(action);
-                     }
-        });
+                 new RecipesRecyclerViewAdapter(requireActivity().getApplication(), recipesList, recipe -> {
+                     FavoritesFragmentDirections.ActionFavoritesFragmentToRecipeFragment action =
+                             FavoritesFragmentDirections.actionFavoritesFragmentToRecipeFragment(recipe);
+                     Navigation.findNavController(requireView()).navigate(action);
+                 });
         recyclerViewFavorites.setAdapter(favoritesRecyclerViewAdapter);
 
         SharedPreferencesUtil sharedPreferencesUtil =
@@ -89,16 +84,10 @@ public class FavoritesFragment extends Fragment {
         boolean isFirstLoading = sharedPreferencesUtil.readBooleanData(Constants.SHARED_PREFERENCES_FILE_NAME,
                 Constants.SHARED_PREFERENCES_FIRST_LOADING);
 
-        // Observe the LiveData associated with the MutableLiveData containing the favorite news
-        // returned by the method getFavoriteNewsLiveData() of NewsViewModel class.
-        // Pay attention to which LifecycleOwner you give as value to
-        // the method observe(LifecycleOwner, Observer).
-        // In this case, getViewLifecycleOwner() refers to
-        // androidx.fragment.app.FragmentViewLifecycleOwner and not to the Fragment itself.
-        // You can read more details here: https://stackoverflow.com/a/58663143/4255576
         recipesViewModel.getFavoriteRecipesLiveData(isFirstLoading).observe(getViewLifecycleOwner(), result -> {
             if (result != null) {
                 if (result.isSuccess()) {
+
                     recipesList.clear();
                     recipesList.addAll(((Result.RecipesResponseSuccess)result).getData().getRecipesList());
                     favoritesRecyclerViewAdapter.notifyDataSetChanged();

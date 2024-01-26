@@ -2,8 +2,10 @@ package it.unimib.food_alchemy.adapter;
 
 import static it.unimib.food_alchemy.R.color.md_theme_light_error;
 
+import android.app.Application;
 import android.graphics.Color;
 import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +15,9 @@ import android.widget.TextView;
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.time.LocalDate;
@@ -36,13 +40,16 @@ public class IngredientsRecyclerViewAdapter extends
      */
     public interface OnItemClickListener {
         void onIngredientsItemClick(Ingredient ingredient);
+        void onSelectedButtonPressed(int position);
     }
 
     private final List<Ingredient> ingredientsList;
     private final OnItemClickListener onItemClickListener;
+    //private final Application application;
 
-    public IngredientsRecyclerViewAdapter(List<Ingredient> ingredientsList, OnItemClickListener onItemClickListener)    {
+    public IngredientsRecyclerViewAdapter(List<Ingredient>  ingredientsList/*, Application application,*/, OnItemClickListener onItemClickListener)    {
         this.ingredientsList = ingredientsList;
+        //this.application = application;
         this.onItemClickListener = onItemClickListener;
     }
     @NonNull
@@ -70,7 +77,7 @@ public class IngredientsRecyclerViewAdapter extends
     /**
      * Custom ViewHolder to bind data to the RecyclerView items.
      */
-    public class IngredientsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class IngredientsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private final TextView textViewTitle;
         private final TextView textViewDate;
@@ -95,7 +102,7 @@ public class IngredientsRecyclerViewAdapter extends
              * **/
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 int expiryDays = Integer.parseInt(ingredient.getExpiryDate()) - Integer.parseInt(getCurrentDate());
-                if(expiryDays < 0)  {
+                if(expiryDays <= 0)  {
                     flag_view.setVisibility(View.VISIBLE);
                     flag_view.setBackgroundColor(Color.parseColor("#93000A"));
                 }
@@ -103,16 +110,18 @@ public class IngredientsRecyclerViewAdapter extends
                     flag_view.setVisibility(View.VISIBLE);
                     flag_view.setBackgroundColor(Color.parseColor("#FFD700"));
                 }
-
             }
+            //setImageViewSelectedFridgeItem(ingredientsList.get(getAdapterPosition()).isSelected());
         }
         @Override
         public void onClick(View v) {
-            if(check.getVisibility() == View.INVISIBLE)
-                check.setVisibility(View.VISIBLE);
-            else
-                check.setVisibility(View.INVISIBLE);
-            onItemClickListener.onIngredientsItemClick(ingredientsList.get(getAdapterPosition()));
+            /*
+            if(v.getId() == R.id.check_imageview)   {
+                setImageViewSelectedFridgeItem(ingredientsList.get(getAdapterPosition()).isSelected());
+                onItemClickListener.onSelectedButtonPressed(getAdapterPosition());
+            } else {
+                onItemClickListener.onIngredientsItemClick(ingredientsList.get(getAdapterPosition()));
+            }*/
         }
         @RequiresApi(api = Build.VERSION_CODES.O)
         private String getCurrentDate() {
@@ -132,5 +141,19 @@ public class IngredientsRecyclerViewAdapter extends
             }
             return formattedString;
         }
+
+        /*private void setImageViewSelectedFridgeItem(boolean isSelected) {
+            if (isSelected) {
+                Log.d("TAG", "ISSELECTED");
+                check.setImageDrawable(
+                        AppCompatResources.getDrawable(application,
+                                R.drawable.baseline_check_circle_24));
+            } else {
+                Log.d("TAG", "ISNOTSELECTED");
+                check.setImageDrawable(
+                        AppCompatResources.getDrawable(application,
+                                R.drawable.baseline_circle_24));
+            }
+        }*/
     }
 }

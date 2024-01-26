@@ -1,7 +1,5 @@
 package it.unimib.food_alchemy.ui.main;
 
-import android.util.Log;
-
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -9,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import it.unimib.food_alchemy.data.repository.recipes.IRecipesRepository;
+import it.unimib.food_alchemy.model.Ingredient;
 import it.unimib.food_alchemy.model.Recipe;
 import it.unimib.food_alchemy.model.Result;
 
@@ -27,6 +26,8 @@ public class RecipeViewModel extends ViewModel {
     private boolean firstLoading;
     private MutableLiveData<Result> recipesListLiveData;
     private MutableLiveData<Result> favoriteRecipesListLiveData;
+    private MutableLiveData<Result> fridgeItemsListLiveData;
+    private MutableLiveData<Result> fridgeItemsSelectedLiveData;
 
     public RecipeViewModel(IRecipesRepository recipesRepository)    {
         this.recipesRepository = recipesRepository;
@@ -88,6 +89,49 @@ public class RecipeViewModel extends ViewModel {
      */
     public void deleteAllFavoriteRecipes() {
         recipesRepository.deleteFavoriteRecipes();
+    }
+
+    /**
+     * Ingredients methods
+     */
+
+    public MutableLiveData<Result> getFridgeItems() {
+        if(fridgeItemsListLiveData == null) {
+            fetchFridgeItems();
+        }
+        return fridgeItemsListLiveData;
+    }
+
+    public MutableLiveData<Result> getFridgeItemsSelectedLiveData() {
+        if(fridgeItemsSelectedLiveData == null) {
+            getFridgeItemsSelected();
+        }
+        return fridgeItemsSelectedLiveData;
+    }
+
+    public void updateFridgeItem(Ingredient ingredient) {
+        recipesRepository.updateFridgeItem(ingredient);
+    }
+
+    private void fetchFridgeItems() {
+        fridgeItemsListLiveData = recipesRepository.fetchFridgeItems();
+    }
+
+    private void getFridgeItemsSelected()   {
+        fridgeItemsSelectedLiveData = recipesRepository.getFridgeItemsSelected();
+    }
+
+    public void insertFridgeItem(Ingredient ingredient)  {
+        recipesRepository.insertFridgeItem(ingredient);
+    }
+    public void deleteFridgeItem(Ingredient ingredient) {
+        recipesRepository.deleteFridgeItem(ingredient);
+    }
+    public void updateSelectedFridgeItem(Ingredient ingredient) {
+        recipesRepository.updateFridgeItem(ingredient);
+    }
+    public void deleteAllFridgeItems()  {
+        recipesRepository.deleteFridgeItems();
     }
 
     public int getOffset() {

@@ -167,11 +167,6 @@ public class UserRepository implements IUserRepository, UserResponseCallback, Re
     }
 
     @Override
-    public void onSuccessFromLocal(Ingredient ingredient) {
-
-    }
-
-    @Override
     public void onFridgeItemsStatusChanged(Ingredient ingredient, List<Ingredient> fridgeItems) {
 
     }

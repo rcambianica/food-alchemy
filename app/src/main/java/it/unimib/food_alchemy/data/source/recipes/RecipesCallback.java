@@ -25,8 +25,7 @@ public interface RecipesCallback {
      */
 
     void onSuccessFromLocal(List<Ingredient> ingredients);
-    void onSuccessFromLocal(Ingredient ingredient);
     void onFridgeItemsStatusChanged(Ingredient ingredient, List<Ingredient> fridgeItems);
     void onFridgeItemsStatusChanged(List<Ingredient> ingredients);
-    void onDeleteFridgeItemsSuccess(List<Ingredient> fridgeItems);
+
 }
