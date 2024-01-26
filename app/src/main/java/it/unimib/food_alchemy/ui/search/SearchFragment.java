@@ -26,6 +26,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
@@ -33,28 +34,28 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.Set;
 
 import it.unimib.food_alchemy.R;
+import it.unimib.food_alchemy.data.repository.recipes.IRecipesRepository;
 import it.unimib.food_alchemy.databinding.FragmentSearchBinding;
 import it.unimib.food_alchemy.ui.main.MainActivity;
+import it.unimib.food_alchemy.ui.main.RecipeViewModel;
+import it.unimib.food_alchemy.ui.main.RecipeViewModelFactory;
+import it.unimib.food_alchemy.util.ServiceLocator;
 import it.unimib.food_alchemy.util.SharedPreferencesUtil;
 
 public class SearchFragment extends Fragment {
 
     private FragmentSearchBinding fragmentSearchBinding;
+    private RecipeViewModel recipeViewModel;
 
     public SearchFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment SearchFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static SearchFragment newInstance() {
         return new SearchFragment();
     }
@@ -62,6 +63,17 @@ public class SearchFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        IRecipesRepository recipesRepository =
+                ServiceLocator.getInstance().getRecipesRepository(requireActivity().getApplication());
+
+        if(recipesRepository != null)   {
+            recipeViewModel = new ViewModelProvider(requireActivity(),
+                    new RecipeViewModelFactory(recipesRepository)).get(RecipeViewModel.class);
+        }   else {
+            Snackbar.make(requireActivity().findViewById(android.R.id.content),
+                    getString(R.string.unexpected_error), Snackbar.LENGTH_SHORT).show();
+        }
     }
 
     @Override

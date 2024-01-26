@@ -7,177 +7,173 @@
     android:id="@+id/constraintLayout_esterno"
     tools:context=".ui.main.MainActivity">
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/nested_scroll_view"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+    <Button
+        android:id="@+id/search_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:text="@string/search"
+        android:textAlignment="textStart"
+        app:icon="@drawable/baseline_search_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/recipe_of_the_day" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/recipe_of_the_day"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/search_button"
+        app:layout_constraintBottom_toTopOf="@id/textView4"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        app:cardCornerRadius="30dp"
+        app:cardElevation="6dp">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/search_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="15dp"
-            android:layout_marginStart="40dp"
-            android:layout_marginEnd="40dp"
-            android:text="@string/search"
-            android:textAlignment="textStart"
-            app:icon="@drawable/baseline_search_24"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/recipe_of_the_day" />
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/recipe_of_the_day"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/search_button"
-            app:layout_constraintBottom_toTopOf="@id/textView4"
-            android:layout_marginStart="25dp"
-            android:layout_marginEnd="25dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            app:cardCornerRadius="30dp"
-            app:cardElevation="6dp">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <TextView
+                android:id="@+id/day_title"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/instructions"/>
 
                 <TextView
-                    android:id="@+id/day_title"
+                    android:id="@+id/instructions"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:text="@string/suggested_dish"
                     android:textAlignment="center"
-                    android:textSize="20dp"
+                    android:textSize="15sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toTopOf="@id/instructions"/>
+                    app:layout_constraintTop_toBottomOf="@id/day_title"
+                    app:layout_constraintBottom_toTopOf="@id/day_image"/>
 
-                    <TextView
-                        android:id="@+id/instructions"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/suggested_dish"
-                        android:textAlignment="center"
-                        android:textSize="15dp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/day_title"
-                        app:layout_constraintBottom_toTopOf="@id/day_image"/>
+            <ImageView
+                android:id="@+id/day_image"
+                android:contentDescription="@string/recipe_image"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_marginTop="10dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/instructions"
+                 />
 
-                <ImageView
-                    android:id="@+id/day_image"
-                    android:layout_width="match_parent"
-                    android:layout_height="250dp"
-                    android:layout_marginTop="10dp"
-                    android:scaleType="centerCrop"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/instructions"
-                     />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 
-        </androidx.cardview.widget.CardView>
+    </androidx.cardview.widget.CardView>
 
-        <TextView
-            android:id="@+id/textView4"
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="@string/discovery"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/scrollViewDiscover"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recipe_of_the_day" />
+
+
+    <HorizontalScrollView
+        android:id="@+id/scrollViewDiscover"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView4"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/linearButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="@string/discovery"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/scrollViewDiscover"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/recipe_of_the_day" />
+            android:orientation="horizontal">
+
+            <android.widget.Button
+                android:id="@+id/bottone_main_course"
+                android:layout_width="125dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/custom_button"
+                android:drawableTop="@drawable/dinner_dining_black_24dp"
+                android:drawableTint="?attr/colorControlNormal"
+                android:paddingTop="20dp"
+                android:paddingBottom="25dp"
+                android:text="@string/main_course"
+                android:enabled="true"/>
 
 
-        <HorizontalScrollView
-            android:id="@+id/scrollViewDiscover"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="15dp"
-            android:layout_marginStart="40dp"
-            android:layout_marginEnd="40dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textView4"
-            android:scrollbars="none">
+            <android.widget.Button
+                android:id="@+id/bottone_side_dish"
+                android:layout_width="125dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/custom_button"
+                android:drawableTop="@drawable/side_dish_pollo"
+                android:drawableTint="?attr/colorControlNormal"
+                android:paddingTop="20dp"
+                android:paddingBottom="25dp"
+                android:text="@string/side_dish" />
 
-            <LinearLayout
-                android:id="@+id/linearButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+            <android.widget.Button
+                android:id="@+id/bottone_dessert"
+                android:layout_width="125dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/custom_button"
+                android:drawableTop="@drawable/food_cake_slice"
+                android:drawableTint="?attr/colorControlNormal"
+                android:paddingTop="20dp"
+                android:paddingBottom="25dp"
+                android:text="@string/dessert" />
 
-                <android.widget.Button
-                    android:id="@+id/bottone_main_course"
-                    android:layout_width="125dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/custom_button"
-                    android:drawableTop="@drawable/dinner_dining_black_24dp"
-                    android:drawableTint="?attr/colorControlNormal"
-                    android:paddingTop="20dp"
-                    android:paddingBottom="25dp"
-                    android:text="@string/main_course"
-                    android:enabled="true"/>
+            <android.widget.Button
+                android:id="@+id/bottone_appetizer"
+                android:layout_width="125dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/custom_button"
+                android:drawableTop="@drawable/appetizer"
+                android:drawableTint="?attr/colorControlNormal"
+                android:paddingTop="20dp"
+                android:paddingBottom="25dp"
+                android:text="@string/appetizer" />
 
+        </LinearLayout>
 
-                <android.widget.Button
-                    android:id="@+id/bottone_side_dish"
-                    android:layout_width="125dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/custom_button"
-                    android:drawableTop="@drawable/side_dish_pollo"
-                    android:drawableTint="?attr/colorControlNormal"
-                    android:paddingTop="20dp"
-                    android:paddingBottom="25dp"
-                    android:text="@string/side_dish" />
+    </HorizontalScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <android.widget.Button
-                    android:id="@+id/bottone_dessert"
-                    android:layout_width="125dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/custom_button"
-                    android:drawableTop="@drawable/food_cake_slice"
-                    android:drawableTint="?attr/colorControlNormal"
-                    android:paddingTop="20dp"
-                    android:paddingBottom="25dp"
-                    android:text="@string/dessert" />
-
-                <android.widget.Button
-                    android:id="@+id/bottone_appetizer"
-                    android:layout_width="125dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/custom_button"
-                    android:drawableTop="@drawable/appetizer"
-                    android:drawableTint="?attr/colorControlNormal"
-                    android:paddingTop="20dp"
-                    android:paddingBottom="25dp"
-                    android:text="@string/appetizer" />
-
-            </LinearLayout>
-
-        </HorizontalScrollView>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.core.widget.NestedScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
 
