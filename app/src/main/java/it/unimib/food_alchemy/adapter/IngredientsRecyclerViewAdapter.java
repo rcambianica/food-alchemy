@@ -40,16 +40,13 @@ public class IngredientsRecyclerViewAdapter extends
      */
     public interface OnItemClickListener {
         void onIngredientsItemClick(Ingredient ingredient);
-        void onSelectedButtonPressed(int position);
     }
 
     private final List<Ingredient> ingredientsList;
     private final OnItemClickListener onItemClickListener;
-    //private final Application application;
 
-    public IngredientsRecyclerViewAdapter(List<Ingredient>  ingredientsList/*, Application application,*/, OnItemClickListener onItemClickListener)    {
+    public IngredientsRecyclerViewAdapter(List<Ingredient>  ingredientsList, OnItemClickListener onItemClickListener)    {
         this.ingredientsList = ingredientsList;
-        //this.application = application;
         this.onItemClickListener = onItemClickListener;
     }
     @NonNull
@@ -111,17 +108,12 @@ public class IngredientsRecyclerViewAdapter extends
                     flag_view.setBackgroundColor(Color.parseColor("#FFD700"));
                 }
             }
-            //setImageViewSelectedFridgeItem(ingredientsList.get(getAdapterPosition()).isSelected());
+            setImageViewSelectedFridgeItem(ingredientsList.get(getAdapterPosition()).isSelected());
         }
         @Override
         public void onClick(View v) {
-            /*
-            if(v.getId() == R.id.check_imageview)   {
                 setImageViewSelectedFridgeItem(ingredientsList.get(getAdapterPosition()).isSelected());
-                onItemClickListener.onSelectedButtonPressed(getAdapterPosition());
-            } else {
                 onItemClickListener.onIngredientsItemClick(ingredientsList.get(getAdapterPosition()));
-            }*/
         }
         @RequiresApi(api = Build.VERSION_CODES.O)
         private String getCurrentDate() {
@@ -142,18 +134,12 @@ public class IngredientsRecyclerViewAdapter extends
             return formattedString;
         }
 
-        /*private void setImageViewSelectedFridgeItem(boolean isSelected) {
+        private void setImageViewSelectedFridgeItem(boolean isSelected) {
             if (isSelected) {
-                Log.d("TAG", "ISSELECTED");
-                check.setImageDrawable(
-                        AppCompatResources.getDrawable(application,
-                                R.drawable.baseline_check_circle_24));
-            } else {
-                Log.d("TAG", "ISNOTSELECTED");
-                check.setImageDrawable(
-                        AppCompatResources.getDrawable(application,
-                                R.drawable.baseline_circle_24));
+                check.setVisibility(View.VISIBLE);
+            } else  {
+                check.setVisibility(View.INVISIBLE);
             }
-        }*/
+        }
     }
 }

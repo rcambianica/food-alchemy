@@ -177,11 +177,6 @@ public class UserRepository implements IUserRepository, UserResponseCallback, Re
     }
 
     @Override
-    public void onDeleteFridgeItemsSuccess(List<Ingredient> fridgeItems) {
-
-    }
-
-    @Override
     public void onSuccessSynchronization() {
         userFavoriteRecipesMutableLiveData.postValue(new Result.RecipesResponseSuccess(null));
     }

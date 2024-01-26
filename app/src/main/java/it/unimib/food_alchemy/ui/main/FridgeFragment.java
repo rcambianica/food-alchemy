@@ -2,11 +2,9 @@ package it.unimib.food_alchemy.ui.main;
 
 import android.graphics.Canvas;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,18 +26,12 @@ import it.unimib.food_alchemy.adapter.IngredientsRecyclerViewAdapter;
 import it.unimib.food_alchemy.data.repository.recipes.IRecipesRepository;
 import it.unimib.food_alchemy.databinding.FragmentFridgeBinding;
 import it.unimib.food_alchemy.model.Ingredient;
-import it.unimib.food_alchemy.model.RecipesResponse;
 import it.unimib.food_alchemy.model.Result;
 import it.unimib.food_alchemy.util.ErrorMessagesUtil;
 import it.unimib.food_alchemy.util.ServiceLocator;
 import it.unimib.food_alchemy.util.SharedPreferencesUtil;
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link FridgeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class FridgeFragment extends Fragment {
 
     private static final String TAG = FridgeFragment.class.getSimpleName();
@@ -101,13 +93,9 @@ public class FridgeFragment extends Fragment {
                 new IngredientsRecyclerViewAdapter(ingredientList, new IngredientsRecyclerViewAdapter.OnItemClickListener() {
                     @Override
                     public void onIngredientsItemClick(Ingredient ingredient) {
+                        ingredient.setSelected(!ingredient.isSelected());
+                        recipeViewModel.updateFridgeItem(ingredient);
                         Snackbar.make(view, ingredient.getTitle(), Snackbar.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onSelectedButtonPressed(int position) {
-                        //ingredientList.get(position).setSelected(!ingredientList.get(position).isSelected());
-                        //recipeViewModel.updateFridgeItem(ingredientList.get(position));
                     }
                 });
         recyclerViewIngredients.setLayoutManager(layoutManager);
@@ -121,8 +109,6 @@ public class FridgeFragment extends Fragment {
                         if(result.isSuccess())  {
                             ingredientList.clear();
                             ingredientList.addAll(((Result.IngredientsResponseSuccess)result).getData().getIngredientsList());
-                            Log.d(TAG, "result: " + ((Result.IngredientsResponseSuccess)result).getData().getIngredientsList().toString());
-                            Log.d(TAG, "lista " + ingredientList);
                             ingredientsRecyclerViewAdapter.notifyDataSetChanged();
                         } else {
                             ErrorMessagesUtil errorMessagesUtil =

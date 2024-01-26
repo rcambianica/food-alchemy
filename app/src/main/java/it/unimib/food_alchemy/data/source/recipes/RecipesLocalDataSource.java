@@ -122,9 +122,6 @@ public class RecipesLocalDataSource extends BaseRecipesLocalDataSource{
 
                 recipesCallback.onSuccessFromLocal(recipesApiResponse);
             }
-            else    {
-                Log.d("recipes_local_data_source", "recipesList nulla");
-            }
         });
     }
 

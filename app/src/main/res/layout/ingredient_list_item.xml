@@ -50,7 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/check"
-                android:src="@drawable/baseline_circle_24"
+                android:src="@drawable/baseline_check_circle_24"
                 android:visibility="invisible"
                 app:layout_constraintBottom_toTopOf="@+id/date_textview"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -59,7 +59,6 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
             <View
                 android:id="@+id/flag_view"
                 android:layout_width="match_parent"
@@ -72,6 +71,5 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="1.0" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
