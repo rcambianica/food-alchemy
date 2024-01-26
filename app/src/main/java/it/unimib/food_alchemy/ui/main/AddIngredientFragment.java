@@ -111,7 +111,7 @@ public class AddIngredientFragment extends Fragment {
             String expiryDate = formatDate(fragmentAddIngredientBinding.spinnerButton.getText().toString());
             if(isIngredientOk(ingredientName))  {
                 long ran = (long)Math.floor(Math.random()*(30));;
-                Ingredient fridgeItem = new Ingredient(ran,ingredientName,expiryDate,false,false);
+                Ingredient fridgeItem = new Ingredient(ran,ingredientName,expiryDate,false);
                 recipeViewModel.insertFridgeItem(fridgeItem);
                 Navigation.findNavController(requireView()).navigateUp();
             }

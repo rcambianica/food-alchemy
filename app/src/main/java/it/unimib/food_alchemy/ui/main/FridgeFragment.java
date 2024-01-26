@@ -140,7 +140,7 @@ public class FridgeFragment extends Fragment {
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
             int pos = viewHolder.getBindingAdapterPosition();
             recipeViewModel.deleteFridgeItem(ingredientList.get(pos));
-            deletedIngredient = new Ingredient(ingredientList.get(pos).getId(),ingredientList.get(pos).getTitle(), ingredientList.get(pos).getExpiryDate(),false,false);
+            deletedIngredient = new Ingredient(ingredientList.get(pos).getId(),ingredientList.get(pos).getTitle(), ingredientList.get(pos).getExpiryDate(),false);
             ingredientList.remove(pos);
             ingredientsRecyclerViewAdapter.notifyDataSetChanged();
             Snackbar.make(requireView(),deletedIngredient.getTitle(),Snackbar.LENGTH_LONG).setAction("Undo", view -> {

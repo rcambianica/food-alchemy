@@ -122,7 +122,6 @@ public class FavoriteRecipesDataSource extends BaseFavoriteRecipesDataSource    
                         List<Ingredient> ingredientList = new ArrayList<>();
                         for(DataSnapshot ds : task.getResult().getChildren()) {
                             Ingredient ingredient = ds.getValue(Ingredient.class);
-                            ingredient.setSynchronized(true);
                             ingredientList.add(ingredient);
                         }
 
@@ -136,7 +135,6 @@ public class FavoriteRecipesDataSource extends BaseFavoriteRecipesDataSource    
         databaseReference.child(FIREBASE_USERS_COLLECTION).child(idToken).
                 child(FIREBASE_FRIDGE_ITEMS_COLLECTION).child(String.valueOf(ingredient.getId())).setValue(ingredient)
                 .addOnSuccessListener(unused -> {
-                    ingredient.setSynchronized(true);
                     recipesCallback.onSuccessFromCloudWritingFridgeItems(ingredient);
                 })
                 .addOnFailureListener(e -> recipesCallback.onFailureFromCloud(e));
@@ -147,7 +145,6 @@ public class FavoriteRecipesDataSource extends BaseFavoriteRecipesDataSource    
         databaseReference.child(FIREBASE_USERS_COLLECTION).child(idToken).
                 child(FIREBASE_FRIDGE_ITEMS_COLLECTION).child(String.valueOf(ingredient.getId())).
                 removeValue().addOnSuccessListener(unused -> {
-                    ingredient.setSynchronized(false);
                     recipesCallback.onSuccessFromCloudWritingFridgeItems(ingredient);
                 }).addOnFailureListener(e -> {
                     recipesCallback.onFailureFromCloud(e);

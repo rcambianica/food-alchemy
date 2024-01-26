@@ -30,18 +30,14 @@ public class Ingredient implements Parcelable {
 
     private String expiryDate;
 
-    @ColumnInfo(name = "is_synchronized")
-    private boolean isSynchronized;
-
     @ColumnInfo(name = "is_selected", defaultValue = "0")
     private boolean isSelected;
     public Ingredient() {}
 
-    public Ingredient(long id, String title, String expiryDate, boolean isSynchronized, boolean isSelected) {
+    public Ingredient(long id, String title, String expiryDate, boolean isSelected) {
         this.id = id;
         this.title = title;
         this.expiryDate = expiryDate;
-        this.isSynchronized = isSynchronized;
         this.isSelected = isSelected;
     }
 
@@ -86,14 +82,6 @@ public class Ingredient implements Parcelable {
         this.expiryDate = expiryDate;
     }
 
-    public boolean isSynchronized() {
-        return isSynchronized;
-    }
-
-    public void setSynchronized(boolean aSynchronized) {
-        isSynchronized = aSynchronized;
-    }
-
     public boolean isSelected() {
         return isSelected;
     }
@@ -110,7 +98,6 @@ public class Ingredient implements Parcelable {
                 ", amount=" + amount +
                 ", unit='" + unit + '\'' +
                 ", expiryDate='" + expiryDate + '\'' +
-                ", isSynchronized=" + isSynchronized +
                 ", isSelected=" + isSelected +
                 '}';
     }
@@ -127,7 +114,6 @@ public class Ingredient implements Parcelable {
         parcel.writeFloat(amount);
         parcel.writeString(unit);
         parcel.writeString(expiryDate);
-        parcel.writeByte((byte) (isSynchronized ? 1 : 0));
         parcel.writeByte((byte) (isSelected ? 1 : 0));
     }
 
@@ -137,7 +123,6 @@ public class Ingredient implements Parcelable {
         amount = in.readFloat();
         unit = in.readString();
         expiryDate = in.readString();
-        isSynchronized = in.readByte() != 0;
         isSelected = in.readByte() != 0;
     }
 
