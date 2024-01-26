@@ -42,7 +42,8 @@
     <string name="error_ingredient_message">The ingredient cannot be null!</string>
 
     <!--SEARCH-->
-    <string name="search">Search Here</string>
+    <string name="search_here">Search Here</string>
+    <string name="search">Search</string>
     <!--CHIPCATEGORIES-->
     <string name="categories">Categories</string>
     <string name="main_course">Main Course</string>

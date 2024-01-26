@@ -29,21 +29,28 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 
+import com.google.android.material.chip.Chip;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import it.unimib.food_alchemy.R;
 import it.unimib.food_alchemy.data.repository.recipes.IRecipesRepository;
 import it.unimib.food_alchemy.databinding.FragmentSearchBinding;
+import it.unimib.food_alchemy.model.Ingredient;
+import it.unimib.food_alchemy.model.Result;
 import it.unimib.food_alchemy.ui.main.MainActivity;
 import it.unimib.food_alchemy.ui.main.RecipeViewModel;
 import it.unimib.food_alchemy.ui.main.RecipeViewModelFactory;
+import it.unimib.food_alchemy.util.ErrorMessagesUtil;
 import it.unimib.food_alchemy.util.ServiceLocator;
 import it.unimib.food_alchemy.util.SharedPreferencesUtil;
 
@@ -52,6 +59,7 @@ public class SearchFragment extends Fragment {
     private FragmentSearchBinding fragmentSearchBinding;
     private RecipeViewModel recipeViewModel;
 
+    private List<Ingredient> selectedFridgeItems;
     public SearchFragment() {
         // Required empty public constructor
     }
@@ -74,6 +82,7 @@ public class SearchFragment extends Fragment {
             Snackbar.make(requireActivity().findViewById(android.R.id.content),
                     getString(R.string.unexpected_error), Snackbar.LENGTH_SHORT).show();
         }
+        selectedFridgeItems = new ArrayList<>();
     }
 
     @Override
@@ -90,14 +99,39 @@ public class SearchFragment extends Fragment {
 
         fragmentSearchBinding.searchView.setIconified(false);
 
-        setViewsChecked();
-
-        fragmentSearchBinding.searchButtonDirect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Navigation.findNavController(requireView()).navigate(R.id.action_searchFragment_to_resultsSearchFragment);
+        recipeViewModel.getFridgeItemsSelectedLiveData().observe(getViewLifecycleOwner(),result -> {
+            if(result != null)  {
+                if(result.isSuccess())  {
+                    selectedFridgeItems.clear();
+                    selectedFridgeItems.addAll(((Result.IngredientsResponseSuccess)result).getData().getIngredientsList());
+                    for(Ingredient ingredient: selectedFridgeItems) {
+                        Chip chip = new Chip(requireContext());
+                        chip.setText(ingredient.getTitle());
+                        chip.setCloseIconVisible(true);
+                        chip.setOnCloseIconClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                ingredient.setSelected(false);
+                                recipeViewModel.updateSelectedFridgeItem(ingredient);
+                                fragmentSearchBinding.chipIngredients.removeAllViews();
+                                selectedFridgeItems.remove(ingredient);
+                                Log.d("TAG", selectedFridgeItems.toString());
+                            }
+                        });
+                        fragmentSearchBinding.chipIngredients.addView(chip);
+                    }
+                } else {
+                    ErrorMessagesUtil errorMessagesUtil =
+                            new ErrorMessagesUtil(requireActivity().getApplication());
+                    Snackbar.make(view, errorMessagesUtil.
+                                    getErrorMessage(((Result.Error)result).getMessage()),
+                            Snackbar.LENGTH_SHORT).show();
+                }
             }
         });
+
+        setViewsChecked();
+
 
         fragmentSearchBinding.returnButton.setOnClickListener(new View.OnClickListener() {
             @Override

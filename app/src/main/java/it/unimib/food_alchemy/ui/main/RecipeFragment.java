@@ -10,8 +10,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavBackStackEntry;
 import androidx.navigation.Navigation;
 
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,8 +33,6 @@ import it.unimib.food_alchemy.model.Recipe;
 import it.unimib.food_alchemy.util.ServiceLocator;
 
 public class RecipeFragment extends Fragment {
-
-    private final String TAG = RecipeFragment.class.getSimpleName();
     private FragmentRecipeBinding fragmentRecipeBinding;
     private RecipeViewModel recipeViewModel;
 
@@ -110,7 +106,6 @@ public class RecipeFragment extends Fragment {
             recipe.setFavorite(!recipe.isFavorite());
             setCheck(recipe);
             recipeViewModel.updateRecipe(recipe);
-            //TODO decidere se vogliamo tenerlo
             if(!recipe.isFavorite())
                 Navigation.findNavController(requireView()).navigateUp();
         });

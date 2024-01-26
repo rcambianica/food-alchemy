@@ -121,7 +121,7 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
     @Override
     public void updateFridgeItem(Ingredient ingredient) {
         recipesLocalDataSource.updateFridgeItem(ingredient);
-        //TODO capire cosa fare qui
+
     }
 
     @Override
@@ -249,8 +249,6 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
 
         if(allIngredientsResult != null && allIngredientsResult.isSuccess())    {
             allFridgeItemsMutableLiveData.postValue(allIngredientsResult);
-        } else {
-            Log.d(TAG, "ELSE");
         }
         fridgeItemsSelectedMutableLiveData.postValue(new Result.IngredientsResponseSuccess(new IngredientsResponse(fridgeItems)));
     }

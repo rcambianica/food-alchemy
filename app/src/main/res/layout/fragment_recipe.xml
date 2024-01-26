@@ -159,7 +159,7 @@
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
        android:clickable="true"
-       android:contentDescription="@string/search"
+       android:contentDescription="@string/search_here"
        android:src="@android:drawable/star_off"
        app:layout_constraintBottom_toBottomOf="parent"
        app:layout_constraintEnd_toEndOf="parent"

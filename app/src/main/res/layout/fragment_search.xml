@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:padding="8dp"
-        app:layout_constraintBottom_toTopOf="@id/searchView"
+        app:layout_constraintBottom_toTopOf="@id/search_linear"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -36,43 +36,40 @@
             android:textSize="24sp"
             android:textStyle="bold" />
 
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-        <ImageButton
-            android:id="@+id/search_button_direct"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="@android:color/transparent"
-            android:padding="8dp"
-            android:src="@drawable/search_draw"
-            app:tint="?attr/colorControlNormal" />
     </LinearLayout>
 
-    <!-- SearchView -->
-    <SearchView
-        android:id="@+id/searchView"
+    <LinearLayout
+        android:id="@+id/search_linear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:queryHint="Search..."
-        app:iconifiedByDefault="false"
-        app:layout_constraintBottom_toTopOf="@id/scrollChip"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/linear_layout" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/linear_layout"
+        app:layout_constraintBottom_toTopOf="@id/scrollChip">
+
+        <SearchView
+            android:id="@+id/searchView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:focusable="true"
+            android:queryHint="Search..."
+            app:iconifiedByDefault="false" />
+
+        <Button
+            android:id="@+id/search_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/search" />
+    </LinearLayout>
 
     <ScrollView
         android:id="@+id/scrollChip"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/searchView"
+        app:layout_constraintTop_toBottomOf="@id/search_linear"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -83,6 +80,9 @@
                 android:id="@+id/chip_ingredients"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="18dp"
+                android:layout_marginEnd="18dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
