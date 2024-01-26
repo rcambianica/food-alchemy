@@ -14,7 +14,7 @@ import java.util.Objects;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
- *  Class to represent the API response of NewsAPI.org (https://api.spoonacular.com/)
+ *  Class to represent the API response of Spoonacular (https://api.spoonacular.com/)
  *  associated with the endpoint "recipes" - recipes/complexSearch.
  */
 public class RecipeApiResponse extends RecipesResponse{

@@ -16,6 +16,7 @@ public class UserViewModel extends ViewModel {
     private final IUserRepository userRepository;
     private MutableLiveData<Result> userMutableLiveData;
     private MutableLiveData<Result> userFavoriteRecipesMutableLiveData;
+    private MutableLiveData<Result> userFridgeItemsMutableLiveData;
     private MutableLiveData<Result> userPreferencesMutableLiveData;
     private boolean authenticationError;
 

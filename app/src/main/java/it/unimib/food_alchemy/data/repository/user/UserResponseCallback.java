@@ -12,6 +12,7 @@ public interface UserResponseCallback {
     void onSuccessFromRemoteDatabase(User user);
     void onSuccessFromGettingUserFavoritesRecipes(List<Recipe> recipeList);
     void onSuccessFromGettingUserPreferences();
+    void onSuccessFromGettingUserFridgeItems(List<Ingredient> ingredientsList);
     void onFailureFromRemoteDatabase(String message);
     void onSuccessLogout();
 }

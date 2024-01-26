@@ -61,6 +61,9 @@ public interface RecipeDao {
     List<Ingredient> getFridgeItemsSelected();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    List<Long> insertIngredientsList(List<Ingredient> ingredients);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insertIngredient(Ingredient ingredient);
 
     @Insert

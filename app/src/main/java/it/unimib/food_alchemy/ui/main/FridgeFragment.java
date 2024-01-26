@@ -27,6 +27,7 @@ import it.unimib.food_alchemy.data.repository.recipes.IRecipesRepository;
 import it.unimib.food_alchemy.databinding.FragmentFridgeBinding;
 import it.unimib.food_alchemy.model.Ingredient;
 import it.unimib.food_alchemy.model.Result;
+import it.unimib.food_alchemy.util.Constants;
 import it.unimib.food_alchemy.util.ErrorMessagesUtil;
 import it.unimib.food_alchemy.util.ServiceLocator;
 import it.unimib.food_alchemy.util.SharedPreferencesUtil;
@@ -95,7 +96,6 @@ public class FridgeFragment extends Fragment {
                     public void onIngredientsItemClick(Ingredient ingredient) {
                         ingredient.setSelected(!ingredient.isSelected());
                         recipeViewModel.updateFridgeItem(ingredient);
-                        Snackbar.make(view, ingredient.getTitle(), Snackbar.LENGTH_SHORT).show();
                     }
                 });
         recyclerViewIngredients.setLayoutManager(layoutManager);
@@ -104,12 +104,19 @@ public class FridgeFragment extends Fragment {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(recyclerViewIngredients);
 
-        recipeViewModel.getFridgeItems().observe(getViewLifecycleOwner(),
+        boolean isFirstLoading = sharedPreferencesUtil.readBooleanData(Constants.SHARED_PREFERENCES_FILE_NAME,
+                Constants.SHARED_PREFERENCES_FRIDGE_ITEMS_FIRST_LOADING);
+
+        recipeViewModel.getFridgeItems(isFirstLoading).observe(getViewLifecycleOwner(),
                 result -> {
                         if(result.isSuccess())  {
                             ingredientList.clear();
                             ingredientList.addAll(((Result.IngredientsResponseSuccess)result).getData().getIngredientsList());
                             ingredientsRecyclerViewAdapter.notifyDataSetChanged();
+                            if (isFirstLoading) {
+                                sharedPreferencesUtil.writeBooleanData(Constants.SHARED_PREFERENCES_FILE_NAME,
+                                        Constants.SHARED_PREFERENCES_FRIDGE_ITEMS_FIRST_LOADING, false);
+                            }
                         } else {
                             ErrorMessagesUtil errorMessagesUtil =
                                     new ErrorMessagesUtil(requireActivity().getApplication());

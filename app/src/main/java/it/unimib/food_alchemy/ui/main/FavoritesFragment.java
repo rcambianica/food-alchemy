@@ -1,7 +1,6 @@
 package it.unimib.food_alchemy.ui.main;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,18 +81,17 @@ public class FavoritesFragment extends Fragment {
                 new SharedPreferencesUtil(requireActivity().getApplication());
 
         boolean isFirstLoading = sharedPreferencesUtil.readBooleanData(Constants.SHARED_PREFERENCES_FILE_NAME,
-                Constants.SHARED_PREFERENCES_FIRST_LOADING);
+                Constants.SHARED_PREFERENCES_RECIPES_FIRST_LOADING);
 
-        recipesViewModel.getFavoriteRecipesLiveData(isFirstLoading).observe(getViewLifecycleOwner(), result -> {
+        recipesViewModel.getFavoriteRecipesLiveData().observe(getViewLifecycleOwner(), result -> {
             if (result != null) {
                 if (result.isSuccess()) {
-
                     recipesList.clear();
                     recipesList.addAll(((Result.RecipesResponseSuccess)result).getData().getRecipesList());
                     favoritesRecyclerViewAdapter.notifyDataSetChanged();
                     if (isFirstLoading) {
                         sharedPreferencesUtil.writeBooleanData(Constants.SHARED_PREFERENCES_FILE_NAME,
-                                Constants.SHARED_PREFERENCES_FIRST_LOADING, false);
+                                Constants.SHARED_PREFERENCES_RECIPES_FIRST_LOADING, false);
                     }
                 } else {
                     ErrorMessagesUtil errorMessagesUtil =

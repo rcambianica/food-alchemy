@@ -68,14 +68,8 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
     }
 
     @Override
-    public MutableLiveData<Result> getFavoriteRecipes(boolean isFirstLoading) {
-        // The first time the user launches the app, check if she
-        // has previously saved favorite recipes on the cloud
-        if (isFirstLoading) {
-            backupFavoriteRecipesDataSource.getFavoriteRecipes();
-        } else {
-            recipesLocalDataSource.getFavoriteRecipes();
-        }
+    public MutableLiveData<Result> getFavoriteRecipes() {
+        recipesLocalDataSource.getFavoriteRecipes();
         return favoriteRecipesMutableLiveData;
     }
 
@@ -96,8 +90,13 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
     }
 
     @Override
-    public MutableLiveData<Result> fetchFridgeItems() {
-        recipesLocalDataSource.getFridgeItems();
+    public MutableLiveData<Result> fetchFridgeItems(boolean isFirstLoading) {
+        if(isFirstLoading)  {
+            backupFavoriteRecipesDataSource.getFridgeItems();
+        } else {
+            recipesLocalDataSource.getFridgeItems();
+        }
+
         return allFridgeItemsMutableLiveData;
     }
 
@@ -110,21 +109,25 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
     @Override
     public void insertFridgeItem(Ingredient ingredient) {
         recipesLocalDataSource.insertFridgeItem(ingredient);
+        backupFavoriteRecipesDataSource.addFridgeItem(ingredient);
     }
 
     @Override
     public void deleteFridgeItem(Ingredient ingredient) {
         recipesLocalDataSource.deleteFridgeItem(ingredient);
+        backupFavoriteRecipesDataSource.deleteFridgeItem(ingredient);
     }
 
     @Override
     public void updateFridgeItem(Ingredient ingredient) {
         recipesLocalDataSource.updateFridgeItem(ingredient);
+        //TODO capire cosa fare qui
     }
 
     @Override
     public void deleteFridgeItems() {
         recipesLocalDataSource.deleteAllFridgeItems();
+        backupFavoriteRecipesDataSource.deleteAllFridgeItems();
     }
 
     @Override
@@ -161,15 +164,6 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
 
     @Override
     public void onRecipesFavoriteStatusChanged(Recipe recipes, List<Recipe> favoriteRecipes) {
-        Result allRecipesResult = allRecipesMutableLiveData.getValue();
-
-        if (allRecipesResult != null && allRecipesResult.isSuccess()) {
-            List<Recipe> oldAllRecipes = ((Result.RecipesResponseSuccess)allRecipesResult).getData().getRecipesList();
-            if (oldAllRecipes.contains(recipes)) {
-                oldAllRecipes.set(oldAllRecipes.indexOf(recipes), recipes);
-                allRecipesMutableLiveData.postValue(allRecipesResult);
-            }
-        }
         favoriteRecipesMutableLiveData.postValue(new Result.RecipesResponseSuccess(new RecipesResponse(favoriteRecipes)));
     }
 
@@ -193,17 +187,6 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
 
     @Override
     public void onDeleteFavoriteRecipesSuccess(List<Recipe> favoriteRecipes) {
-        Result allRecipesResult = allRecipesMutableLiveData.getValue();
-
-        if (allRecipesResult != null && allRecipesResult.isSuccess()) {
-            List<Recipe> oldAllRecipes = ((Result.RecipesResponseSuccess)allRecipesResult).getData().getRecipesList();
-            for (Recipe recipes : favoriteRecipes) {
-                if (oldAllRecipes.contains(recipes)) {
-                    oldAllRecipes.set(oldAllRecipes.indexOf(recipes), recipes);
-                }
-            }
-            allRecipesMutableLiveData.postValue(allRecipesResult);
-        }
 
         if (favoriteRecipesMutableLiveData.getValue() != null &&
                 favoriteRecipesMutableLiveData.getValue().isSuccess()) {
@@ -216,7 +199,7 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
     }
 
     @Override
-    public void onSuccessFromCloudReading(List<Recipe> recipesList) {
+    public void onSuccessFromCloudReadingFavoriteRecipes(List<Recipe> recipesList) {
         // Favorite recipes got from Realtime Database the first time
         if (recipesList != null) {
             for (Recipe recipes : recipesList) {
@@ -228,7 +211,7 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
     }
 
     @Override
-    public void onSuccessFromCloudWriting(Recipe recipes) {
+    public void onSuccessFromCloudWritingFavoriteRecipes(Recipe recipes) {
         if (recipes != null && !recipes.isFavorite()) {
             recipes.setSynchronized(false);
         }
@@ -276,5 +259,22 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
     public void onFridgeItemsStatusChanged(List<Ingredient> ingredients) {
         Result.IngredientsResponseSuccess result = new Result.IngredientsResponseSuccess(new IngredientsResponse(ingredients));
         fridgeItemsSelectedMutableLiveData.postValue(result);
+    }
+
+    @Override
+    public void onSuccessFromCloudReadingFridgeItems(List<Ingredient> ingredients) {
+        // Fridge Items got from Realtime Database the first time
+        if (ingredients != null) {
+            for (Ingredient ingredient : ingredients) {
+                ingredient.setSynchronized(true);
+            }
+            recipesLocalDataSource.insertFridgeItems(ingredients);
+            allFridgeItemsMutableLiveData.postValue(new Result.IngredientsResponseSuccess(new IngredientsResponse(ingredients)));
+        }
+    }
+
+    @Override
+    public void onSuccessFromCloudWritingFridgeItems(Ingredient ingredient) {
+        backupFavoriteRecipesDataSource.getFridgeItems();
     }
 }

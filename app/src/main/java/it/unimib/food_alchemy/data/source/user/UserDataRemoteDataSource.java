@@ -1,6 +1,7 @@
 package it.unimib.food_alchemy.data.source.user;
 
 import static it.unimib.food_alchemy.util.Constants.FIREBASE_FAVORITE_RECIPES_COLLECTION;
+import static it.unimib.food_alchemy.util.Constants.FIREBASE_FRIDGE_ITEMS_COLLECTION;
 import static it.unimib.food_alchemy.util.Constants.FIREBASE_USERS_COLLECTION;
 import static it.unimib.food_alchemy.util.Constants.SHARED_FRIDGE_ITEMS_FILE_NAME;
 import static it.unimib.food_alchemy.util.Constants.SHARED_FRIDGE_ITEMS_FRIDGE;
@@ -76,7 +77,7 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource{
                         userResponseCallback.onFailureFromRemoteDatabase(Objects.requireNonNull(task.getException()).getLocalizedMessage());
                     }
                     else {
-                        Log.d(TAG, "Successful read: " + task.getResult().getValue());
+                        Log.d(TAG, "Successful recipes read: " + task.getResult().getValue());
 
                         List<Recipe> recipesList = new ArrayList<>();
                         for(DataSnapshot ds : task.getResult().getChildren()) {
@@ -132,5 +133,27 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource{
 
         databaseReference.child(FIREBASE_USERS_COLLECTION).child(idToken).
                 child(SHARED_PREFERENCES_INTOLERANCES).setValue(new ArrayList<>(intolerances));
+    }
+
+    @Override
+    public void getUserFridgeItems(String idToken) {
+        databaseReference.child(FIREBASE_USERS_COLLECTION).child(idToken).
+                child(FIREBASE_FRIDGE_ITEMS_COLLECTION).get().addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        Log.d(TAG, "Error getting data", task.getException());
+                        userResponseCallback.onFailureFromRemoteDatabase(Objects.requireNonNull(task.getException()).getLocalizedMessage());
+                    }
+                    else {
+                        Log.d(TAG, "Successful ingredients read: " + task.getResult().getValue());
+
+                        List<Ingredient> ingredientList = new ArrayList<>();
+                        for(DataSnapshot ds : task.getResult().getChildren()) {
+                            Ingredient ingredient = ds.getValue(Ingredient.class);
+                            ingredientList.add(ingredient);
+                        }
+
+                        userResponseCallback.onSuccessFromGettingUserFridgeItems(ingredientList);
+                    }
+                });
     }
 }

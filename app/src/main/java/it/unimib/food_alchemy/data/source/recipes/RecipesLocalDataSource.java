@@ -137,9 +137,9 @@ public class RecipesLocalDataSource extends BaseRecipesLocalDataSource{
             if (recipesList != null) {
 
                 recipesDao.insertRecipesList(recipesList);
-
-                RecipeApiResponse recipesApiResponse = new RecipeApiResponse();
-                recipesApiResponse.setRecipeList(recipesList);
+                //TODO controllare se fa effettivamente qualcosa
+                //RecipeApiResponse recipesApiResponse = new RecipeApiResponse();
+                //recipesApiResponse.setRecipeList(recipesList);
                 recipesCallback.onSuccessSynchronization();
             }
         });
@@ -212,6 +212,19 @@ public class RecipesLocalDataSource extends BaseRecipesLocalDataSource{
                 List<Ingredient> results = new ArrayList<>(allIngredients);
                 results.add(ingredient);
                 recipesCallback.onSuccessFromLocal(results);
+            }
+        });
+    }
+
+    @Override
+    public void insertFridgeItems(List<Ingredient> ingredientsList) {
+        RecipeRoomDatabase.databaseWriteExecutor.execute(() -> {
+            if (ingredientsList != null) {
+
+                recipesDao.insertIngredientsList(ingredientsList);
+                //RecipeApiResponse recipesApiResponse = new RecipeApiResponse();
+                //recipesApiResponse.setRecipeList(ingredientsList);
+                recipesCallback.onSuccessSynchronization();
             }
         });
     }

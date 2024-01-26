@@ -27,7 +27,8 @@ public class Constants {
     public static final String SHARED_PREFERENCES_FILE_NAME = "it.unimib.food_alchemy.preferences";
     public static final String SHARED_PREFERENCES_DIET = "diet";
     public static final String SHARED_PREFERENCES_INTOLERANCES = "intolerances";
-    public static final String SHARED_PREFERENCES_FIRST_LOADING = "first_loading";
+    public static final String SHARED_PREFERENCES_RECIPES_FIRST_LOADING = "recipes_first_loading";
+    public static final String SHARED_PREFERENCES_FRIDGE_ITEMS_FIRST_LOADING = "fridge_items_first_loading";
 
     //Constants for SharedFridgeItems
     public static final String SHARED_FRIDGE_ITEMS_FILE_NAME = "it.unimib.food_alchemy.fridge_items";
@@ -73,4 +74,5 @@ public class Constants {
     // Constants for Firebase Realtime Database
     public static final String FIREBASE_USERS_COLLECTION = "users";
     public static final String FIREBASE_FAVORITE_RECIPES_COLLECTION = "favorite_recipes";
+    public static final String FIREBASE_FRIDGE_ITEMS_COLLECTION = "fridge_items";
 }

@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,13 +28,7 @@ import it.unimib.food_alchemy.ui.auth.UserViewModelFactory;
 import it.unimib.food_alchemy.util.ServiceLocator;
 import it.unimib.food_alchemy.util.SharedPreferencesUtil;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link AccountFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class AccountFragment extends Fragment {
-    private static final String TAG = AccountFragment.class.getSimpleName();
     private FragmentAccountBinding fragmentAccountBinding;
 
 
@@ -43,12 +36,6 @@ public class AccountFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment AccountFragment.
-     */
     public static AccountFragment newInstance() { return new AccountFragment();}
 
     private UserViewModel userViewModel;
@@ -93,30 +80,22 @@ public class AccountFragment extends Fragment {
         fragmentAccountBinding.textviewUserDiet.setText(diet);
         fragmentAccountBinding.textviewUserIntolerances.setText(intolerancesToString(intolerances));
 
-        fragmentAccountBinding.buttonEdit.setOnClickListener(v -> {
-            Navigation.findNavController(requireView()).navigate((R.id.action_accountFragment_to_preferencesActivity));
-        });
+        fragmentAccountBinding.buttonEdit.setOnClickListener(v -> Navigation.findNavController(requireView()).navigate((R.id.action_accountFragment_to_preferencesActivity)));
 
-        fragmentAccountBinding.deleteIngredients.setOnClickListener(view12 -> {
-            recipeViewModel.deleteAllFridgeItems();
-        });
+        fragmentAccountBinding.deleteIngredients.setOnClickListener(v -> recipeViewModel.deleteAllFridgeItems());
 
-        fragmentAccountBinding.buttonDeleteFavorites.setOnClickListener(view1 -> {
-            recipeViewModel.deleteAllFavoriteRecipes();
-        });
+        fragmentAccountBinding.buttonDeleteFavorites.setOnClickListener(v -> recipeViewModel.deleteAllFavoriteRecipes());
 
-        fragmentAccountBinding.buttonLogout.setOnClickListener(v -> {
-            userViewModel.logout().observe(getViewLifecycleOwner(), result -> {
-                if(result.isSuccess())  {
-                    Navigation.findNavController(view).navigate(
-                            R.id.action_accountFragment_to_authActivity);
-                } else {
-                    Snackbar.make(view,
-                            requireActivity().getString(R.string.unexpected_error),
-                            Snackbar.LENGTH_SHORT).show();
-                }
-            });
-        });
+        fragmentAccountBinding.buttonLogout.setOnClickListener(v -> userViewModel.logout().observe(getViewLifecycleOwner(), result -> {
+            if(result.isSuccess())  {
+                Navigation.findNavController(view).navigate(
+                        R.id.action_accountFragment_to_authActivity);
+            } else {
+                Snackbar.make(view,
+                        requireActivity().getString(R.string.unexpected_error),
+                        Snackbar.LENGTH_SHORT).show();
+            }
+        }));
     }
 
     private String intolerancesToString(String[] array)   {

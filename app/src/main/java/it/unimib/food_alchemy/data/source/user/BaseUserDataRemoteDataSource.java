@@ -21,5 +21,6 @@ public abstract class BaseUserDataRemoteDataSource {
     public abstract void getUserFavoriteRecipes(String idToken);
     public abstract void getUserPreferences(String idToken);
     public abstract void saveUserPreferences(String diet, Set<String> intolerances, String idToken);
+    public abstract void getUserFridgeItems(String idToken);
 }
 

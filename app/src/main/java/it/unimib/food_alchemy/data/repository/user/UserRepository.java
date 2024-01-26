@@ -28,6 +28,7 @@ public class UserRepository implements IUserRepository, UserResponseCallback, Re
     private final MutableLiveData<Result> userMutableLiveData;
     private final MutableLiveData<Result> userFavoriteRecipesMutableLiveData;
     private final MutableLiveData<Result> userPreferencesMutableLiveData;
+    //TODO capire se si possono togliere
     private final MutableLiveData<Result> userFridgeItemsMutableLiveData;
 
     public UserRepository(BaseUserAuthenticationRemoteDataSource userRemoteDataSource,
@@ -133,6 +134,11 @@ public class UserRepository implements IUserRepository, UserResponseCallback, Re
         userPreferencesMutableLiveData.postValue(new Result.UserResponseSuccess(null));
     }
 
+    @Override
+    public void onSuccessFromGettingUserFridgeItems(List<Ingredient> ingredientsList) {
+        recipesLocalDataSource.insertFridgeItems(ingredientsList);
+    }
+
 
     @Override
     public void onFailureFromRemoteDatabase(String message) {
@@ -143,6 +149,7 @@ public class UserRepository implements IUserRepository, UserResponseCallback, Re
     @Override
     public void onSuccessLogout() {
         recipesLocalDataSource.deleteAllRecipes();
+        recipesLocalDataSource.deleteAllFridgeItems();
     }
 
     @Override
@@ -173,6 +180,16 @@ public class UserRepository implements IUserRepository, UserResponseCallback, Re
 
     @Override
     public void onFridgeItemsStatusChanged(List<Ingredient> ingredients) {
+
+    }
+
+    @Override
+    public void onSuccessFromCloudReadingFridgeItems(List<Ingredient> ingredients) {
+
+    }
+
+    @Override
+    public void onSuccessFromCloudWritingFridgeItems(Ingredient ingredient) {
 
     }
 
@@ -212,12 +229,12 @@ public class UserRepository implements IUserRepository, UserResponseCallback, Re
     }
 
     @Override
-    public void onSuccessFromCloudReading(List<Recipe> recipes) {
+    public void onSuccessFromCloudReadingFavoriteRecipes(List<Recipe> recipes) {
 
     }
 
     @Override
-    public void onSuccessFromCloudWriting(Recipe recipes) {
+    public void onSuccessFromCloudWritingFavoriteRecipes(Recipe recipes) {
 
     }
 

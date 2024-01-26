@@ -1,14 +1,11 @@
 package it.unimib.food_alchemy.data.source.recipes;
 
 import static it.unimib.food_alchemy.util.Constants.FIREBASE_FAVORITE_RECIPES_COLLECTION;
+import static it.unimib.food_alchemy.util.Constants.FIREBASE_FRIDGE_ITEMS_COLLECTION;
 import static it.unimib.food_alchemy.util.Constants.FIREBASE_USERS_COLLECTION;
 
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -16,6 +13,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.unimib.food_alchemy.model.Ingredient;
 import it.unimib.food_alchemy.model.Recipe;
 
 public class FavoriteRecipesDataSource extends BaseFavoriteRecipesDataSource    {
@@ -39,7 +37,7 @@ public class FavoriteRecipesDataSource extends BaseFavoriteRecipesDataSource    
                         Log.d(TAG, "Error getting data", task.getException());
                     }
                     else {
-                        Log.d(TAG, "Successful read: " + task.getResult().getValue());
+                        Log.d(TAG, "Successful recipes read: " + task.getResult().getValue());
 
                         List<Recipe> recipesList = new ArrayList<>();
                         for(DataSnapshot ds : task.getResult().getChildren()) {
@@ -48,7 +46,7 @@ public class FavoriteRecipesDataSource extends BaseFavoriteRecipesDataSource    
                             recipesList.add(recipe);
                         }
 
-                        recipesCallback.onSuccessFromCloudReading(recipesList);
+                        recipesCallback.onSuccessFromCloudReadingFavoriteRecipes(recipesList);
                     }
                 });
     }
@@ -59,7 +57,7 @@ public class FavoriteRecipesDataSource extends BaseFavoriteRecipesDataSource    
                 child(FIREBASE_FAVORITE_RECIPES_COLLECTION).child(String.valueOf(recipe.getId())).setValue(recipe)
                 .addOnSuccessListener(unused -> {
                     recipe.setSynchronized(true);
-                    recipesCallback.onSuccessFromCloudWriting(recipe);
+                    recipesCallback.onSuccessFromCloudWritingFavoriteRecipes(recipe);
                 })
                 .addOnFailureListener(e -> recipesCallback.onFailureFromCloud(e));
     }
@@ -95,7 +93,7 @@ public class FavoriteRecipesDataSource extends BaseFavoriteRecipesDataSource    
                 child(FIREBASE_FAVORITE_RECIPES_COLLECTION).child(String.valueOf(recipe.getId())).
                 removeValue().addOnSuccessListener(unused -> {
                     recipe.setSynchronized(false);
-                    recipesCallback.onSuccessFromCloudWriting(recipe);
+                    recipesCallback.onSuccessFromCloudWritingFavoriteRecipes(recipe);
                 }).addOnFailureListener(e -> {
                     recipesCallback.onFailureFromCloud(e);
                 });
@@ -105,7 +103,62 @@ public class FavoriteRecipesDataSource extends BaseFavoriteRecipesDataSource    
     public void deleteAllFavoriteRecipes() {
         databaseReference.child(FIREBASE_USERS_COLLECTION).child(idToken).
                 child(FIREBASE_FAVORITE_RECIPES_COLLECTION).removeValue().addOnSuccessListener(unused -> {
-                    recipesCallback.onSuccessFromCloudWriting(null);
+                    recipesCallback.onSuccessFromCloudWritingFavoriteRecipes(null);
+                }).addOnFailureListener(e -> {
+                    recipesCallback.onFailureFromCloud(e);
+                });
+    }
+
+    @Override
+    public void getFridgeItems() {
+        databaseReference.child(FIREBASE_USERS_COLLECTION).child(idToken).
+                child(FIREBASE_FRIDGE_ITEMS_COLLECTION).get().addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        Log.d(TAG, "Error getting data", task.getException());
+                    }
+                    else {
+                        Log.d(TAG, "Successful read: " + task.getResult().getValue());
+
+                        List<Ingredient> ingredientList = new ArrayList<>();
+                        for(DataSnapshot ds : task.getResult().getChildren()) {
+                            Ingredient ingredient = ds.getValue(Ingredient.class);
+                            ingredient.setSynchronized(true);
+                            ingredientList.add(ingredient);
+                        }
+
+                        recipesCallback.onSuccessFromCloudReadingFridgeItems(ingredientList);
+                    }
+                });
+    }
+
+    @Override
+    public void addFridgeItem(Ingredient ingredient) {
+        databaseReference.child(FIREBASE_USERS_COLLECTION).child(idToken).
+                child(FIREBASE_FRIDGE_ITEMS_COLLECTION).child(String.valueOf(ingredient.getId())).setValue(ingredient)
+                .addOnSuccessListener(unused -> {
+                    ingredient.setSynchronized(true);
+                    recipesCallback.onSuccessFromCloudWritingFridgeItems(ingredient);
+                })
+                .addOnFailureListener(e -> recipesCallback.onFailureFromCloud(e));
+    }
+
+    @Override
+    public void deleteFridgeItem(Ingredient ingredient) {
+        databaseReference.child(FIREBASE_USERS_COLLECTION).child(idToken).
+                child(FIREBASE_FRIDGE_ITEMS_COLLECTION).child(String.valueOf(ingredient.getId())).
+                removeValue().addOnSuccessListener(unused -> {
+                    ingredient.setSynchronized(false);
+                    recipesCallback.onSuccessFromCloudWritingFridgeItems(ingredient);
+                }).addOnFailureListener(e -> {
+                    recipesCallback.onFailureFromCloud(e);
+                });
+    }
+
+    @Override
+    public void deleteAllFridgeItems() {
+        databaseReference.child(FIREBASE_USERS_COLLECTION).child(idToken).
+                child(FIREBASE_FRIDGE_ITEMS_COLLECTION).removeValue().addOnSuccessListener(unused -> {
+                    recipesCallback.onSuccessFromCloudWritingFridgeItems(null);
                 }).addOnFailureListener(e -> {
                     recipesCallback.onFailureFromCloud(e);
                 });

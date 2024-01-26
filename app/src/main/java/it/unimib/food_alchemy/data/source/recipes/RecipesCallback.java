@@ -14,8 +14,8 @@ public interface RecipesCallback {
     void onRecipesFavoriteStatusChanged(Recipe recipes, List<Recipe> favoriteRecipes);
     void onRecipesFavoriteStatusChanged(List<Recipe> recipes);
     void onDeleteFavoriteRecipesSuccess(List<Recipe> favoriteRecipes);
-    void onSuccessFromCloudReading(List<Recipe> recipes);
-    void onSuccessFromCloudWriting(Recipe recipes);
+    void onSuccessFromCloudReadingFavoriteRecipes(List<Recipe> recipes);
+    void onSuccessFromCloudWritingFavoriteRecipes(Recipe recipes);
     void onFailureFromCloud(Exception exception);
     void onSuccessSynchronization();
     void onSuccessDeletion();
@@ -27,5 +27,7 @@ public interface RecipesCallback {
     void onSuccessFromLocal(List<Ingredient> ingredients);
     void onFridgeItemsStatusChanged(Ingredient ingredient, List<Ingredient> fridgeItems);
     void onFridgeItemsStatusChanged(List<Ingredient> ingredients);
+    void onSuccessFromCloudReadingFridgeItems(List<Ingredient> ingredients);
+    void onSuccessFromCloudWritingFridgeItems(Ingredient ingredient);
 
 }

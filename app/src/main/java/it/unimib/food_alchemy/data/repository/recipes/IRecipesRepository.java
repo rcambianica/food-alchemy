@@ -14,7 +14,7 @@ public interface IRecipesRepository {
 
     void fetchRecipes(String query, String diet, Set<String> intolerances, List<String> ingredients, String type, int offset);
 
-    MutableLiveData<Result> getFavoriteRecipes(boolean firstLoading);
+    MutableLiveData<Result> getFavoriteRecipes();
 
     void updateRecipe(Recipe recipe);
 
@@ -24,7 +24,7 @@ public interface IRecipesRepository {
      * Ingredients methods
      */
 
-    MutableLiveData<Result> fetchFridgeItems();
+    MutableLiveData<Result> fetchFridgeItems(boolean firstLoading);
     MutableLiveData<Result> getFridgeItemsSelected();
     void insertFridgeItem(Ingredient ingredient);
     void deleteFridgeItem(Ingredient ingredient);

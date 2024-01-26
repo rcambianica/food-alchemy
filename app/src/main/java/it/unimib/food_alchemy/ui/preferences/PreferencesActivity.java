@@ -10,9 +10,11 @@ import static it.unimib.food_alchemy.util.Constants.NO_DIET;
 import static it.unimib.food_alchemy.util.Constants.PEANUT;
 import static it.unimib.food_alchemy.util.Constants.SEA_FOOD;
 import static it.unimib.food_alchemy.util.Constants.SESAME;
+import static it.unimib.food_alchemy.util.Constants.SHARED_FRIDGE_ITEMS_FRIDGE;
 import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_DIET;
 import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_FILE_NAME;
-import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_FIRST_LOADING;
+import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_FRIDGE_ITEMS_FIRST_LOADING;
+import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_RECIPES_FIRST_LOADING;
 import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_INTOLERANCES;
 import static it.unimib.food_alchemy.util.Constants.SHELL_FISH;
 import static it.unimib.food_alchemy.util.Constants.SOY;
@@ -176,7 +178,9 @@ public class PreferencesActivity extends AppCompatActivity {
                 SHARED_PREFERENCES_INTOLERANCES, intolerances);
 
         sharedPreferencesUtil.writeBooleanData(SHARED_PREFERENCES_FILE_NAME,
-                SHARED_PREFERENCES_FIRST_LOADING, true);
+                SHARED_PREFERENCES_RECIPES_FIRST_LOADING, true);
+        sharedPreferencesUtil.writeBooleanData(SHARED_PREFERENCES_FILE_NAME,
+                SHARED_PREFERENCES_FRIDGE_ITEMS_FIRST_LOADING,true);
 
         DataEncryptionUtil dataEncryptionUtil = new DataEncryptionUtil(getApplication());
 

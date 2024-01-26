@@ -53,9 +53,9 @@ public class RecipeViewModel extends ViewModel {
      * list of favorite recipes to the Fragment/Activity.
      * @return The LiveData object associated with the list of favorite recipes.
      */
-    public MutableLiveData<Result> getFavoriteRecipesLiveData(boolean isFirstLoading) {
+    public MutableLiveData<Result> getFavoriteRecipesLiveData() {
         if (favoriteRecipesListLiveData == null) {
-            getFavoriteRecipes(isFirstLoading);
+            getFavoriteRecipes();
         }
         return favoriteRecipesListLiveData;
     }
@@ -80,8 +80,8 @@ public class RecipeViewModel extends ViewModel {
      * It uses the Repository to get the list of favorite recipes
      * and to associate it with the LiveData object.
      */
-    private void getFavoriteRecipes(boolean firstLoading)   {
-        favoriteRecipesListLiveData = recipesRepository.getFavoriteRecipes(firstLoading);
+    private void getFavoriteRecipes()   {
+        favoriteRecipesListLiveData = recipesRepository.getFavoriteRecipes();
     }
 
     /**
@@ -95,9 +95,9 @@ public class RecipeViewModel extends ViewModel {
      * Ingredients methods
      */
 
-    public MutableLiveData<Result> getFridgeItems() {
+    public MutableLiveData<Result> getFridgeItems(boolean firstLoading) {
         if(fridgeItemsListLiveData == null) {
-            fetchFridgeItems();
+            fetchFridgeItems(firstLoading);
         }
         return fridgeItemsListLiveData;
     }
@@ -113,8 +113,8 @@ public class RecipeViewModel extends ViewModel {
         recipesRepository.updateFridgeItem(ingredient);
     }
 
-    private void fetchFridgeItems() {
-        fridgeItemsListLiveData = recipesRepository.fetchFridgeItems();
+    private void fetchFridgeItems(boolean firstLoading) {
+        fridgeItemsListLiveData = recipesRepository.fetchFridgeItems(firstLoading);
     }
 
     private void getFridgeItemsSelected()   {
