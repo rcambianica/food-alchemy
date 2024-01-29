@@ -69,7 +69,7 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
 
     @Override
     public MutableLiveData<Result> getFavoriteRecipes() {
-        recipesLocalDataSource.getFavoriteRecipes();
+        backupFavoriteRecipesDataSource.getFavoriteRecipes();
         return favoriteRecipesMutableLiveData;
     }
 
