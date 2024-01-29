@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavBackStackEntry;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,12 +31,16 @@ import it.unimib.food_alchemy.model.AnalyzedInstruction;
 import it.unimib.food_alchemy.model.Ingredient;
 import it.unimib.food_alchemy.model.InstructionStep;
 import it.unimib.food_alchemy.model.Recipe;
+import it.unimib.food_alchemy.model.Result;
+import it.unimib.food_alchemy.util.Constants;
+import it.unimib.food_alchemy.util.ErrorMessagesUtil;
 import it.unimib.food_alchemy.util.ServiceLocator;
 
 public class RecipeFragment extends Fragment {
     private FragmentRecipeBinding fragmentRecipeBinding;
     private RecipeViewModel recipeViewModel;
 
+    private List<Recipe> recipesList;
     public RecipeFragment() {
         // Required empty public constructor
     }
@@ -57,7 +62,7 @@ public class RecipeFragment extends Fragment {
             Snackbar.make(requireActivity().findViewById(android.R.id.content),
                     getString(R.string.unexpected_error), Snackbar.LENGTH_SHORT).show();
         }
-
+        recipesList = new ArrayList<>();
     }
 
     @Override
@@ -77,11 +82,32 @@ public class RecipeFragment extends Fragment {
                 .load(recipe.getImageUrl())
                 .placeholder(R.drawable.baseline_access_time_24)
                 .into(fragmentRecipeBinding.imageRecipe);
-        setCheck(recipe);
         fragmentRecipeBinding.bigTitle.setText(recipe.getTitle());
         fragmentRecipeBinding.quantity.setText(strings.get(0));
         fragmentRecipeBinding.ingredients.setText(strings.get(1));
         fragmentRecipeBinding.instructions.setText(formatInstructions(recipe.getInstructions()));
+
+        recipeViewModel.getFavoriteRecipesLiveData().observe(getViewLifecycleOwner(), result -> {
+            if (result != null) {
+                if (result.isSuccess()) {
+                    recipesList.clear();
+                    recipesList.addAll(((Result.RecipesResponseSuccess)result).getData().getRecipesList());
+                    if(recipesList.contains(recipe)){
+                        Log.d("TAG", "preferito");
+                        recipe.setFavorite(true);
+                    }
+
+                    setCheck(recipe);
+                } else {
+                    ErrorMessagesUtil errorMessagesUtil =
+                            new ErrorMessagesUtil(requireActivity().getApplication());
+                    Snackbar.make(view, errorMessagesUtil.
+                                    getErrorMessage(((Result.Error)result).getMessage()),
+                            Snackbar.LENGTH_SHORT).show();
+                }
+            }
+        });
+
 
         fragmentRecipeBinding.backButton.setOnClickListener(v -> Navigation.findNavController(requireView()).navigateUp());
 
