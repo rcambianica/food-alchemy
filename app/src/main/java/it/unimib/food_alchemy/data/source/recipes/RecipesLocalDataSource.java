@@ -115,8 +115,9 @@ public class RecipesLocalDataSource extends BaseRecipesLocalDataSource{
             if (recipesList != null) {
                 for (Recipe recipe : allRecipes) {
                     for(int i = 0; i < recipesList.size(); i++) {
-                        if (recipesList.get(i).getId() == recipe.getId())
+                        if (recipesList.get(i).getId() == recipe.getId())   {
                             recipesList.set(i, recipe);
+                        }
                     }
                 }
 
@@ -148,7 +149,6 @@ public class RecipesLocalDataSource extends BaseRecipesLocalDataSource{
                 for (Recipe recipe : allRecipes) {
                     for(int i = 0; i < recipesList.size(); i++) {
                         if (recipesList.get(i).getId() == recipe.getId()) {
-                            Log.d("INSERT", "PROVA");
                             recipe.setSynchronized(true);
                             recipesList.set(i, recipe);
                         }
@@ -160,8 +160,6 @@ public class RecipesLocalDataSource extends BaseRecipesLocalDataSource{
                     recipesList.get(i).setId(insertedNewsIds.get(i));
                 }
 
-                RecipeApiResponse newsApiResponse = new RecipeApiResponse();
-                newsApiResponse.setRecipeList(recipesList);
                 recipesCallback.onSuccessSynchronization();
             }
         });

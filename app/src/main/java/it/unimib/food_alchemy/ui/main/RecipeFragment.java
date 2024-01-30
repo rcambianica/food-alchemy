@@ -90,13 +90,14 @@ public class RecipeFragment extends Fragment {
         recipeViewModel.getFavoriteRecipesLiveData().observe(getViewLifecycleOwner(), result -> {
             if (result != null) {
                 if (result.isSuccess()) {
+                    recipe.setFavorite(false);
                     recipesList.clear();
                     recipesList.addAll(((Result.RecipesResponseSuccess)result).getData().getRecipesList());
-                    if(recipesList.contains(recipe)){
-                        Log.d("TAG", "preferito");
-                        recipe.setFavorite(true);
+                    for(Recipe r: recipesList)  {
+                        if(r.getId() == recipe.getId()) {
+                            recipe.setFavorite(true);
+                        }
                     }
-
                     setCheck(recipe);
                 } else {
                     ErrorMessagesUtil errorMessagesUtil =

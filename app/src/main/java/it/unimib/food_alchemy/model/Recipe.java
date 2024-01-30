@@ -181,4 +181,20 @@ public class Recipe implements Parcelable {
         parcel.writeByte((byte) (isFavorite ? 1 : 0));
         parcel.writeByte((byte) (isSynchronized ? 1 : 0));
     }
+
+    @Override
+    public String toString() {
+        return "Recipe{" +
+                "id=" + id +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", imageType='" + imageType + '\'' +
+                ", title='" + title + '\'' +
+                ", instructions=" + instructions +
+                ", diets=" + diets +
+                ", type=" + type +
+                ", ingredients=" + ingredients +
+                ", isFavorite=" + isFavorite +
+                ", isSynchronized=" + isSynchronized +
+                '}';
+    }
 }
