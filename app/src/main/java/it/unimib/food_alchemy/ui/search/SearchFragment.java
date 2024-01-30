@@ -33,9 +33,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.SearchView;
 
 
 import com.google.android.material.chip.Chip;
+//import com.google.android.material.search.SearchView;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -60,6 +64,10 @@ public class SearchFragment extends Fragment {
     private RecipeViewModel recipeViewModel;
 
     private List<Ingredient> selectedFridgeItems;
+
+    ArrayList<String> arrayList;
+    ArrayAdapter<String>adapter;
+
     public SearchFragment() {
         // Required empty public constructor
     }
@@ -83,6 +91,7 @@ public class SearchFragment extends Fragment {
                     getString(R.string.unexpected_error), Snackbar.LENGTH_SHORT).show();
         }
         selectedFridgeItems = new ArrayList<>();
+
     }
 
     @Override
@@ -97,7 +106,7 @@ public class SearchFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle saveInstanceState){
         super.onViewCreated(view, saveInstanceState);
 
-        fragmentSearchBinding.searchView.setIconified(false);
+        //fragmentSearchBinding.searchView.setIconified(false);
 
         recipeViewModel.getFridgeItemsSelectedLiveData().observe(getViewLifecycleOwner(),result -> {
             if(result != null)  {
@@ -143,6 +152,40 @@ public class SearchFragment extends Fragment {
             }
         });
 
+
+
+        ListView myListView=view.findViewById(R.id.search_list);
+        SearchView searchView = view.findViewById(R.id.searchView);
+
+        myListView.setVisibility(View.GONE);
+
+        arrayList=new ArrayList<>();
+        arrayList.add("Pizza");
+        arrayList.add("Pasta");
+        arrayList.add("Pomodoro");
+        arrayList.add("Salmone");
+        arrayList.add("Cavolfiore");
+        arrayList.add("Zoccolo");
+        arrayList.add("Maiale");
+        arrayList.add("Suino");
+        arrayList.add("Cacca");
+        arrayList.add("Pupù");
+
+        adapter=new ArrayAdapter<String>(requireContext(),android.R.layout.simple_list_item_1,arrayList);
+        myListView.setAdapter(adapter);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
+            public boolean onQueryTextSubmit(String s){
+                myListView.setVisibility(View.GONE);
+                return false;
+            }
+
+            public boolean onQueryTextChange(String s){
+                myListView.setVisibility(View.VISIBLE);
+                adapter.getFilter().filter(s);
+                return false;
+            }
+        });
     }
 
     private void setViewsChecked()  {

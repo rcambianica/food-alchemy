@@ -14,6 +14,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,6 +27,7 @@ import androidx.navigation.Navigation;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -62,6 +66,9 @@ public class AddIngredientFragment extends Fragment {
     private DatePickerDialog datePickerDialog;
     private RecipeViewModel recipeViewModel;
     private SharedPreferencesUtil sharedPreferencesUtil;
+
+    ArrayList<String>arrayList;
+    ArrayAdapter<String>adapter;
     public AddIngredientFragment()  {
         // Required empty public constructor
     }
@@ -107,7 +114,7 @@ public class AddIngredientFragment extends Fragment {
             Navigation.findNavController(requireView()).navigateUp();
         });
         fragmentAddIngredientBinding.saveButton.setOnClickListener(v -> {
-            String ingredientName = fragmentAddIngredientBinding.textInputEditTextIngredient.getText().toString().trim();
+            String ingredientName = fragmentAddIngredientBinding.autoCompleteTextView.getText().toString().trim();
             String expiryDate = formatDate(fragmentAddIngredientBinding.spinnerButton.getText().toString());
             if(isIngredientOk(ingredientName))  {
                 long ran = (long)Math.floor(Math.random()*(30));;
@@ -127,6 +134,17 @@ public class AddIngredientFragment extends Fragment {
             ((BottomNavigationView) requireActivity().findViewById(R.id.bottom_navigation)).
                     getMenu().findItem(R.id.fridgeFragment).setChecked(true);
         }
+
+
+        arrayList=new ArrayList<>();
+        arrayList.add("Sappo");
+        arrayList.add("Santo");
+        arrayList.add("Sasso");
+        arrayList.add("Salmone");
+        arrayList.add("Salame");
+
+        adapter=new ArrayAdapter<String>(requireContext(),android.R.layout.simple_list_item_1,arrayList);
+        fragmentAddIngredientBinding.autoCompleteTextView.setAdapter(adapter);
 
     }
 
@@ -189,10 +207,10 @@ public class AddIngredientFragment extends Fragment {
     private boolean isIngredientOk(String ingredient) {
         // Check if the ingredient is null
         if (ingredient.isEmpty()) {
-            fragmentAddIngredientBinding.textInputLayoutIngredient.setError(getString(R.string.error_ingredient_message));
+            fragmentAddIngredientBinding.autoCompleteTextView.setError(getString(R.string.error_ingredient_message));
             return false;
         } else {
-            fragmentAddIngredientBinding.textInputLayoutIngredient.setError(null);
+            fragmentAddIngredientBinding.autoCompleteTextView.setError(null);
             return true;
         }
     }
