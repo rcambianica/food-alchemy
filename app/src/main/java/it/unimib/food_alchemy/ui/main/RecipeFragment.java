@@ -133,8 +133,6 @@ public class RecipeFragment extends Fragment {
             recipe.setFavorite(!recipe.isFavorite());
             setCheck(recipe);
             recipeViewModel.updateRecipe(recipe);
-            if(!recipe.isFavorite())
-                Navigation.findNavController(requireView()).navigateUp();
         });
 
     }
