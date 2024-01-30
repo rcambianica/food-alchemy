@@ -69,7 +69,7 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
 
     @Override
     public MutableLiveData<Result> getFavoriteRecipes() {
-        recipesLocalDataSource.getFavoriteRecipes();
+        backupFavoriteRecipesDataSource.getFavoriteRecipes();
         return favoriteRecipesMutableLiveData;
     }
 
@@ -163,7 +163,18 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
     }
 
     @Override
-    public void onRecipesFavoriteStatusChanged(Recipe recipes, List<Recipe> favoriteRecipes) {
+    public void onRecipesFavoriteStatusChanged(Recipe recipe, List<Recipe> favoriteRecipes) {
+        Result allRecipesResult = allRecipesMutableLiveData.getValue();
+
+        if(allRecipesResult != null && allRecipesResult.isSuccess())    {
+            List<Recipe> oldAllRecipes = ((Result.RecipesResponseSuccess)allRecipesResult).getData().getRecipesList();
+            for(int i = 0; i < oldAllRecipes.size(); i++)   {
+                if(oldAllRecipes.get(i).getId() == recipe.getId()){
+                    oldAllRecipes.set(i,recipe);
+                    allRecipesMutableLiveData.postValue(allRecipesResult);
+                }
+            }
+        }
         favoriteRecipesMutableLiveData.postValue(new Result.RecipesResponseSuccess(new RecipesResponse(favoriteRecipes)));
     }
 
@@ -187,6 +198,19 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
 
     @Override
     public void onDeleteFavoriteRecipesSuccess(List<Recipe> favoriteRecipes) {
+
+        Result allRecipesResult = allRecipesMutableLiveData.getValue();
+        if(allRecipesResult != null && allRecipesResult.isSuccess())    {
+            List<Recipe> oldAllRecipes = ((Result.RecipesResponseSuccess)allRecipesResult).getData().getRecipesList();
+            for(Recipe r: favoriteRecipes)  {
+                for(int i = 0; i < oldAllRecipes.size(); i++)   {
+                    if(oldAllRecipes.get(i).getId() == r.getId()){
+                        oldAllRecipes.set(i, r);
+                    }
+                }
+            }
+            allRecipesMutableLiveData.postValue(allRecipesResult);
+        }
 
         if (favoriteRecipesMutableLiveData.getValue() != null &&
                 favoriteRecipesMutableLiveData.getValue().isSuccess()) {

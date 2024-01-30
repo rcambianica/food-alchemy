@@ -113,9 +113,18 @@ public class RecipesLocalDataSource extends BaseRecipesLocalDataSource{
             List<Recipe> allRecipes = recipesDao.getAllRecipes();
             List<Recipe> recipesList = recipesApiResponse.getRecipesList();
             if (recipesList != null) {
+                for (Recipe recipe : allRecipes) {
+                    for(int i = 0; i < recipesList.size(); i++) {
+                        if (recipesList.get(i).getId() == recipe.getId())   {
+                            recipesList.set(i, recipe);
+                        }
+                    }
+                }
 
-                recipesDao.insertRecipesList(recipesList);
-
+                List<Long> insertedRecipesIds = recipesDao.insertRecipesList(recipesList);
+                for (int i = 0; i < recipesList.size(); i++) {
+                    recipesList.get(i).setId(insertedRecipesIds.get(i));
+                }
 
                 sharedPreferencesUtil.writeStringData(SHARED_PREFERENCES_FILE_NAME,
                         LAST_UPDATE, String.valueOf(System.currentTimeMillis()));
@@ -135,11 +144,22 @@ public class RecipesLocalDataSource extends BaseRecipesLocalDataSource{
     public void insertRecipes(List<Recipe> recipesList) {
         RecipeRoomDatabase.databaseWriteExecutor.execute(() -> {
             if (recipesList != null) {
+                List<Recipe> allRecipes = recipesDao.getAllRecipes();
 
-                recipesDao.insertRecipesList(recipesList);
-                //TODO controllare se fa effettivamente qualcosa
-                //RecipeApiResponse recipesApiResponse = new RecipeApiResponse();
-                //recipesApiResponse.setRecipeList(recipesList);
+                for (Recipe recipe : allRecipes) {
+                    for(int i = 0; i < recipesList.size(); i++) {
+                        if (recipesList.get(i).getId() == recipe.getId()) {
+                            recipe.setSynchronized(true);
+                            recipesList.set(i, recipe);
+                        }
+                    }
+                }
+
+                List<Long> insertedNewsIds = recipesDao.insertRecipesList(recipesList);
+                for (int i = 0; i < recipesList.size(); i++) {
+                    recipesList.get(i).setId(insertedNewsIds.get(i));
+                }
+
                 recipesCallback.onSuccessSynchronization();
             }
         });
