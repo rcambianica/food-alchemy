@@ -16,7 +16,9 @@ public class UserViewModel extends ViewModel {
     private final IUserRepository userRepository;
     private MutableLiveData<Result> userMutableLiveData;
     private MutableLiveData<Result> userFavoriteRecipesMutableLiveData;
-    private MutableLiveData<Result> userFridgeItemsMutableLiveData;
+    private MutableLiveData<Result> resetPassword;
+    //TODO CAPIRE SE SERVE
+    //private MutableLiveData<Result> userFridgeItemsMutableLiveData;
     private MutableLiveData<Result> userPreferencesMutableLiveData;
     private boolean authenticationError;
 
@@ -92,8 +94,10 @@ public class UserViewModel extends ViewModel {
         this.authenticationError = authenticationError;
     }
 
-    public void forgotPassword(String mail) {
-        userRepository.forgotPassword(mail);
+    public MutableLiveData<Result> forgotPassword(String mail) {
+
+        resetPassword = userRepository.forgotPassword(mail);
+        return resetPassword;
     }
 
     private void getUserData(String email, String password, boolean isUserRegistered) {

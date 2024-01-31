@@ -18,7 +18,9 @@ import com.google.android.material.snackbar.Snackbar;
 import org.apache.commons.validator.routines.EmailValidator;
 
 import it.unimib.food_alchemy.R;
+import it.unimib.food_alchemy.data.repository.user.IUserRepository;
 import it.unimib.food_alchemy.databinding.FragmentForgotPasswordBinding;
+import it.unimib.food_alchemy.util.ServiceLocator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -50,8 +52,11 @@ public class ForgotPasswordFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
-        userViewModel.setAuthenticationError(false);
+        IUserRepository userRepository = ServiceLocator.getInstance().
+                getUserRepository(requireActivity().getApplication());
+        userViewModel = new ViewModelProvider(
+                requireActivity(),
+                new UserViewModelFactory(userRepository)).get(UserViewModel.class);
     }
 
     @Override
@@ -68,15 +73,17 @@ public class ForgotPasswordFragment extends Fragment {
             String email = fragmentForgotPasswordBinding.textInputEditTextEmail.getText().toString();
 
             if (isEmailOk(email)) {
-
-                userViewModel.forgotPassword(email);
-                /*
-                TODO usare callbacks per controllare stato
-                 if(successo)
-                    mostra messaggio di successo
-                * */
-                Snackbar.make(requireActivity().findViewById(android.R.id.content), "Email sent successfully, check your inbox!", Snackbar.LENGTH_SHORT).show();
-
+                userViewModel.forgotPassword(email).observe(getViewLifecycleOwner(), result -> {
+                    if(result != null)  {
+                        if(result.isSuccess())  {
+                            Snackbar.make(requireActivity().findViewById(android.R.id.content), "Email sent successfully, check your inbox!", Snackbar.LENGTH_SHORT).show();
+                        }else {
+                            Snackbar.make(view,
+                                    requireActivity().getString(R.string.unexpected_error),
+                                    Snackbar.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             } else {
                 Snackbar.make(requireActivity().findViewById(android.R.id.content), R.string.check_login_data_message, Snackbar.LENGTH_SHORT).show();
             }

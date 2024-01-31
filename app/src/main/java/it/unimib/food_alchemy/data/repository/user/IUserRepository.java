@@ -30,6 +30,6 @@ public interface IUserRepository {
 
     void saveUserPreferences(String Diet, Set<String> intolerances, String idToken);
 
-    void forgotPassword(String mail);
+    MutableLiveData<Result> forgotPassword(String mail);
 
 }

@@ -29,6 +29,7 @@ public class UserRepository implements IUserRepository, UserResponseCallback, Re
     private final MutableLiveData<Result> userMutableLiveData;
     private final MutableLiveData<Result> userFavoriteRecipesMutableLiveData;
     private final MutableLiveData<Result> userPreferencesMutableLiveData;
+    private final MutableLiveData<Result> resetPassword;
     //TODO capire se si possono togliere
     private final MutableLiveData<Result> userFridgeItemsMutableLiveData;
 
@@ -41,6 +42,7 @@ public class UserRepository implements IUserRepository, UserResponseCallback, Re
         this.userMutableLiveData = new MutableLiveData<>();
         this.userPreferencesMutableLiveData = new MutableLiveData<>();
         this.userFavoriteRecipesMutableLiveData = new MutableLiveData<>();
+        this.resetPassword = new MutableLiveData<>();
         this.userFridgeItemsMutableLiveData = new MutableLiveData<>();
         this.userRemoteDataSource.setUserResponseCallback(this);
         this.userDataRemoteDataSource.setUserResponseCallback(this);
@@ -97,8 +99,9 @@ public class UserRepository implements IUserRepository, UserResponseCallback, Re
     }
 
     @Override
-    public void forgotPassword(String mail) {
+    public MutableLiveData<Result> forgotPassword(String mail) {
         userRemoteDataSource.forgotPassword(mail);
+        return resetPassword;
     }
 
     @Override
@@ -172,7 +175,8 @@ public class UserRepository implements IUserRepository, UserResponseCallback, Re
 
     @Override
     public void onSuccessForgot() {
-
+        Result.UserResponseSuccess result = new Result.UserResponseSuccess(null);
+        resetPassword.postValue(result);
     }
 
     @Override
