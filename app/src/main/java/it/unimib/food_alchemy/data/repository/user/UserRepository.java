@@ -182,7 +182,7 @@ public class UserRepository implements IUserRepository, UserResponseCallback, Re
     @Override
     public void onFailureForgot(String message) {
         Result.Error result = new Result.Error(message);
-        userMutableLiveData.postValue(result);
+        resetPassword.postValue(result);
     }
 
     /**
