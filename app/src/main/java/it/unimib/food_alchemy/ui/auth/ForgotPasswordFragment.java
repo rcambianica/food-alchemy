@@ -1,17 +1,15 @@
 package it.unimib.food_alchemy.ui.auth;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
-
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -22,11 +20,6 @@ import it.unimib.food_alchemy.data.repository.user.IUserRepository;
 import it.unimib.food_alchemy.databinding.FragmentForgotPasswordBinding;
 import it.unimib.food_alchemy.util.ServiceLocator;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ForgotPasswordFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ForgotPasswordFragment extends Fragment {
 
     public static final String TAG = ForgotPasswordFragment.class.getSimpleName();
@@ -38,12 +31,6 @@ public class ForgotPasswordFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment ForgotPasswordFragment.
-     */
     public static ForgotPasswordFragment newInstance() {
         ForgotPasswordFragment fragment = new ForgotPasswordFragment();
         return fragment;
