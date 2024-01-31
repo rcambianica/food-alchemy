@@ -25,6 +25,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -154,11 +155,7 @@ public class SearchFragment extends Fragment {
         });
 
 
-
-        ListView myListView=view.findViewById(R.id.search_list);
-        SearchView searchView = view.findViewById(R.id.searchView);
-
-        myListView.setVisibility(View.GONE);
+        fragmentSearchBinding.searchList.setVisibility(View.GONE);
 
         arrayList=new ArrayList<>();
         arrayList.add("Pizza");
@@ -173,20 +170,41 @@ public class SearchFragment extends Fragment {
         arrayList.add("Pupù");
 
         adapter=new ArrayAdapter<String>(requireContext(),android.R.layout.simple_list_item_1,arrayList);
-        myListView.setAdapter(adapter);
+        fragmentSearchBinding.searchList.setAdapter(adapter);
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
+        fragmentSearchBinding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
             public boolean onQueryTextSubmit(String s){
-                myListView.setVisibility(View.GONE);
+                fragmentSearchBinding.searchList.setVisibility(View.GONE);
                 return false;
             }
 
             public boolean onQueryTextChange(String s){
-                myListView.setVisibility(View.VISIBLE);
+                fragmentSearchBinding.searchList.setVisibility(View.VISIBLE);
                 adapter.getFilter().filter(s);
                 return false;
             }
         });
+
+        fragmentSearchBinding.searchList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                fragmentSearchBinding.searchList.setVisibility(View.GONE);
+
+
+                Chip chip = new Chip(requireContext());
+                chip.setText((String) parent.getItemAtPosition(position));
+                chip.setCloseIconVisible(true);
+                chip.setOnCloseIconClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        fragmentSearchBinding.chipIngredients.removeView(chip);
+                        Log.d("TAG", selectedFridgeItems.toString());
+                    }
+                });
+                fragmentSearchBinding.chipIngredients.addView(chip);
+            }
+        });
+
     }
 
     private void setViewsChecked()  {
