@@ -10,6 +10,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
@@ -21,7 +23,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 import it.unimib.food_alchemy.model.User;
 
-public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRemoteDataSource{
+public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRemoteDataSource {
 
     private static final String TAG = UserAuthenticationRemoteDataSource.class.getSimpleName();
 
@@ -34,10 +36,10 @@ public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRe
     @Override
     public User getLoggedUser() {
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-        if(firebaseUser == null)    {
+        if (firebaseUser == null) {
             return null;
         } else {
-            return new User(firebaseUser.getDisplayName(),firebaseUser.getEmail(),firebaseUser.getUid());
+            return new User(firebaseUser.getDisplayName(), firebaseUser.getEmail(), firebaseUser.getUid());
         }
     }
 
@@ -92,8 +94,24 @@ public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRe
     }
 
     @Override
+    public void forgotPassword(String userMail) {
+        firebaseAuth.sendPasswordResetEmail(userMail).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    userResponseCallback.onSuccessForgot();
+                    Log.d(TAG, "reset password : success");
+                } else {
+                    userResponseCallback.onFailureForgot(task.getException().getMessage());
+                    Log.d(TAG, "reset password : error");
+                }
+            }
+        });
+    }
+
+    @Override
     public void signInWithGoogle(String idToken) {
-        if (idToken !=  null) {
+        if (idToken != null) {
             // Got an ID token from Google. Use it to authenticate
             // with Firebase.
             AuthCredential firebaseCredential = GoogleAuthProvider.getCredential(idToken, null);

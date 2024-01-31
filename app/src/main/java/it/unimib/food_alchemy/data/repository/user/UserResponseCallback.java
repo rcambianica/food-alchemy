@@ -8,11 +8,22 @@ import it.unimib.food_alchemy.model.User;
 
 public interface UserResponseCallback {
     void onSuccessFromAuthentication(User user);
+
     void onFailureFromAuthentication(String message);
+
     void onSuccessFromRemoteDatabase(User user);
+
     void onSuccessFromGettingUserFavoritesRecipes(List<Recipe> recipeList);
+
     void onSuccessFromGettingUserPreferences();
+
     void onSuccessFromGettingUserFridgeItems(List<Ingredient> ingredientsList);
+
     void onFailureFromRemoteDatabase(String message);
+
     void onSuccessLogout();
+
+    void onSuccessForgot();
+
+    void onFailureForgot(String message);
 }

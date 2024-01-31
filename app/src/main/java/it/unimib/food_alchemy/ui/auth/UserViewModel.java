@@ -92,6 +92,10 @@ public class UserViewModel extends ViewModel {
         this.authenticationError = authenticationError;
     }
 
+    public void forgotPassword(String mail) {
+        userRepository.forgotPassword(mail);
+    }
+
     private void getUserData(String email, String password, boolean isUserRegistered) {
         userMutableLiveData = userRepository.getUser(email, password, isUserRegistered);
     }

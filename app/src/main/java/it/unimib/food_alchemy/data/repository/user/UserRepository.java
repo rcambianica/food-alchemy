@@ -97,6 +97,11 @@ public class UserRepository implements IUserRepository, UserResponseCallback, Re
     }
 
     @Override
+    public void forgotPassword(String mail) {
+        userRemoteDataSource.forgotPassword(mail);
+    }
+
+    @Override
     public void signInWithGoogle(String token) {
         userRemoteDataSource.signInWithGoogle(token);
     }
@@ -162,6 +167,17 @@ public class UserRepository implements IUserRepository, UserResponseCallback, Re
     @Override
     public void onSuccessDeletion() {
         Result.UserResponseSuccess result = new Result.UserResponseSuccess(null);
+        userMutableLiveData.postValue(result);
+    }
+
+    @Override
+    public void onSuccessForgot() {
+
+    }
+
+    @Override
+    public void onFailureForgot(String message) {
+        Result.Error result = new Result.Error(message);
         userMutableLiveData.postValue(result);
     }
 

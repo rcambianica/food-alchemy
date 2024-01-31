@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import android.util.Log;
@@ -28,6 +29,9 @@ public class ForgotPasswordFragment extends Fragment {
 
     public static final String TAG = ForgotPasswordFragment.class.getSimpleName();
     private FragmentForgotPasswordBinding fragmentForgotPasswordBinding;
+
+    private UserViewModel userViewModel;
+
     public ForgotPasswordFragment() {
         // Required empty public constructor
     }
@@ -46,27 +50,35 @@ public class ForgotPasswordFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
+        userViewModel.setAuthenticationError(false);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        fragmentForgotPasswordBinding = FragmentForgotPasswordBinding.inflate(inflater,container,false);
+        fragmentForgotPasswordBinding = FragmentForgotPasswordBinding.inflate(inflater, container, false);
         return fragmentForgotPasswordBinding.getRoot();
     }
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState)  {
+
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         fragmentForgotPasswordBinding.buttonReset.setOnClickListener(v -> {
             String email = fragmentForgotPasswordBinding.textInputEditTextEmail.getText().toString();
 
-            //start login if email and password are ok
-            if(isEmailOk(email))   {
-                Log.d(TAG, "Email is ok");
+            if (isEmailOk(email)) {
+
+                userViewModel.forgotPassword(email);
+                /*
+                TODO usare callbacks per controllare stato
+                 if(successo)
+                    mostra messaggio di successo
+                * */
+                Snackbar.make(requireActivity().findViewById(android.R.id.content), "Email sent successfully, check your inbox!", Snackbar.LENGTH_SHORT).show();
+
             } else {
-                Snackbar.make(requireActivity().findViewById(android.R.id.content),
-                        R.string.check_login_data_message, Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(requireActivity().findViewById(android.R.id.content), R.string.check_login_data_message, Snackbar.LENGTH_SHORT).show();
             }
         });
 
@@ -77,6 +89,7 @@ public class ForgotPasswordFragment extends Fragment {
 
     /**
      * Checks if the email address has a correct format.
+     *
      * @param email The email address to be validated
      * @return true if the email address is valid, false otherwise
      */
@@ -91,6 +104,7 @@ public class ForgotPasswordFragment extends Fragment {
             return true;
         }
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
