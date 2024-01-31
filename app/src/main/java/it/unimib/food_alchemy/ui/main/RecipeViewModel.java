@@ -41,9 +41,9 @@ public class RecipeViewModel extends ViewModel {
      * Fragment/Activity.
      * @return The LiveData object associated with the recipes list.
      */
-    public MutableLiveData<Result> getRecipes(String query, String diet, Set<String> intolerances, List<String> ingredients, String type, long lastUpdate) {
+    public MutableLiveData<Result> getRecipes(String query, String diet, Set<String> intolerances, List<String> ingredients, String type) {
         if(recipesListLiveData == null) {
-            fetchRecipes(query, diet, intolerances, ingredients,type, lastUpdate);
+            fetchRecipes(query, diet, intolerances, ingredients,type);
         }
         return recipesListLiveData;
     }
@@ -68,12 +68,12 @@ public class RecipeViewModel extends ViewModel {
         recipesRepository.updateRecipe(recipe);
     }
 
-    public void fetchRecipes(String query, String diet, Set<String> intolerances, List<String> ingredients, String type)  {
+    public void fetchRecipesScroll(String query, String diet, Set<String> intolerances, List<String> ingredients, String type)  {
         recipesRepository.fetchRecipes(query,diet,intolerances,ingredients, type, offset);
     }
 
-    private void fetchRecipes(String query, String diet, Set<String> intolerances, List<String> ingredients, String type, long lastUpdate)    {
-        recipesListLiveData = recipesRepository.fetchRecipes(query, diet, intolerances, ingredients, type, offset, lastUpdate);
+    private void fetchRecipes(String query, String diet, Set<String> intolerances, List<String> ingredients, String type)    {
+        recipesListLiveData = recipesRepository.fetchRecipesLiveData(query, diet, intolerances, ingredients, type, offset);
     }
 
     /**

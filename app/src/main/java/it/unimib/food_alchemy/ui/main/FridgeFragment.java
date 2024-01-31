@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.unimib.food_alchemy.R;
-import it.unimib.food_alchemy.adapter.IngredientsRecyclerViewAdapter;
+import it.unimib.food_alchemy.adapter.FridgeItemsRecyclerViewAdapter;
 import it.unimib.food_alchemy.data.repository.recipes.IRecipesRepository;
 import it.unimib.food_alchemy.databinding.FragmentFridgeBinding;
 import it.unimib.food_alchemy.model.Ingredient;
@@ -41,7 +41,7 @@ public class FridgeFragment extends Fragment {
 
     //serve per recuperare un ingrediente eliminato per sbaglio con lo swipe a sinistra
     private Ingredient deletedIngredient = null;
-    private IngredientsRecyclerViewAdapter ingredientsRecyclerViewAdapter;
+    private FridgeItemsRecyclerViewAdapter fridgeItemsRecyclerViewAdapter;
     private RecipeViewModel recipeViewModel;
     private SharedPreferencesUtil sharedPreferencesUtil;
     public FridgeFragment() {
@@ -86,12 +86,12 @@ public class FridgeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        RecyclerView recyclerViewIngredients = fragmentFridgeBinding.recyclerviewIngredients;
+        RecyclerView recyclerViewIngredients = fragmentFridgeBinding.recyclerviewFridgeItems;
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(requireContext(),
                 LinearLayoutManager.VERTICAL, false);
 
-        ingredientsRecyclerViewAdapter =
-                new IngredientsRecyclerViewAdapter(ingredientList, new IngredientsRecyclerViewAdapter.OnItemClickListener() {
+        fridgeItemsRecyclerViewAdapter =
+                new FridgeItemsRecyclerViewAdapter(ingredientList, new FridgeItemsRecyclerViewAdapter.OnItemClickListener() {
                     @Override
                     public void onIngredientsItemClick(Ingredient ingredient) {
                         ingredient.setSelected(!ingredient.isSelected());
@@ -99,7 +99,7 @@ public class FridgeFragment extends Fragment {
                     }
                 });
         recyclerViewIngredients.setLayoutManager(layoutManager);
-        recyclerViewIngredients.setAdapter(ingredientsRecyclerViewAdapter);
+        recyclerViewIngredients.setAdapter(fridgeItemsRecyclerViewAdapter);
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(recyclerViewIngredients);
@@ -112,7 +112,7 @@ public class FridgeFragment extends Fragment {
                         if(result.isSuccess())  {
                             ingredientList.clear();
                             ingredientList.addAll(((Result.IngredientsResponseSuccess)result).getData().getIngredientsList());
-                            ingredientsRecyclerViewAdapter.notifyDataSetChanged();
+                            fridgeItemsRecyclerViewAdapter.notifyDataSetChanged();
                             if (isFirstLoading) {
                                 sharedPreferencesUtil.writeBooleanData(Constants.SHARED_PREFERENCES_FILE_NAME,
                                         Constants.SHARED_PREFERENCES_FRIDGE_ITEMS_FIRST_LOADING, false);
@@ -142,10 +142,10 @@ public class FridgeFragment extends Fragment {
             recipeViewModel.deleteFridgeItem(ingredientList.get(pos));
             deletedIngredient = new Ingredient(ingredientList.get(pos).getId(),ingredientList.get(pos).getTitle(), ingredientList.get(pos).getExpiryDate(),false);
             ingredientList.remove(pos);
-            ingredientsRecyclerViewAdapter.notifyDataSetChanged();
+            fridgeItemsRecyclerViewAdapter.notifyDataSetChanged();
             Snackbar.make(requireView(),deletedIngredient.getTitle(),Snackbar.LENGTH_LONG).setAction("Undo", view -> {
                 ingredientList.add(pos,deletedIngredient);
-                ingredientsRecyclerViewAdapter.notifyItemInserted(pos);
+                fridgeItemsRecyclerViewAdapter.notifyItemInserted(pos);
                 recipeViewModel.insertFridgeItem(deletedIngredient);
             }).show();
         }

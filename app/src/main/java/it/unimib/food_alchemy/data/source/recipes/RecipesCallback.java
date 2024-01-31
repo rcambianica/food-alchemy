@@ -3,6 +3,7 @@ package it.unimib.food_alchemy.data.source.recipes;
 import java.util.List;
 
 import it.unimib.food_alchemy.model.Ingredient;
+import it.unimib.food_alchemy.model.IngredientsResponse;
 import it.unimib.food_alchemy.model.Recipe;
 import it.unimib.food_alchemy.model.RecipeApiResponse;
 

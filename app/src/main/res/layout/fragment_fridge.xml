@@ -8,7 +8,7 @@
     tools:context=".ui.main.MainActivity">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerview_ingredients"
+        android:id="@+id/recyclerview_fridge_items"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"

@@ -3,6 +3,7 @@ package it.unimib.food_alchemy.data.service;
 import java.util.List;
 
 import it.unimib.food_alchemy.model.Ingredient;
+import it.unimib.food_alchemy.model.IngredientsResponse;
 import it.unimib.food_alchemy.model.Recipe;
 import it.unimib.food_alchemy.model.RecipeApiResponse;
 import retrofit2.Call;
@@ -75,12 +76,8 @@ public interface SpoonacularApiService {
     Call<List<Ingredient>> autocompleteIngredientSearch(
             @retrofit2.http.Query("query") String query,
             @retrofit2.http.Query("number") Integer number,
-            @retrofit2.http.Query("apiKey") String apiKey
-    );
-
-    @GET("recipes/random")
-    Call<RecipeApiResponse> getRecipeOfTheDay(
-            @retrofit2.http.Query("number") Integer number,
+            @retrofit2.http.Query("metaInformation") boolean metaInformation,
+            @retrofit2.http.Query("intolerances") String intolerances,
             @retrofit2.http.Query("apiKey") String apiKey
     );
 }

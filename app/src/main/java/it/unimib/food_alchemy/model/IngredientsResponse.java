@@ -10,10 +10,6 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class IngredientsResponse implements Parcelable {
-
-    private boolean isLoading;
-
-    @SerializedName("results")
     private List<Ingredient> ingredientsList;
 
     public IngredientsResponse() {}
@@ -30,14 +26,6 @@ public class IngredientsResponse implements Parcelable {
         this.ingredientsList = ingredientsList;
     }
 
-    public boolean isLoading() {
-        return isLoading;
-    }
-
-    public void setLoading(boolean loading) {
-        isLoading = loading;
-    }
-
     @Override
     public String toString() {
         return "IngredientsResponse{" +
@@ -52,12 +40,10 @@ public class IngredientsResponse implements Parcelable {
 
     @Override
     public void writeToParcel(@NonNull Parcel parcel, int i) {
-        parcel.writeByte((byte) (isLoading ? 1 : 0));
         parcel.writeTypedList(ingredientsList);
     }
 
     protected IngredientsResponse(Parcel in) {
-        isLoading = in.readByte() != 0;
         ingredientsList = in.createTypedArrayList(Ingredient.CREATOR);
     }
 

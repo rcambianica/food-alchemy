@@ -49,15 +49,10 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
         this.backupFavoriteRecipesDataSource.setRecipesCallback(this);
     }
 
-    public MutableLiveData<Result> fetchRecipes(String query, String diet, Set<String> intolerances, List<String> ingredients, String type, int offset, long lastUpdate) {
-        long currentTime = System.currentTimeMillis();
-        if(currentTime - lastUpdate > FRESH_TIMEOUT)    {
-            recipesRemoteDataSource.getRecipes(query, diet,intolerances,ingredients, type, offset);
-        } else {
-            recipesLocalDataSource.getRecipes();
-        }
+    public MutableLiveData<Result> fetchRecipesLiveData(String query, String diet, Set<String> intolerances, List<String> ingredients, String type, int offset) {
 
-
+        recipesRemoteDataSource.getRecipes(query, diet,intolerances,ingredients, type, offset);
+        recipesLocalDataSource.getRecipes();
 
         return allRecipesMutableLiveData;
     }
@@ -72,8 +67,6 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
         backupFavoriteRecipesDataSource.getFavoriteRecipes();
         return favoriteRecipesMutableLiveData;
     }
-
-
 
     public void updateRecipe(Recipe recipe) {
         recipesLocalDataSource.updateRecipe(recipe);
@@ -256,6 +249,9 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
     public void onSuccessDeletion() {
 
     }
+
+
+
 
     /**
      * Ingredients methods

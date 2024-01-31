@@ -8,6 +8,7 @@ import java.util.Set;
 import it.unimib.food_alchemy.data.source.recipes.BaseRecipesLocalDataSource;
 import it.unimib.food_alchemy.data.source.recipes.RecipesCallback;
 import it.unimib.food_alchemy.model.Ingredient;
+import it.unimib.food_alchemy.model.IngredientsResponse;
 import it.unimib.food_alchemy.model.Recipe;
 import it.unimib.food_alchemy.model.RecipeApiResponse;
 import it.unimib.food_alchemy.model.Result;

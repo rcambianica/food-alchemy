@@ -123,7 +123,7 @@ public class RandomFragment extends Fragment {
 
         fragmentRandomBinding.progressBar.setVisibility(View.VISIBLE);
 
-        recipeViewModel.getRecipes(null, diet,intolerances,null,type,0).observe(getViewLifecycleOwner(),
+        recipeViewModel.getRecipes(null, diet,intolerances,null,type).observe(getViewLifecycleOwner(),
                 result -> {
                     if(result.isSuccess())  {
                         RecipesResponse recipesResponse = ((Result.RecipesResponseSuccess) result).getData();
@@ -202,7 +202,7 @@ public class RandomFragment extends Fragment {
                             recipesRecyclerViewAdapter.notifyDataSetChanged();
                             int offset = recipeViewModel.getOffset() + RECIPES_NUMBER_PARAMETER;
                             recipeViewModel.setOffset(offset);
-                            recipeViewModel.fetchRecipes(null,diet,intolerances,null,type);
+                            recipeViewModel.fetchRecipesScroll(null,diet,intolerances,null,type);
                         }
                     }
                 }

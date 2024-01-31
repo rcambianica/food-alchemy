@@ -3,12 +3,17 @@ package it.unimib.food_alchemy.data.source.recipes;
 import static it.unimib.food_alchemy.util.Constants.API_KEY_ERROR;
 import static it.unimib.food_alchemy.util.Constants.RECIPES_NUMBER_PARAMETER;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import it.unimib.food_alchemy.data.service.SpoonacularApiService;
+import it.unimib.food_alchemy.model.Ingredient;
+import it.unimib.food_alchemy.model.IngredientsResponse;
 import it.unimib.food_alchemy.model.RecipeApiResponse;
 import it.unimib.food_alchemy.util.ServiceLocator;
 import retrofit2.Call;
@@ -40,28 +45,6 @@ public class RecipesRemoteDataSource extends BaseRecipesRemoteDataSource{
                         true,
                         true,
                         apiKey);
-        recipeResponseCall.enqueue(new Callback<RecipeApiResponse>() {
-            @Override
-            public void onResponse(@NonNull Call<RecipeApiResponse> call, @NonNull Response<RecipeApiResponse> response) {
-                if(response.body() != null && response.isSuccessful())  {
-                    recipesCallback.onSuccessFromRemote(response.body());
-                } else {
-                    recipesCallback.onFailureFromRemote(new Exception(API_KEY_ERROR));
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<RecipeApiResponse> call, @NonNull Throwable t) {
-                recipesCallback.onFailureFromRemote(new Exception(API_KEY_ERROR));
-            }
-        });
-    }
-
-    @Override
-    public void getRecipeOfTheDay() {
-        Call<RecipeApiResponse> recipeResponseCall = recipesApiService
-                .getRecipeOfTheDay(1,apiKey);
-
         recipeResponseCall.enqueue(new Callback<RecipeApiResponse>() {
             @Override
             public void onResponse(@NonNull Call<RecipeApiResponse> call, @NonNull Response<RecipeApiResponse> response) {

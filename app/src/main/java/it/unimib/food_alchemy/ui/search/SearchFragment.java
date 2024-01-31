@@ -21,14 +21,6 @@ import static it.unimib.food_alchemy.util.Constants.WHEAT;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,9 +29,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.chip.Chip;
-//import com.google.android.material.search.SearchView;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -60,10 +55,13 @@ import it.unimib.food_alchemy.util.SharedPreferencesUtil;
 
 public class SearchFragment extends Fragment {
 
+    private final static String TAG = SearchFragment.class.getSimpleName().toString();
     private FragmentSearchBinding fragmentSearchBinding;
     private RecipeViewModel recipeViewModel;
 
     private List<Ingredient> selectedFridgeItems;
+    private List<Ingredient> autocompleteIngredients;
+    private SharedPreferencesUtil sharedPreferencesUtil;
 
     ArrayList<String> arrayList;
     ArrayAdapter<String>adapter;
@@ -90,8 +88,10 @@ public class SearchFragment extends Fragment {
             Snackbar.make(requireActivity().findViewById(android.R.id.content),
                     getString(R.string.unexpected_error), Snackbar.LENGTH_SHORT).show();
         }
-        selectedFridgeItems = new ArrayList<>();
+        sharedPreferencesUtil = new SharedPreferencesUtil(getActivity().getApplication());
 
+        selectedFridgeItems = new ArrayList<>();
+        autocompleteIngredients = new ArrayList<>();
     }
 
     @Override
@@ -106,7 +106,7 @@ public class SearchFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle saveInstanceState){
         super.onViewCreated(view, saveInstanceState);
 
-        //fragmentSearchBinding.searchView.setIconified(false);
+        Set<String> intolerances = sharedPreferencesUtil.readStringSetData(SHARED_PREFERENCES_FILE_NAME, SHARED_PREFERENCES_INTOLERANCES);
 
         recipeViewModel.getFridgeItemsSelectedLiveData().observe(getViewLifecycleOwner(),result -> {
             if(result != null)  {
@@ -138,6 +138,7 @@ public class SearchFragment extends Fragment {
                 }
             }
         });
+
 
         setViewsChecked();
 

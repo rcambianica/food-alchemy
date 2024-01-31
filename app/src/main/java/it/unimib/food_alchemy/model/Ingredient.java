@@ -92,7 +92,7 @@ public class Ingredient implements Parcelable {
 
     @Override
     public String toString() {
-        return "Ingredient{" +
+        return "{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", amount=" + amount +

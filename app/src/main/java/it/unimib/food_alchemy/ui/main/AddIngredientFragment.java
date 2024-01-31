@@ -1,22 +1,18 @@
 package it.unimib.food_alchemy.ui.main;
 
-import static it.unimib.food_alchemy.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
-import static it.unimib.food_alchemy.util.Constants.ID_TOKEN;
-import static it.unimib.food_alchemy.util.Constants.SHARED_FRIDGE_ITEMS_FILE_NAME;
-import static it.unimib.food_alchemy.util.Constants.SHARED_FRIDGE_ITEMS_FIRST_LOADING;
-import static it.unimib.food_alchemy.util.Constants.SHARED_FRIDGE_ITEMS_FRIDGE;
+import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_FILE_NAME;
+import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_INTOLERANCES;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,41 +20,33 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavBackStackEntry;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.textfield.TextInputEditText;
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 
 import it.unimib.food_alchemy.R;
+import it.unimib.food_alchemy.adapter.IngredientsRecyclerViewAdapter;
 import it.unimib.food_alchemy.data.repository.recipes.IRecipesRepository;
-import it.unimib.food_alchemy.data.repository.user.IUserRepository;
-import it.unimib.food_alchemy.data.repository.user.UserRepository;
+import it.unimib.food_alchemy.data.service.SpoonacularApiService;
 import it.unimib.food_alchemy.databinding.FragmentAddIngredientBinding;
 import it.unimib.food_alchemy.model.Ingredient;
-import it.unimib.food_alchemy.ui.auth.UserViewModel;
-import it.unimib.food_alchemy.ui.auth.UserViewModelFactory;
-import it.unimib.food_alchemy.util.DataEncryptionUtil;
 import it.unimib.food_alchemy.util.ServiceLocator;
 import it.unimib.food_alchemy.util.SharedPreferencesUtil;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link AddIngredientFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class AddIngredientFragment extends Fragment {
 
     private static final String TAG = AddIngredientFragment.class.getSimpleName();
@@ -66,9 +54,9 @@ public class AddIngredientFragment extends Fragment {
     private DatePickerDialog datePickerDialog;
     private RecipeViewModel recipeViewModel;
     private SharedPreferencesUtil sharedPreferencesUtil;
-
-    ArrayList<String>arrayList;
-    ArrayAdapter<String>adapter;
+    private List<Ingredient> autocompleteIngredients;
+    private Ingredient ingredientToAdd;
+    private IngredientsRecyclerViewAdapter ingredientsRecyclerViewAdapter;
     public AddIngredientFragment()  {
         // Required empty public constructor
     }
@@ -91,6 +79,9 @@ public class AddIngredientFragment extends Fragment {
             Snackbar.make(requireActivity().findViewById(android.R.id.content),
                     getString(R.string.unexpected_error), Snackbar.LENGTH_SHORT).show();
         }
+        sharedPreferencesUtil = new SharedPreferencesUtil(getActivity().getApplication());
+        autocompleteIngredients = new ArrayList<>();
+        ingredientToAdd = new Ingredient();
     }
 
     @Override
@@ -104,7 +95,22 @@ public class AddIngredientFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        sharedPreferencesUtil = new SharedPreferencesUtil(getActivity().getApplication());
+        RecyclerView recyclerViewIngredients = fragmentAddIngredientBinding.recyclerviewIngredients;
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(requireContext(),
+                LinearLayoutManager.VERTICAL, false);
+
+        ingredientsRecyclerViewAdapter =
+                new IngredientsRecyclerViewAdapter(autocompleteIngredients, new IngredientsRecyclerViewAdapter.OnItemClickListener() {
+                    @Override
+                    public void onIngredientsItemClick(Ingredient ingredient) {
+                        fragmentAddIngredientBinding.textInputEditTextIngredient.setText(ingredient.getTitle());
+                        fragmentAddIngredientBinding.recyclerviewIngredients.setVisibility(View.GONE);
+                        ingredientToAdd = ingredient;
+                    }
+                });
+        recyclerViewIngredients.setLayoutManager(layoutManager);
+        recyclerViewIngredients.setAdapter(ingredientsRecyclerViewAdapter);
+
 
         initDatePicker();
 
@@ -113,13 +119,33 @@ public class AddIngredientFragment extends Fragment {
         fragmentAddIngredientBinding.returnButton.setOnClickListener(v -> {
             Navigation.findNavController(requireView()).navigateUp();
         });
+
+        Set<String> intolerances = sharedPreferencesUtil.readStringSetData(SHARED_PREFERENCES_FILE_NAME, SHARED_PREFERENCES_INTOLERANCES);
+        fragmentAddIngredientBinding.textInputEditTextIngredient.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                fetchIngredients(String.valueOf(editable),intolerances);
+                fragmentAddIngredientBinding.recyclerviewIngredients.setVisibility(View.VISIBLE);
+            }
+        });
+
         fragmentAddIngredientBinding.saveButton.setOnClickListener(v -> {
-            String ingredientName = fragmentAddIngredientBinding.autoCompleteTextView.getText().toString().trim();
+            String ingredientName = fragmentAddIngredientBinding.textInputEditTextIngredient.getText().toString().trim();
             String expiryDate = formatDate(fragmentAddIngredientBinding.spinnerButton.getText().toString());
             if(isIngredientOk(ingredientName))  {
-                long ran = (long)Math.floor(Math.random()*(30));;
-                Ingredient fridgeItem = new Ingredient(ran,ingredientName,expiryDate,false);
-                recipeViewModel.insertFridgeItem(fridgeItem);
+                ingredientToAdd.setExpiryDate(expiryDate);
+
+                recipeViewModel.insertFridgeItem(ingredientToAdd);
                 Navigation.findNavController(requireView()).navigateUp();
             }
         });
@@ -136,15 +162,6 @@ public class AddIngredientFragment extends Fragment {
         }
 
 
-        arrayList=new ArrayList<>();
-        arrayList.add("Sappo");
-        arrayList.add("Santo");
-        arrayList.add("Sasso");
-        arrayList.add("Salmone");
-        arrayList.add("Salame");
-
-        adapter=new ArrayAdapter<String>(requireContext(),android.R.layout.simple_list_item_1,arrayList);
-        fragmentAddIngredientBinding.autoCompleteTextView.setAdapter(adapter);
 
     }
 
@@ -207,14 +224,48 @@ public class AddIngredientFragment extends Fragment {
     private boolean isIngredientOk(String ingredient) {
         // Check if the ingredient is null
         if (ingredient.isEmpty()) {
-            fragmentAddIngredientBinding.autoCompleteTextView.setError(getString(R.string.error_ingredient_message));
+            fragmentAddIngredientBinding.textInputLayoutIngredient.setError(getString(R.string.error_ingredient_message));
             return false;
         } else {
-            fragmentAddIngredientBinding.autoCompleteTextView.setError(null);
+            fragmentAddIngredientBinding.textInputLayoutIngredient.setError(null);
             return true;
         }
     }
 
+    private void fetchIngredients(String query,Set<String> intolerances)  {
+        SpoonacularApiService service = ServiceLocator.getInstance().getSpoonacularApiService();
+        Call<List<Ingredient>> ingredientsResponseCall = service
+                .autocompleteIngredientSearch(query,
+                        5,
+                        true,
+                        intolerances == null ? null : String.join(",",intolerances),
+                        getActivity().getApplication().getString(R.string.spoonacular_api_key));
+        ingredientsResponseCall.enqueue(new Callback<List<Ingredient>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Ingredient>> call, @NonNull Response<List<Ingredient>> response) {
+                if(response.body() != null && response.isSuccessful())  {
+                    onApiResult(response.body());
+                } else {
+                    onApiResult(null);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Ingredient>> call, @NonNull Throwable t) {
+                onApiResult(null);
+            }
+        });
+    }
+
+    private void onApiResult(List<Ingredient> results)  {
+        if(results != null) {
+            autocompleteIngredients.clear();
+            autocompleteIngredients.addAll(results);
+        } else {
+            Log.d(TAG, "Lista nulla");
+        }
+       ingredientsRecyclerViewAdapter.notifyDataSetChanged();
+    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();

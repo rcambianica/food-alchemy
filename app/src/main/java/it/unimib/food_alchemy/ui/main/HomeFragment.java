@@ -114,7 +114,7 @@ public class HomeFragment extends Fragment {
         Set<String> intolerances;
         diet = sharedPreferencesUtil.readStringData(SHARED_PREFERENCES_FILE_NAME,SHARED_PREFERENCES_DIET);
         intolerances = sharedPreferencesUtil.readStringSetData(SHARED_PREFERENCES_FILE_NAME, SHARED_PREFERENCES_INTOLERANCES);
-        recipeViewModel.getRecipes(null,diet,intolerances,null,null,0).observe(getViewLifecycleOwner(),
+        recipeViewModel.getRecipes(null,diet,intolerances,null,null).observe(getViewLifecycleOwner(),
                 result -> {
                     if(result.isSuccess())  {
                         RecipesResponse recipesResponse = ((Result.RecipesResponseSuccess) result).getData();

@@ -45,6 +45,7 @@ public class RecipesLocalDataSource extends BaseRecipesLocalDataSource{
         RecipeRoomDatabase.databaseWriteExecutor.execute(() -> {
             RecipeApiResponse recipesApiResponse = new RecipeApiResponse();
             recipesApiResponse.setRecipeList(recipesDao.getAllRecipes());
+
             recipesCallback.onSuccessFromLocal(recipesApiResponse);
         });
     }
