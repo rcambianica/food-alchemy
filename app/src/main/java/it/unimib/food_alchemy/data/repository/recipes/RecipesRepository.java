@@ -52,7 +52,7 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
     public MutableLiveData<Result> fetchRecipesLiveData(String query, String diet, Set<String> intolerances, List<String> ingredients, String type, int offset) {
 
         recipesRemoteDataSource.getRecipes(query, diet,intolerances,ingredients, type, offset);
-        recipesLocalDataSource.getRecipes();
+        //recipesLocalDataSource.getRecipes();
 
         return allRecipesMutableLiveData;
     }

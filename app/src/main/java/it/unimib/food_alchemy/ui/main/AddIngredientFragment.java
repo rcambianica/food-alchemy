@@ -144,7 +144,6 @@ public class AddIngredientFragment extends Fragment {
             String expiryDate = formatDate(fragmentAddIngredientBinding.spinnerButton.getText().toString());
             if(isIngredientOk(ingredientName))  {
                 ingredientToAdd.setExpiryDate(expiryDate);
-
                 recipeViewModel.insertFridgeItem(ingredientToAdd);
                 Navigation.findNavController(requireView()).navigateUp();
             }
@@ -266,6 +265,7 @@ public class AddIngredientFragment extends Fragment {
         }
        ingredientsRecyclerViewAdapter.notifyDataSetChanged();
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
