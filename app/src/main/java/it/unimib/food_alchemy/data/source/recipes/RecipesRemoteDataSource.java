@@ -63,8 +63,9 @@ public class RecipesRemoteDataSource extends BaseRecipesRemoteDataSource{
         });
     }
 
-    public void getRecipesByType(String type,  int offset) {
-        getRecipes(null, null, null, null, type, offset);
+    @Override
+    public void getRecipesByType(String type, int offset) {
+
     }
 
     @Override

@@ -126,13 +126,13 @@ public class RandomFragment extends Fragment {
 
         fragmentRandomBinding.progressBar.setVisibility(View.VISIBLE);
 
-        recipeViewModel.getByTypeRecipes(type, 0).observe(getViewLifecycleOwner(),
+        recipeViewModel.getByTypeRecipes(type).observe(getViewLifecycleOwner(),
                 result -> {
                     if (result != null) {
                         if (result.isSuccess()) {
                             RecipesResponse recipesResponse = ((Result.RecipesResponseSuccess) result).getData();
                             List<Recipe> fetchedRecipes = recipesResponse.getRecipesList();
-
+                            Log.d(TAG, fetchedRecipes.toString());
                             if (!recipeViewModel.isLoading()) {
                                 if (recipeViewModel.isFirstLoading()) {
                                     recipeViewModel.setTotalResults(((RecipeApiResponse) recipesResponse).getTotalResults());

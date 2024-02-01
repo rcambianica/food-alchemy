@@ -12,14 +12,13 @@ import it.unimib.food_alchemy.model.Result;
 public interface IRecipesRepository {
     MutableLiveData<Result> fetchRecipesLiveData(String query, String diet, Set<String> intolerances, List<String> ingredients ,String type, int offset);
 
-    MutableLiveData<Result> fetchRandomRecipe(String diet, Set<String> intolerances);
+    MutableLiveData<Result> fetchRandomRecipeLiveData(String diet, Set<String> intolerances);
 
-    void fetchRecipes(String query, String diet, Set<String> intolerances, List<String> ingredients, String type, int offset);
+    void fetchRecipesScroll(String query, String diet, Set<String> intolerances, List<String> ingredients, String type, int offset);
 
-    MutableLiveData<Result> fetchRecipesByType(String type, int offset, long lastUpdate);
-    void fetchRecipesByType(String type, int offset);
+    MutableLiveData<Result> fetchRecipesLiveDataByType(String type, int offset);
 
-    MutableLiveData<Result> getFavoriteRecipes();
+    MutableLiveData<Result> getFavoriteRecipesLiveData();
 
     void updateRecipe(Recipe recipe);
 

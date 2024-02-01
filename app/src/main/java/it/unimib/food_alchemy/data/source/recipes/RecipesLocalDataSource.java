@@ -51,10 +51,10 @@ public class RecipesLocalDataSource extends BaseRecipesLocalDataSource{
     }
 
     @Override
-    public void getRecipesByType(String type, int offset) {
+    public void getRecipesByType(String type) {
         RecipeRoomDatabase.databaseWriteExecutor.execute(() -> {
             RecipeApiResponse recipesApiResponse = new RecipeApiResponse();
-            recipesApiResponse.setRecipeList(recipesDao.getRecipesByType(type, offset));
+            recipesApiResponse.setRecipeList(recipesDao.getRecipesByType(type));
             recipesCallback.onSuccessFromLocal(recipesApiResponse);
         });
     }

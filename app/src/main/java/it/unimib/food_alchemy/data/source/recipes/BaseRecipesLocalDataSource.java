@@ -18,7 +18,7 @@ public abstract class BaseRecipesLocalDataSource {
      * Recipes methods
      */
     public abstract void getRecipes();
-    public abstract void getRecipesByType(String type, int offset);
+    public abstract void getRecipesByType(String type);
     public abstract void getFavoriteRecipes();
     public abstract void updateRecipe(Recipe recipe);
     public abstract void deleteFavoriteRecipes();

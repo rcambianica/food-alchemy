@@ -17,8 +17,8 @@ public interface RecipeDao {
     @Query("SELECT * FROM recipes")
     List<Recipe> getAllRecipes();
 
-    @Query("SELECT * FROM recipes WHERE type LIKE '%' || :type || '%' LIMIT 10 OFFSET :offset")
-    List<Recipe> getRecipesByType(String type, int offset);
+    @Query("SELECT * FROM recipes WHERE type LIKE '%' || :type || '%'")
+    List<Recipe> getRecipesByType(String type);
 
     @Query("SELECT * FROM recipes WHERE id = :id")
     Recipe getRecipe(long id);

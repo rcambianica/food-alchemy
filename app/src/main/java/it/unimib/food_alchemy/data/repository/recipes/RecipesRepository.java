@@ -57,41 +57,29 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
     }
 
     public MutableLiveData<Result> fetchRecipesLiveData(String query, String diet, Set<String> intolerances, List<String> ingredients, String type, int offset) {
-
         recipesRemoteDataSource.getRecipes(query, diet,intolerances,ingredients, type, offset);
-        //recipesLocalDataSource.getRecipes();
-
         return allRecipesMutableLiveData;
     }
 
-    public MutableLiveData<Result> fetchRandomRecipe(String diet, Set<String> intolerances) {
-        Log.d("TEST", "fetchRandomRecipe repository");
+    public MutableLiveData<Result> fetchRandomRecipeLiveData(String diet, Set<String> intolerances) {
         recipesRemoteDataSource.getRecipeOfTheDay(diet,intolerances);
         return randomRecipesMutableLiveData;
     }
 
     @Override
-    public void fetchRecipes(String query, String diet, Set<String> intolerances, List<String> ingredients, String type, int offset) {
+    public void fetchRecipesScroll(String query, String diet, Set<String> intolerances, List<String> ingredients, String type, int offset) {
         recipesRemoteDataSource.getRecipes(query, diet, intolerances, ingredients, type, offset);
     }
 
     @Override
-    public MutableLiveData<Result> fetchRecipesByType(String type, int offset, long lastUpdate) {
-        recipesLocalDataSource.getRecipesByType(type, offset);
-        List<Recipe> recipesList = ((Result.RecipesResponseSuccess) allRecipesMutableLiveData.getValue()).getData().getRecipesList();
-        if(recipesList.isEmpty()) {
-            recipesRemoteDataSource.getRecipesByType(type, offset);
-        }
+    public MutableLiveData<Result> fetchRecipesLiveDataByType(String type, int offset){
+        recipesLocalDataSource.getRecipesByType(type);
+
         return allRecipesMutableLiveData;
     }
 
     @Override
-    public void fetchRecipesByType(String type, int offset) {
-        recipesLocalDataSource.getRecipesByType(type, offset);
-    }
-
-    @Override
-    public MutableLiveData<Result> getFavoriteRecipes() {
+    public MutableLiveData<Result> getFavoriteRecipesLiveData() {
         backupFavoriteRecipesDataSource.getFavoriteRecipes();
         return favoriteRecipesMutableLiveData;
     }
@@ -179,18 +167,10 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
             }
         } else {
             Log.d("TEST", "1");
-            if (allRecipesMutableLiveData.getValue() != null && allRecipesMutableLiveData.getValue().isSuccess()) {
-                Log.d("TEST", "2");
-                List<Recipe> recipesList = ((Result.RecipesResponseSuccess) allRecipesMutableLiveData.getValue()).getData().getRecipesList();
-                recipesList.addAll(recipesApiResponse.getRecipesList());
-                recipesApiResponse.setRecipeList(recipesList);
-                Result.RecipesResponseSuccess result = new Result.RecipesResponseSuccess(recipesApiResponse);
-                allRecipesMutableLiveData.postValue(result);
-            } else {
                 Log.d("TEST", "3");
                 Result.RecipesResponseSuccess result = new Result.RecipesResponseSuccess(recipesApiResponse);
+                Log.d(TAG, result.getData().toString());
                 allRecipesMutableLiveData.postValue(result);
-            }
         }
     }
 
