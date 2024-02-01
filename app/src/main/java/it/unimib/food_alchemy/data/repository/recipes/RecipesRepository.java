@@ -4,12 +4,17 @@ import static it.unimib.food_alchemy.util.Constants.FRESH_TIMEOUT;
 
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import it.unimib.food_alchemy.R;
 import it.unimib.food_alchemy.data.source.recipes.BaseFavoriteRecipesDataSource;
 import it.unimib.food_alchemy.data.source.recipes.BaseRecipesLocalDataSource;
 import it.unimib.food_alchemy.data.source.recipes.BaseRecipesRemoteDataSource;
@@ -25,6 +30,7 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
     private static final String TAG = RecipesRepository.class.getSimpleName();
 
     private final MutableLiveData<Result> allRecipesMutableLiveData;
+    private final MutableLiveData<Result> randomRecipesMutableLiveData;
     private final MutableLiveData<Result> favoriteRecipesMutableLiveData;
     private final MutableLiveData<Result> allFridgeItemsMutableLiveData;
     private final MutableLiveData<Result> fridgeItemsSelectedMutableLiveData;
@@ -38,6 +44,7 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
                              BaseFavoriteRecipesDataSource favoriteRecipesDataSource) {
 
         allRecipesMutableLiveData = new MutableLiveData<>();
+        randomRecipesMutableLiveData = new MutableLiveData<>();
         favoriteRecipesMutableLiveData = new MutableLiveData<>();
         allFridgeItemsMutableLiveData = new MutableLiveData<>();
         fridgeItemsSelectedMutableLiveData = new MutableLiveData<>();
@@ -57,9 +64,30 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
         return allRecipesMutableLiveData;
     }
 
+    public MutableLiveData<Result> fetchRandomRecipe(String diet, Set<String> intolerances) {
+        Log.d("TEST", "fetchRandomRecipe repository");
+        recipesRemoteDataSource.getRecipeOfTheDay(diet,intolerances);
+        return randomRecipesMutableLiveData;
+    }
+
     @Override
     public void fetchRecipes(String query, String diet, Set<String> intolerances, List<String> ingredients, String type, int offset) {
         recipesRemoteDataSource.getRecipes(query, diet, intolerances, ingredients, type, offset);
+    }
+
+    @Override
+    public MutableLiveData<Result> fetchRecipesByType(String type, int offset, long lastUpdate) {
+        recipesLocalDataSource.getRecipesByType(type, offset);
+        List<Recipe> recipesList = ((Result.RecipesResponseSuccess) allRecipesMutableLiveData.getValue()).getData().getRecipesList();
+        if(recipesList.isEmpty()) {
+            recipesRemoteDataSource.getRecipesByType(type, offset);
+        }
+        return allRecipesMutableLiveData;
+    }
+
+    @Override
+    public void fetchRecipesByType(String type, int offset) {
+        recipesLocalDataSource.getRecipesByType(type, offset);
     }
 
     @Override
@@ -136,15 +164,33 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
 
     @Override
     public void onSuccessFromLocal(RecipeApiResponse recipesApiResponse) {
-        if (allRecipesMutableLiveData.getValue() != null && allRecipesMutableLiveData.getValue().isSuccess()) {
-            List<Recipe> recipesList = ((Result.RecipesResponseSuccess) allRecipesMutableLiveData.getValue()).getData().getRecipesList();
-            recipesList.addAll(recipesApiResponse.getRecipesList());
-            recipesApiResponse.setRecipeList(recipesList);
-            Result.RecipesResponseSuccess result = new Result.RecipesResponseSuccess(recipesApiResponse);
-            allRecipesMutableLiveData.postValue(result);
+        Log.d("TEST", "0");
+        if (recipesApiResponse.isFromRandom()) {
+            Log.d("TEST", "random");
+            if (randomRecipesMutableLiveData.getValue() != null && randomRecipesMutableLiveData.getValue().isSuccess()) {
+                List<Recipe> recipesList = ((Result.RecipesResponseSuccess) randomRecipesMutableLiveData.getValue()).getData().getRecipesList();
+                recipesList.addAll(recipesApiResponse.getRecipesList());
+                recipesApiResponse.setRecipeList(recipesList);
+                Result.RecipesResponseSuccess result = new Result.RecipesResponseSuccess(recipesApiResponse);
+                randomRecipesMutableLiveData.postValue(result);
+            } else {
+                Result.RecipesResponseSuccess result = new Result.RecipesResponseSuccess(recipesApiResponse);
+                randomRecipesMutableLiveData.postValue(result);
+            }
         } else {
-            Result.RecipesResponseSuccess result = new Result.RecipesResponseSuccess(recipesApiResponse);
-            allRecipesMutableLiveData.postValue(result);
+            Log.d("TEST", "1");
+            if (allRecipesMutableLiveData.getValue() != null && allRecipesMutableLiveData.getValue().isSuccess()) {
+                Log.d("TEST", "2");
+                List<Recipe> recipesList = ((Result.RecipesResponseSuccess) allRecipesMutableLiveData.getValue()).getData().getRecipesList();
+                recipesList.addAll(recipesApiResponse.getRecipesList());
+                recipesApiResponse.setRecipeList(recipesList);
+                Result.RecipesResponseSuccess result = new Result.RecipesResponseSuccess(recipesApiResponse);
+                allRecipesMutableLiveData.postValue(result);
+            } else {
+                Log.d("TEST", "3");
+                Result.RecipesResponseSuccess result = new Result.RecipesResponseSuccess(recipesApiResponse);
+                allRecipesMutableLiveData.postValue(result);
+            }
         }
     }
 

@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  *  associated with the endpoint "recipes" - recipes/complexSearch.
  */
 public class RecipeApiResponse extends RecipesResponse{
+    private boolean fromRandom;
 
     private int totalResults;
     public RecipeApiResponse() {
@@ -27,6 +28,7 @@ public class RecipeApiResponse extends RecipesResponse{
     public RecipeApiResponse(int totalResults, List<Recipe> recipes)    {
         super(recipes);
         this.totalResults = totalResults;
+        this.fromRandom = false;
     }
 
     public int getTotalResults() {
@@ -76,4 +78,12 @@ public class RecipeApiResponse extends RecipesResponse{
             return new RecipeApiResponse[size];
         }
     };
+
+    public boolean isFromRandom() {
+        return fromRandom;
+    }
+
+    public void setFromRandom(boolean fromRandom) {
+        this.fromRandom = fromRandom;
+    }
 }

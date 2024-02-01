@@ -49,6 +49,35 @@ public class RecipesRemoteDataSource extends BaseRecipesRemoteDataSource{
             @Override
             public void onResponse(@NonNull Call<RecipeApiResponse> call, @NonNull Response<RecipeApiResponse> response) {
                 if(response.body() != null && response.isSuccessful())  {
+                    Log.d("TEST", "" + response.body().isFromRandom());
+                    recipesCallback.onSuccessFromRemote(response.body());
+                } else {
+                    recipesCallback.onFailureFromRemote(new Exception(API_KEY_ERROR));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<RecipeApiResponse> call, @NonNull Throwable t) {
+                recipesCallback.onFailureFromRemote(new Exception(API_KEY_ERROR));
+            }
+        });
+    }
+
+    public void getRecipesByType(String type,  int offset) {
+        getRecipes(null, null, null, null, type, offset);
+    }
+
+    @Override
+    public void getRecipeOfTheDay(String diet, Set<String> intolerances) {
+        Log.d("TEST", "getRecipeOfTheDay remotedatasource");
+        Call<RecipeApiResponse> recipeResponseCall = recipesApiService
+                .searchRecipes(null, null, null, null, null, "random", null, 1, true, true, true, apiKey);
+
+        recipeResponseCall.enqueue(new Callback<RecipeApiResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<RecipeApiResponse> call, @NonNull Response<RecipeApiResponse> response) {
+                if(response.body() != null && response.isSuccessful())  {
+                    response.body().setFromRandom(true);
                     recipesCallback.onSuccessFromRemote(response.body());
                 } else {
                     recipesCallback.onFailureFromRemote(new Exception(API_KEY_ERROR));

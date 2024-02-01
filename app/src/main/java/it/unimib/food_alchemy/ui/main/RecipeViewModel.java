@@ -1,14 +1,20 @@
 package it.unimib.food_alchemy.ui.main;
 
+import android.util.Log;
+
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
 import it.unimib.food_alchemy.data.repository.recipes.IRecipesRepository;
 import it.unimib.food_alchemy.model.Ingredient;
 import it.unimib.food_alchemy.model.Recipe;
+import it.unimib.food_alchemy.model.RecipesResponse;
 import it.unimib.food_alchemy.model.Result;
 
 /**
@@ -26,6 +32,8 @@ public class RecipeViewModel extends ViewModel {
     private boolean firstLoading;
     private MutableLiveData<Result> recipesListLiveData;
     private MutableLiveData<Result> favoriteRecipesListLiveData;
+
+    private MutableLiveData<Result> randomRecipeMutableLiveData;
     private MutableLiveData<Result> fridgeItemsListLiveData;
     private MutableLiveData<Result> fridgeItemsSelectedLiveData;
 
@@ -47,6 +55,22 @@ public class RecipeViewModel extends ViewModel {
         }
         return recipesListLiveData;
     }
+
+
+    public MutableLiveData<Result> getByTypeRecipes(String type, long lastUpdate) {
+        fetchRecipesByType(type, lastUpdate);
+        return recipesListLiveData;
+    }
+
+    public MutableLiveData<Result> getRandomRecipe(String diet, Set<String> intolerances) {
+        if(randomRecipeMutableLiveData == null) {
+            fetchRandomRecipe(diet, intolerances);
+            Log.d("TEST", "getRandomRecipe view model in");
+        }
+        Log.d("TEST", "getRandomRecipe view model out");
+        return randomRecipeMutableLiveData;
+    }
+
 
     /**
      * Returns the LiveData object associated with the
@@ -74,6 +98,18 @@ public class RecipeViewModel extends ViewModel {
 
     private void fetchRecipes(String query, String diet, Set<String> intolerances, List<String> ingredients, String type)    {
         recipesListLiveData = recipesRepository.fetchRecipesLiveData(query, diet, intolerances, ingredients, type, offset);
+    }
+
+    public void fetchRecipesByType(String type, long lastUpdate) {
+        recipesListLiveData = recipesRepository.fetchRecipesByType(type, offset, lastUpdate);
+    }
+
+    private void fetchRandomRecipe(String diet, Set<String> intolerances) {
+        randomRecipeMutableLiveData = recipesRepository.fetchRandomRecipe(diet, intolerances);
+    }
+
+    public void fetchRecipesByType(String type) {
+        recipesRepository.fetchRecipesByType(type, offset);
     }
 
     /**
@@ -175,6 +211,10 @@ public class RecipeViewModel extends ViewModel {
 
     public MutableLiveData<Result> getRecipesResponseLiveData() {
         return recipesListLiveData;
+    }
+
+    public MutableLiveData<Result> getRandomRecipeListLiveData() {
+        return randomRecipeMutableLiveData;
     }
 }
 

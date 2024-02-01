@@ -14,4 +14,8 @@ public abstract class BaseRecipesRemoteDataSource {
     }
 
     public abstract void getRecipes(String query, String diet, Set<String> intolerances, List<String> ingredients, String type, int offset);
+
+    public abstract void getRecipesByType(String type, int offset);
+
+    public abstract void getRecipeOfTheDay(String diet, Set<String> intolerances);
 }

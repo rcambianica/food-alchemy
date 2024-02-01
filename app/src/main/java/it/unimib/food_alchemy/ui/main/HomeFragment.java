@@ -30,6 +30,7 @@ import it.unimib.food_alchemy.databinding.FragmentHomeBinding;
 import it.unimib.food_alchemy.model.Recipe;
 import it.unimib.food_alchemy.model.RecipesResponse;
 import it.unimib.food_alchemy.model.Result;
+import it.unimib.food_alchemy.util.Constants;
 import it.unimib.food_alchemy.util.ErrorMessagesUtil;
 import it.unimib.food_alchemy.util.ServiceLocator;
 import it.unimib.food_alchemy.util.SharedPreferencesUtil;
@@ -45,11 +46,14 @@ public class HomeFragment extends Fragment {
     private int ran;
     private List<Recipe> randomRecipes;
     private SharedPreferencesUtil sharedPreferencesUtil;
+
     public HomeFragment() {
         // Required empty public constructor
     }
 
-    public static HomeFragment newInstance() {return new HomeFragment();}
+    public static HomeFragment newInstance() {
+        return new HomeFragment();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,12 +63,12 @@ public class HomeFragment extends Fragment {
         IRecipesRepository recipesRepository =
                 ServiceLocator.getInstance().getRecipesRepository(requireActivity().getApplication());
 
-        ran = (int)Math.floor(Math.random()*(30));
+        ran = (int) Math.floor(Math.random() * (30));
 
-        if(recipesRepository != null)   {
+        if (recipesRepository != null) {
             recipeViewModel = new ViewModelProvider(requireActivity(),
                     new RecipeViewModelFactory(recipesRepository)).get(RecipeViewModel.class);
-        }   else {
+        } else {
             Snackbar.make(requireActivity().findViewById(android.R.id.content),
                     getString(R.string.unexpected_error), Snackbar.LENGTH_SHORT).show();
         }
@@ -76,7 +80,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        fragmentHomeBinding = FragmentHomeBinding.inflate(inflater,container, false);
+        fragmentHomeBinding = FragmentHomeBinding.inflate(inflater, container, false);
         return fragmentHomeBinding.getRoot();
     }
 
@@ -106,32 +110,34 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
         super.onViewCreated(view, savedInstanceState);
 
         String diet;
         Set<String> intolerances;
-        diet = sharedPreferencesUtil.readStringData(SHARED_PREFERENCES_FILE_NAME,SHARED_PREFERENCES_DIET);
+        diet = sharedPreferencesUtil.readStringData(SHARED_PREFERENCES_FILE_NAME, SHARED_PREFERENCES_DIET);
         intolerances = sharedPreferencesUtil.readStringSetData(SHARED_PREFERENCES_FILE_NAME, SHARED_PREFERENCES_INTOLERANCES);
-        recipeViewModel.getRecipes(null,diet,intolerances,null,null).observe(getViewLifecycleOwner(),
+        recipeViewModel.getRandomRecipe(diet, intolerances).observe(getViewLifecycleOwner(),
                 result -> {
-                    if(result.isSuccess())  {
-                        RecipesResponse recipesResponse = ((Result.RecipesResponseSuccess) result).getData();
-                        randomRecipes = recipesResponse.getRecipesList();
-                        ran = (int)Math.floor(Math.random()*(randomRecipes.size()-1));
-                        Glide.with(fragmentHomeBinding.dayImage.getContext())
-                                .load(randomRecipes.get(ran).getImageUrl())
-                                .placeholder(R.drawable.baseline_access_time_24)
-                                .into(fragmentHomeBinding.dayImage);
-                        fragmentHomeBinding.dayTitle.setText(randomRecipes.get(ran).getTitle());
+                    if (result != null) {
+                        if (result.isSuccess()) {
+                            RecipesResponse recipesResponse = ((Result.RecipesResponseSuccess) result).getData();
+                            randomRecipes = recipesResponse.getRecipesList();
+                            ran = 0;
+                            Glide.with(fragmentHomeBinding.dayImage.getContext())
+                                    .load(randomRecipes.get(ran).getImageUrl())
+                                    .placeholder(R.drawable.baseline_access_time_24)
+                                    .into(fragmentHomeBinding.dayImage);
+                            fragmentHomeBinding.dayTitle.setText(randomRecipes.get(ran).getTitle());
 
-                    }   else {
-                        ErrorMessagesUtil errorMessagesUtil =
-                                new ErrorMessagesUtil(requireActivity().getApplication());
-                        Snackbar.make(view, errorMessagesUtil.
-                                        getErrorMessage(((Result.Error)result).getMessage()),
-                                Snackbar.LENGTH_SHORT).show();
+                        } else {
+                            ErrorMessagesUtil errorMessagesUtil =
+                                    new ErrorMessagesUtil(requireActivity().getApplication());
+                            Snackbar.make(view, errorMessagesUtil.
+                                            getErrorMessage(((Result.Error) result).getMessage()),
+                                    Snackbar.LENGTH_SHORT).show();
+                        }
                     }
                 });
 
@@ -187,7 +193,7 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public void onDestroyView(){
+    public void onDestroyView() {
         super.onDestroyView();
         fragmentHomeBinding = null;
     }

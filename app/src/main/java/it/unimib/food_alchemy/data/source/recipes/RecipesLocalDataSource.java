@@ -51,6 +51,15 @@ public class RecipesLocalDataSource extends BaseRecipesLocalDataSource{
     }
 
     @Override
+    public void getRecipesByType(String type, int offset) {
+        RecipeRoomDatabase.databaseWriteExecutor.execute(() -> {
+            RecipeApiResponse recipesApiResponse = new RecipeApiResponse();
+            recipesApiResponse.setRecipeList(recipesDao.getRecipesByType(type, offset));
+            recipesCallback.onSuccessFromLocal(recipesApiResponse);
+        });
+    }
+
+    @Override
     public void getFavoriteRecipes() {
         RecipeRoomDatabase.databaseWriteExecutor.execute(() -> {
             List<Recipe> favoriteRecipes = recipesDao.getFavoriteRecipes();

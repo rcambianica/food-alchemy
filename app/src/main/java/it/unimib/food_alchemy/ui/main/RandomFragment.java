@@ -20,6 +20,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,6 +56,7 @@ public class RandomFragment extends Fragment {
     private int lastVisibleItem; // The position of the last visible recipe item
     private int visibleItemCount; // Number or total visible recipes items
     private final int threshold = 1;
+
     public RandomFragment() {
         // Required empty public constructor
     }
@@ -62,6 +64,7 @@ public class RandomFragment extends Fragment {
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
+     *
      * @return A new instance of fragment RandomFragment.
      */
 
@@ -77,10 +80,10 @@ public class RandomFragment extends Fragment {
         IRecipesRepository recipesRepository =
                 ServiceLocator.getInstance().getRecipesRepository(requireActivity().getApplication());
 
-        if(recipesRepository != null)   {
+        if (recipesRepository != null) {
             recipeViewModel = new ViewModelProvider(requireActivity(),
                     new RecipeViewModelFactory(recipesRepository)).get(RecipeViewModel.class);
-        }   else {
+        } else {
             Snackbar.make(requireActivity().findViewById(android.R.id.content),
                     getString(R.string.unexpected_error), Snackbar.LENGTH_SHORT).show();
         }
@@ -97,20 +100,20 @@ public class RandomFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         String diet;
         Set<String> intolerances;
-        diet = sharedPreferencesUtil.readStringData(SHARED_PREFERENCES_FILE_NAME,SHARED_PREFERENCES_DIET);
+        diet = sharedPreferencesUtil.readStringData(SHARED_PREFERENCES_FILE_NAME, SHARED_PREFERENCES_DIET);
         intolerances = sharedPreferencesUtil.readStringSetData(SHARED_PREFERENCES_FILE_NAME, SHARED_PREFERENCES_INTOLERANCES);
 
         RecyclerView randomRecipesRecyclerView = view.findViewById(R.id.results_search_recyclerview);
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext(),
-                LinearLayoutManager.VERTICAL,false);
+                LinearLayoutManager.VERTICAL, false);
 
         String type = RandomFragmentArgs.fromBundle(getArguments()).getType();
 
-         recipesRecyclerViewAdapter = new RecipesRecyclerViewAdapter(requireActivity().getApplication(), recipeList, new RecipesRecyclerViewAdapter.OnItemClickListener() {
+        recipesRecyclerViewAdapter = new RecipesRecyclerViewAdapter(requireActivity().getApplication(), recipeList, new RecipesRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onRecipesItemClick(Recipe recipe) {
                 RandomFragmentDirections.ActionRandomFragmentToRecipeFragment action =
@@ -123,76 +126,78 @@ public class RandomFragment extends Fragment {
 
         fragmentRandomBinding.progressBar.setVisibility(View.VISIBLE);
 
-        recipeViewModel.getRecipes(null, diet,intolerances,null,type).observe(getViewLifecycleOwner(),
+        recipeViewModel.getByTypeRecipes(type, 0).observe(getViewLifecycleOwner(),
                 result -> {
-                    if(result.isSuccess())  {
-                        RecipesResponse recipesResponse = ((Result.RecipesResponseSuccess) result).getData();
-                        List<Recipe> fetchedRecipes = recipesResponse.getRecipesList();
+                    if (result != null) {
+                        if (result.isSuccess()) {
+                            RecipesResponse recipesResponse = ((Result.RecipesResponseSuccess) result).getData();
+                            List<Recipe> fetchedRecipes = recipesResponse.getRecipesList();
 
-                        if(!recipeViewModel.isLoading())    {
-                            if(recipeViewModel.isFirstLoading())    {
-                                recipeViewModel.setTotalResults(((RecipeApiResponse) recipesResponse).getTotalResults());
-                                recipeViewModel.setFirstLoading(false);
-                                this.recipeList.addAll(fetchedRecipes);
+                            if (!recipeViewModel.isLoading()) {
+                                if (recipeViewModel.isFirstLoading()) {
+                                    recipeViewModel.setTotalResults(((RecipeApiResponse) recipesResponse).getTotalResults());
+                                    recipeViewModel.setFirstLoading(false);
+                                    this.recipeList.addAll(fetchedRecipes);
 
-                                recipesRecyclerViewAdapter.notifyItemRangeInserted(0,
-                                        this.recipeList.size());
-                            }   else{
-                                recipeList.clear();
-                                recipeList.addAll(fetchedRecipes);
-                                recipesRecyclerViewAdapter.notifyItemRangeInserted(0, fetchedRecipes.size());
-                            }
-                            fragmentRandomBinding.progressBar.setVisibility(View.GONE);
-                        }   else {
-                            recipeViewModel.setLoading(false);
-                            recipeViewModel.setCurrentResults(recipeList.size());
-
-                            int initialSize = recipeList.size();
-
-                            for(int i = 0; i < recipeList.size(); i++)  {
-                                if(recipeList.get(i) == null)   {
-                                    recipeList.remove(recipeList.get(i));
+                                    recipesRecyclerViewAdapter.notifyItemRangeInserted(0,
+                                            this.recipeList.size());
+                                } else {
+                                    recipeList.clear();
+                                    recipeList.addAll(fetchedRecipes);
+                                    recipesRecyclerViewAdapter.notifyDataSetChanged();
                                 }
-                            }
-                            int startIndex = recipeViewModel.getOffset();
+                                fragmentRandomBinding.progressBar.setVisibility(View.GONE);
+                            } else {
+                                recipeViewModel.setLoading(false);
+                                recipeViewModel.setCurrentResults(recipeList.size());
 
-                            for(int i = startIndex; i < fetchedRecipes.size(); i++) {
-                                recipeList.add(fetchedRecipes.get(i));
+                                int initialSize = recipeList.size();
+
+                                for (int i = 0; i < recipeList.size(); i++) {
+                                    if (recipeList.get(i) == null) {
+                                        recipeList.remove(recipeList.get(i));
+                                    }
+                                }
+                                int startIndex = recipeViewModel.getOffset();
+
+                                for (int i = startIndex; i < fetchedRecipes.size(); i++) {
+                                    recipeList.add(fetchedRecipes.get(i));
+                                }
+                                recipesRecyclerViewAdapter.notifyItemRangeInserted(initialSize, recipeList.size());
                             }
-                            recipesRecyclerViewAdapter.notifyItemRangeInserted(initialSize, recipeList.size());
+                        } else {
+                            ErrorMessagesUtil errorMessagesUtil =
+                                    new ErrorMessagesUtil(requireActivity().getApplication());
+                            Snackbar.make(view, errorMessagesUtil.
+                                            getErrorMessage(((Result.Error) result).getMessage()),
+                                    Snackbar.LENGTH_SHORT).show();
+                            fragmentRandomBinding.progressBar.setVisibility(View.GONE);
                         }
-                    }   else {
-                        ErrorMessagesUtil errorMessagesUtil =
-                                new ErrorMessagesUtil(requireActivity().getApplication());
-                        Snackbar.make(view, errorMessagesUtil.
-                                        getErrorMessage(((Result.Error)result).getMessage()),
-                                Snackbar.LENGTH_SHORT).show();
-                        fragmentRandomBinding.progressBar.setVisibility(View.GONE);
                     }
                 });
 
         randomRecipesRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView,dx,dy);
+                super.onScrolled(recyclerView, dx, dy);
                 boolean isConnected = isConnected();
 
-                if(isConnected && totalItemCount != recipeViewModel.getTotalResults())  {
+                if (isConnected && totalItemCount != recipeViewModel.getTotalResults()) {
                     totalItemCount = layoutManager.getItemCount();
                     lastVisibleItem = layoutManager.findLastVisibleItemPosition();
                     visibleItemCount = layoutManager.getChildCount();
 
-                    if(totalItemCount == visibleItemCount ||
+                    if (totalItemCount == visibleItemCount ||
                             (totalItemCount <= (lastVisibleItem + threshold) &&
                                     dy > 0 && !recipeViewModel.isLoading()
                             ) &&
                                     recipeViewModel.getRecipesResponseLiveData().getValue() != null &&
                                     recipeViewModel.getCurrentResults() != recipeViewModel.getTotalResults()
-                    )   {
+                    ) {
                         MutableLiveData<Result> recipesListMutableLiveData = recipeViewModel.getRecipesResponseLiveData();
 
-                        if(recipesListMutableLiveData.getValue() != null &&
-                                recipesListMutableLiveData.getValue().isSuccess())  {
+                        if (recipesListMutableLiveData.getValue() != null &&
+                                recipesListMutableLiveData.getValue().isSuccess()) {
 
                             recipeViewModel.setLoading(true);
                             recipeList.add(null);
@@ -202,7 +207,7 @@ public class RandomFragment extends Fragment {
                             recipesRecyclerViewAdapter.notifyDataSetChanged();
                             int offset = recipeViewModel.getOffset() + RECIPES_NUMBER_PARAMETER;
                             recipeViewModel.setOffset(offset);
-                            recipeViewModel.fetchRecipesScroll(null,diet,intolerances,null,type);
+                            recipeViewModel.fetchRecipesScroll(null, diet, intolerances, null, type);
                         }
                     }
                 }
@@ -219,7 +224,7 @@ public class RandomFragment extends Fragment {
                 navBackStackEntry.getDestination().getId() == R.id.searchFragment) {
             ((BottomNavigationView) requireActivity().findViewById(R.id.bottom_navigation)).
                     getMenu().findItem(R.id.homeFragment).setChecked(true);
-        }   else if (navBackStackEntry != null &&
+        } else if (navBackStackEntry != null &&
                 navBackStackEntry.getDestination().getId() == R.id.homeFragment) {
             ((BottomNavigationView) requireActivity().findViewById(R.id.bottom_navigation)).
                     getMenu().findItem(R.id.homeFragment).setChecked(true);
@@ -229,11 +234,12 @@ public class RandomFragment extends Fragment {
     /**
      * Checks if the device is connected to Internet.
      * See: https://developer.android.com/training/monitoring-device-state/connectivity-status-type#DetermineConnection
+     *
      * @return true if the device is connected to Internet; false otherwise.
      */
     private boolean isConnected() {
         ConnectivityManager cm =
-                (ConnectivityManager)requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                (ConnectivityManager) requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
@@ -245,8 +251,9 @@ public class RandomFragment extends Fragment {
         recipeViewModel.setFirstLoading(true);
         recipeViewModel.setLoading(false);
     }
+
     @Override
-    public void onDestroyView(){
+    public void onDestroyView() {
         super.onDestroyView();
         fragmentRandomBinding = null;
     }
