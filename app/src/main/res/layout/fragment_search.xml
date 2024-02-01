@@ -40,38 +40,55 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:id="@+id/search_layout"
         app:layout_constraintTop_toBottomOf="@+id/linear_layout">
 
-        <SearchView
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/search_list"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/search_btn"
+
+
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/searchView"
-            android:layout_width="0dp"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:clickable="true"
-            android:focusable="true"
-            android:queryHint="Search..."
-            app:iconifiedByDefault="false" />
+            app:endIconMode="clear_text"
+            app:errorEnabled="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/recyclerview_ingredients_search"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/search_btn">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/search_input_edit_text_ingredient"
+                android:layout_width="300dp"
+                android:layout_height="60dp"
+                android:layout_weight="1"
+                android:inputType="text"
+                android:hint="@string/search_here" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
 
         <Button
+            app:layout_constraintBottom_toTopOf="@id/recyclerview_ingredients_search"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/search_list"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/searchView"
             android:id="@+id/search_btn"
+            android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/search" />
 
-        <ListView
-            app:layout_constraintTop_toBottomOf="@id/searchView"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerview_ingredients_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/search_list"/>
+            app:layout_constraintTop_toBottomOf="@id/searchView"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

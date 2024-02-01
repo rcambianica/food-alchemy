@@ -21,6 +21,9 @@ import static it.unimib.food_alchemy.util.Constants.WHEAT;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +37,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.snackbar.Snackbar;
@@ -43,7 +48,9 @@ import java.util.List;
 import java.util.Set;
 
 import it.unimib.food_alchemy.R;
+import it.unimib.food_alchemy.adapter.IngredientsRecyclerViewAdapter;
 import it.unimib.food_alchemy.data.repository.recipes.IRecipesRepository;
+import it.unimib.food_alchemy.data.service.SpoonacularApiService;
 import it.unimib.food_alchemy.databinding.FragmentSearchBinding;
 import it.unimib.food_alchemy.model.Ingredient;
 import it.unimib.food_alchemy.model.Result;
@@ -53,6 +60,9 @@ import it.unimib.food_alchemy.ui.main.RecipeViewModelFactory;
 import it.unimib.food_alchemy.util.ErrorMessagesUtil;
 import it.unimib.food_alchemy.util.ServiceLocator;
 import it.unimib.food_alchemy.util.SharedPreferencesUtil;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SearchFragment extends Fragment {
 
@@ -63,6 +73,9 @@ public class SearchFragment extends Fragment {
     private List<Ingredient> selectedFridgeItems;
     private List<Ingredient> autocompleteIngredients;
     private SharedPreferencesUtil sharedPreferencesUtil;
+
+    private IngredientsRecyclerViewAdapter ingredientsRecyclerViewAdapter;
+    private Ingredient ingredientToAdd;
 
     ArrayList<String> arrayList;
     ArrayAdapter<String>adapter;
@@ -93,6 +106,7 @@ public class SearchFragment extends Fragment {
 
         selectedFridgeItems = new ArrayList<>();
         autocompleteIngredients = new ArrayList<>();
+        ingredientToAdd = new Ingredient();
     }
 
     @Override
@@ -107,7 +121,61 @@ public class SearchFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle saveInstanceState){
         super.onViewCreated(view, saveInstanceState);
 
+        RecyclerView recyclerViewIngredients = fragmentSearchBinding.recyclerviewIngredientsSearch;
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(requireContext(),
+                LinearLayoutManager.VERTICAL, false);
+
+        ingredientsRecyclerViewAdapter =
+                new IngredientsRecyclerViewAdapter(autocompleteIngredients, new IngredientsRecyclerViewAdapter.OnItemClickListener() {
+                    @Override
+                    public void onIngredientsItemClick(Ingredient ingredient) {
+                        fragmentSearchBinding.searchInputEditTextIngredient.setText(ingredient.getTitle());
+                        fragmentSearchBinding.recyclerviewIngredientsSearch.setVisibility(View.GONE);
+                        ingredientToAdd = ingredient;
+                        Chip chip = new Chip(requireContext());
+                        chip.setText(ingredient.getTitle());
+                        chip.setCloseIconVisible(true);
+                        chip.setOnCloseIconClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                ingredient.setSelected(false);
+
+                                // Remove the specific chip from the ChipGroup
+                                Chip chipToRemove = findChipToRemove(ingredient); // Implement findChipToRemove method
+                                if (chipToRemove != null) {
+                                    fragmentSearchBinding.chipIngredients.removeView(chipToRemove);
+                                }
+
+                                selectedFridgeItems.remove(ingredient);
+                                Log.d("TAG", selectedFridgeItems.toString());
+                            }
+                        });
+                        fragmentSearchBinding.chipIngredients.addView(chip);
+                    }
+                });
+        recyclerViewIngredients.setLayoutManager(layoutManager);
+        recyclerViewIngredients.setAdapter(ingredientsRecyclerViewAdapter);
+
         Set<String> intolerances = sharedPreferencesUtil.readStringSetData(SHARED_PREFERENCES_FILE_NAME, SHARED_PREFERENCES_INTOLERANCES);
+
+        fragmentSearchBinding.searchInputEditTextIngredient.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                fetchIngredients(String.valueOf(editable),intolerances);
+                fragmentSearchBinding.recyclerviewIngredientsSearch.setVisibility(View.VISIBLE);
+            }
+        });
+
 
         recipeViewModel.getFridgeItemsSelectedLiveData().observe(getViewLifecycleOwner(),result -> {
             if(result != null)  {
@@ -154,7 +222,7 @@ public class SearchFragment extends Fragment {
             }
         });
 
-
+/*
         fragmentSearchBinding.searchList.setVisibility(View.GONE);
 
         arrayList=new ArrayList<>();
@@ -205,6 +273,45 @@ public class SearchFragment extends Fragment {
             }
         });
 
+ */
+
+
+
+    }
+
+    private void fetchIngredients(String query,Set<String> intolerances)  {
+        SpoonacularApiService service = ServiceLocator.getInstance().getSpoonacularApiService();
+        Call<List<Ingredient>> ingredientsResponseCall = service
+                .autocompleteIngredientSearch(query,
+                        5,
+                        true,
+                        intolerances == null ? null : String.join(",",intolerances),
+                        getActivity().getApplication().getString(R.string.spoonacular_api_key));
+        ingredientsResponseCall.enqueue(new Callback<List<Ingredient>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Ingredient>> call, @NonNull Response<List<Ingredient>> response) {
+                if(response.body() != null && response.isSuccessful())  {
+                    onApiResult(response.body());
+                } else {
+                    onApiResult(null);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Ingredient>> call, @NonNull Throwable t) {
+                onApiResult(null);
+            }
+        });
+    }
+
+    private void onApiResult(List<Ingredient> results)  {
+        if(results != null) {
+            autocompleteIngredients.clear();
+            autocompleteIngredients.addAll(results);
+        } else {
+            Log.d(TAG, "Lista nulla");
+        }
+        ingredientsRecyclerViewAdapter.notifyDataSetChanged();
     }
 
     private void setViewsChecked()  {
@@ -261,6 +368,22 @@ public class SearchFragment extends Fragment {
                 fragmentSearchBinding.wheat.setChecked(true);
             }
         }
+    }
+
+    private Chip findChipToRemove(Ingredient ingredient) {
+        // Iterate over child views of the ChipGroup to find the matching chip
+        for (int i = 0; i < fragmentSearchBinding.chipIngredients.getChildCount(); i++) {
+            View child = fragmentSearchBinding.chipIngredients.getChildAt(i);
+            if (child instanceof Chip) {
+                Chip chip = (Chip) child;
+                // Implement your logic to match the chip with the ingredient
+                // For example, you might compare the text or tag of the chip
+                if (TextUtils.equals(chip.getText(), ingredient.getTitle())) {
+                    return chip;
+                }
+            }
+        }
+        return null; // Chip not found
     }
 
     @Override
