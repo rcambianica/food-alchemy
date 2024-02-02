@@ -65,20 +65,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SearchFragment extends Fragment {
-
     private final static String TAG = SearchFragment.class.getSimpleName().toString();
     private FragmentSearchBinding fragmentSearchBinding;
     private RecipeViewModel recipeViewModel;
-
     private List<Ingredient> selectedFridgeItems;
     private List<Ingredient> autocompleteIngredients;
     private SharedPreferencesUtil sharedPreferencesUtil;
-
     private IngredientsRecyclerViewAdapter ingredientsRecyclerViewAdapter;
     private Ingredient ingredientToAdd;
-
-    ArrayList<String> arrayList;
-    ArrayAdapter<String>adapter;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -120,18 +114,25 @@ public class SearchFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle saveInstanceState){
         super.onViewCreated(view, saveInstanceState);
+        Set<String> intolerances = sharedPreferencesUtil.readStringSetData(SHARED_PREFERENCES_FILE_NAME, SHARED_PREFERENCES_INTOLERANCES);
 
+        // Initialize the RecyclerView
         RecyclerView recyclerViewIngredients = fragmentSearchBinding.recyclerviewIngredientsSearch;
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(requireContext(),
                 LinearLayoutManager.VERTICAL, false);
 
+        // Set up the adapter for the autocomplete
         ingredientsRecyclerViewAdapter =
                 new IngredientsRecyclerViewAdapter(autocompleteIngredients, new IngredientsRecyclerViewAdapter.OnItemClickListener() {
                     @Override
                     public void onIngredientsItemClick(Ingredient ingredient) {
-                        fragmentSearchBinding.searchInputEditTextIngredient.setText(ingredient.getTitle());
+                        //TODO da vedere se si vuole con o senza
+                        //fragmentSearchBinding.searchInputEditTextIngredient.setText(ingredient.getTitle());
+                        fragmentSearchBinding.searchInputEditTextIngredient.setText("");
                         fragmentSearchBinding.recyclerviewIngredientsSearch.setVisibility(View.GONE);
                         ingredientToAdd = ingredient;
+
+                        // Adding a chip accordingly with the item clicked on the RecyclerView
                         Chip chip = new Chip(requireContext());
                         chip.setText(ingredient.getTitle());
                         chip.setCloseIconVisible(true);
@@ -156,8 +157,7 @@ public class SearchFragment extends Fragment {
         recyclerViewIngredients.setLayoutManager(layoutManager);
         recyclerViewIngredients.setAdapter(ingredientsRecyclerViewAdapter);
 
-        Set<String> intolerances = sharedPreferencesUtil.readStringSetData(SHARED_PREFERENCES_FILE_NAME, SHARED_PREFERENCES_INTOLERANCES);
-
+        // Adding a listener for the changing text int the search bar
         fragmentSearchBinding.searchInputEditTextIngredient.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -171,12 +171,13 @@ public class SearchFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
+                // Making the fetch after typing in the search bar with the text typed
                 fetchIngredients(String.valueOf(editable),intolerances);
                 fragmentSearchBinding.recyclerviewIngredientsSearch.setVisibility(View.VISIBLE);
             }
         });
 
-
+        // Setting up the chips according to the selected items in the FridgeFragment
         recipeViewModel.getFridgeItemsSelectedLiveData().observe(getViewLifecycleOwner(),result -> {
             if(result != null)  {
                 if(result.isSuccess())  {
@@ -208,10 +209,10 @@ public class SearchFragment extends Fragment {
             }
         });
 
-
+        // Calling the methode to pre-check the chips
         setViewsChecked();
 
-
+        // Going back to the main activity with the return button
         fragmentSearchBinding.returnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -221,64 +222,10 @@ public class SearchFragment extends Fragment {
 
             }
         });
-
-/*
-        fragmentSearchBinding.searchList.setVisibility(View.GONE);
-
-        arrayList=new ArrayList<>();
-        arrayList.add("Pizza");
-        arrayList.add("Pasta");
-        arrayList.add("Pomodoro");
-        arrayList.add("Salmone");
-        arrayList.add("Cavolfiore");
-        arrayList.add("Zoccolo");
-        arrayList.add("Maiale");
-        arrayList.add("Suino");
-        arrayList.add("Cacca");
-        arrayList.add("Pupù");
-
-        adapter=new ArrayAdapter<String>(requireContext(),android.R.layout.simple_list_item_1,arrayList);
-        fragmentSearchBinding.searchList.setAdapter(adapter);
-
-        fragmentSearchBinding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
-            public boolean onQueryTextSubmit(String s){
-                fragmentSearchBinding.searchList.setVisibility(View.GONE);
-                return false;
-            }
-
-            public boolean onQueryTextChange(String s){
-                fragmentSearchBinding.searchList.setVisibility(View.VISIBLE);
-                adapter.getFilter().filter(s);
-                return false;
-            }
-        });
-
-        fragmentSearchBinding.searchList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                fragmentSearchBinding.searchList.setVisibility(View.GONE);
-
-
-                Chip chip = new Chip(requireContext());
-                chip.setText((String) parent.getItemAtPosition(position));
-                chip.setCloseIconVisible(true);
-                chip.setOnCloseIconClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        fragmentSearchBinding.chipIngredients.removeView(chip);
-                        Log.d("TAG", selectedFridgeItems.toString());
-                    }
-                });
-                fragmentSearchBinding.chipIngredients.addView(chip);
-            }
-        });
-
- */
-
-
-
     }
 
+
+    // Method that makes the call to the API for the autocomplete
     private void fetchIngredients(String query,Set<String> intolerances)  {
         SpoonacularApiService service = ServiceLocator.getInstance().getSpoonacularApiService();
         Call<List<Ingredient>> ingredientsResponseCall = service
@@ -304,6 +251,7 @@ public class SearchFragment extends Fragment {
         });
     }
 
+    // Getting the result from the fetch, from the API
     private void onApiResult(List<Ingredient> results)  {
         if(results != null) {
             autocompleteIngredients.clear();
@@ -314,14 +262,16 @@ public class SearchFragment extends Fragment {
         ingredientsRecyclerViewAdapter.notifyDataSetChanged();
     }
 
+    // Set up the chips (UI) using the account preferences
     private void setViewsChecked()  {
+        // Getting the information about diet and intolerances
         SharedPreferencesUtil sharedPreferencesUtil = new SharedPreferencesUtil(requireActivity().getApplication());
-
         String diet = sharedPreferencesUtil.readStringData(
                 SHARED_PREFERENCES_FILE_NAME, SHARED_PREFERENCES_DIET);
         Set<String> intolerances = sharedPreferencesUtil.readStringSetData(SHARED_PREFERENCES_FILE_NAME,
                 SHARED_PREFERENCES_INTOLERANCES);
 
+        // Checking the diet's chips
         if (diet != null) {
             if(diet.equals(NO_DIET))
                 fragmentSearchBinding.noDiet.setChecked(true);
@@ -333,6 +283,7 @@ public class SearchFragment extends Fragment {
                 fragmentSearchBinding.vegan.setChecked(true);
         }
 
+        // Checking the intolerances' chips
         if (intolerances != null) {
             if (intolerances.contains(DAIRY)) {
                 fragmentSearchBinding.dairy.setChecked(true);

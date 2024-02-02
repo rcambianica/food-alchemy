@@ -39,7 +39,6 @@ import it.unimib.food_alchemy.util.ServiceLocator;
 public class RecipeFragment extends Fragment {
     private FragmentRecipeBinding fragmentRecipeBinding;
     private RecipeViewModel recipeViewModel;
-
     private List<Recipe> recipesList;
     public RecipeFragment() {
         // Required empty public constructor
@@ -76,8 +75,12 @@ public class RecipeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
+
+        // Setting title, ingredients, instructions and image to display them accordingly
         Recipe recipe = RecipeFragmentArgs.fromBundle(getArguments()).getRecipe();
         List<String> strings = formatIngredients(recipe.getIngredients());
+
+        // Using Glide library to manage the API
         Glide.with(fragmentRecipeBinding.imageRecipe.getContext())
                 .load(recipe.getImageUrl())
                 .placeholder(R.drawable.baseline_access_time_24)
@@ -87,6 +90,7 @@ public class RecipeFragment extends Fragment {
         fragmentRecipeBinding.ingredients.setText(strings.get(1));
         fragmentRecipeBinding.instructions.setText(formatInstructions(recipe.getInstructions()));
 
+        // Observe changes in favorite status and update the UI accordingly
         recipeViewModel.getFavoriteRecipesLiveData().observe(getViewLifecycleOwner(), result -> {
             if (result != null) {
                 if (result.isSuccess()) {
@@ -109,9 +113,10 @@ public class RecipeFragment extends Fragment {
             }
         });
 
-
+        // Set up navigation using the back button
         fragmentRecipeBinding.backButton.setOnClickListener(v -> Navigation.findNavController(requireView()).navigateUp());
 
+        // Logic to check the bottom_navigation_bar accordingly going between fragments
         NavBackStackEntry navBackStackEntry = Navigation.
                 findNavController(view).getPreviousBackStackEntry();
 
@@ -129,6 +134,7 @@ public class RecipeFragment extends Fragment {
                     getMenu().findItem(R.id.favoritesFragment).setChecked(true);
         }
 
+        // Set up click listener for the favorite button
         fragmentRecipeBinding.favoritesButton.setOnClickListener(v -> {
             recipe.setFavorite(!recipe.isFavorite());
             setCheck(recipe);
@@ -136,6 +142,8 @@ public class RecipeFragment extends Fragment {
         });
 
     }
+
+    // Set the appropriate image for the favorite button
     private void setCheck(Recipe recipe) {
         if(recipe.isFavorite()) {
             fragmentRecipeBinding.favoritesButton.setImageDrawable(AppCompatResources.getDrawable(requireContext(),R.drawable.baseline_star_24));
@@ -144,6 +152,7 @@ public class RecipeFragment extends Fragment {
         }
     }
 
+    // Format the amount, unit, and name of each ingredient retrieved from the API for the right visualisation
     private List<String> formatIngredients(List<Ingredient> ingredientList)  {
         List<String> strings = new ArrayList<>();
         String amountAndUnit = "";
@@ -156,6 +165,8 @@ public class RecipeFragment extends Fragment {
         strings.add(name);
         return strings;
     }
+
+    // Format the instructions retrieved from the API for the right visualisation
     private String formatInstructions(List<AnalyzedInstruction> instructionList)  {
         String out="";
         for (int i = 0; i < instructionList.size(); i++)    {

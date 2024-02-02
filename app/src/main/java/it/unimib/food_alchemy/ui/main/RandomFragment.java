@@ -102,18 +102,25 @@ public class RandomFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        // Retrieve diet and intolerances from shared preferences
         String diet;
         Set<String> intolerances;
         diet = sharedPreferencesUtil.readStringData(SHARED_PREFERENCES_FILE_NAME, SHARED_PREFERENCES_DIET);
         intolerances = sharedPreferencesUtil.readStringSetData(SHARED_PREFERENCES_FILE_NAME, SHARED_PREFERENCES_INTOLERANCES);
 
+        // Set up RecyclerView and Adapter for displaying recipes
         RecyclerView randomRecipesRecyclerView = view.findViewById(R.id.results_search_recyclerview);
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext(),
                 LinearLayoutManager.VERTICAL, false);
 
+        // Getting the type from the discovery button previously clicked
         String type = RandomFragmentArgs.fromBundle(getArguments()).getType();
 
+        // Setting up the Adapter
         recipesRecyclerViewAdapter = new RecipesRecyclerViewAdapter(requireActivity().getApplication(), recipeList, new RecipesRecyclerViewAdapter.OnItemClickListener() {
+
+            // Opening the recipe clicked
             @Override
             public void onRecipesItemClick(Recipe recipe) {
                 RandomFragmentDirections.ActionRandomFragmentToRecipeFragment action =
@@ -176,6 +183,7 @@ public class RandomFragment extends Fragment {
                     }
                 });
 
+        // Adding the lazy loading logic by scrolling the recipes
         randomRecipesRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -217,9 +225,7 @@ public class RandomFragment extends Fragment {
         NavBackStackEntry navBackStackEntry = Navigation.
                 findNavController(view).getPreviousBackStackEntry();
 
-        // Logic to highlight the correct tab in BottomNavigationView when the user
-        // goes to NewsDetailFragment from a tab which is neither CountryNewsFragment
-        // nor FavoriteNewsFragment
+        // Logic to highlight the correct tab in BottomNavigationView
         if (navBackStackEntry != null &&
                 navBackStackEntry.getDestination().getId() == R.id.searchFragment) {
             ((BottomNavigationView) requireActivity().findViewById(R.id.bottom_navigation)).
@@ -231,12 +237,7 @@ public class RandomFragment extends Fragment {
         }
     }
 
-    /**
-     * Checks if the device is connected to Internet.
-     * See: https://developer.android.com/training/monitoring-device-state/connectivity-status-type#DetermineConnection
-     *
-     * @return true if the device is connected to Internet; false otherwise.
-     */
+    // Checks it the device is connected to internet, return true if it is connected, false otherwise
     private boolean isConnected() {
         ConnectivityManager cm =
                 (ConnectivityManager) requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);

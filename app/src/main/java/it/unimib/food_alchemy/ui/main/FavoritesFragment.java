@@ -32,7 +32,6 @@ import it.unimib.food_alchemy.util.SharedPreferencesUtil;
  * Fragment that shows the favorites recipes
  */
 public class FavoritesFragment extends Fragment {
-
     private static final String TAG = FavoritesFragment.class.getSimpleName();
     private FragmentFavoritesBinding fragmentFavoritesBinding;
     private List<Recipe> recipesList;
@@ -65,11 +64,13 @@ public class FavoritesFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Set up the RecyclerView for displaying favorite recipes
         RecyclerView recyclerViewFavorites = fragmentFavoritesBinding.favoritesRecyclerView;
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(requireContext());
         recyclerViewFavorites.setLayoutManager(layoutManager);
 
-         favoritesRecyclerViewAdapter =
+        // Initialize the adapter for the RecyclerView
+        favoritesRecyclerViewAdapter =
                  new RecipesRecyclerViewAdapter(requireActivity().getApplication(), recipesList, recipe -> {
                      FavoritesFragmentDirections.ActionFavoritesFragmentToRecipeFragment action =
                              FavoritesFragmentDirections.actionFavoritesFragmentToRecipeFragment(recipe);
@@ -84,6 +85,7 @@ public class FavoritesFragment extends Fragment {
         boolean isFirstLoading = sharedPreferencesUtil.readBooleanData(Constants.SHARED_PREFERENCES_FILE_NAME,
                 Constants.SHARED_PREFERENCES_RECIPES_FIRST_LOADING);
 
+        // Observe the LiveData for favorite recipes from the RecipeViewModel
         recipesViewModel.getFavoriteRecipesLiveData().observe(getViewLifecycleOwner(), result -> {
             if (result != null) {
                 if (result.isSuccess()) {

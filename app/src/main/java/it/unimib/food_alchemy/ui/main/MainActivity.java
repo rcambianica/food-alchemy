@@ -22,11 +22,12 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = navHostFragment.getNavController();
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
 
+        // Define the configuration for the BottomNavigationView
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.homeFragment, R.id.favoritesFragment,
                 R.id.fridgeFragment, R.id.accountFragment).build();
 
-        //for the BottomNavigationView
+        // Set up BottomNavigationView with the NavController
         NavigationUI.setupWithNavController(bottomNav,navController);
 
     }

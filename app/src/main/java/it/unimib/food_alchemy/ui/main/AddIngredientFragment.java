@@ -95,10 +95,12 @@ public class AddIngredientFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Initialize the RecyclerView
         RecyclerView recyclerViewIngredients = fragmentAddIngredientBinding.recyclerviewIngredients;
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(requireContext(),
                 LinearLayoutManager.VERTICAL, false);
 
+        // Set up the adapter for the autocomplete
         ingredientsRecyclerViewAdapter =
                 new IngredientsRecyclerViewAdapter(autocompleteIngredients, new IngredientsRecyclerViewAdapter.OnItemClickListener() {
                     @Override
@@ -111,9 +113,10 @@ public class AddIngredientFragment extends Fragment {
         recyclerViewIngredients.setLayoutManager(layoutManager);
         recyclerViewIngredients.setAdapter(ingredientsRecyclerViewAdapter);
 
-
+        // Initialize the date picker
         initDatePicker();
 
+        // Setting up the date picker with  today's date the showing the date chooser
         fragmentAddIngredientBinding.spinnerButton.setText(getTodaysDate());
         fragmentAddIngredientBinding.spinnerButton.setOnClickListener(v -> datePickerDialog.show());
         fragmentAddIngredientBinding.returnButton.setOnClickListener(v -> {
@@ -134,11 +137,13 @@ public class AddIngredientFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
+                // Making the fetch after typing in the search bar with the text typed
                 fetchIngredients(String.valueOf(editable),intolerances);
                 fragmentAddIngredientBinding.recyclerviewIngredients.setVisibility(View.VISIBLE);
             }
         });
 
+        // Save the selected ingredient to the fridge
         fragmentAddIngredientBinding.saveButton.setOnClickListener(v -> {
             String ingredientName = fragmentAddIngredientBinding.textInputEditTextIngredient.getText().toString().trim();
             String expiryDate = formatDate(fragmentAddIngredientBinding.spinnerButton.getText().toString());
@@ -148,12 +153,12 @@ public class AddIngredientFragment extends Fragment {
                 Navigation.findNavController(requireView()).navigateUp();
             }
         });
+
+
         NavBackStackEntry navBackStackEntry = Navigation.
                 findNavController(view).getPreviousBackStackEntry();
 
-        // Logic to highlight the correct tab in BottomNavigationView when the user
-        // goes to NewsDetailFragment from a tab which is neither CountryNewsFragment
-        // nor FavoriteNewsFragment
+        // Logic to highlight the correct tab in BottomNavigationView
         if (navBackStackEntry != null &&
                 navBackStackEntry.getDestination().getId() == R.id.fridgeFragment) {
             ((BottomNavigationView) requireActivity().findViewById(R.id.bottom_navigation)).
@@ -164,6 +169,7 @@ public class AddIngredientFragment extends Fragment {
 
     }
 
+    // Method to get today's date
     private String getTodaysDate() {
         Calendar cal = Calendar.getInstance();
         int year = cal.get(Calendar.YEAR);
@@ -220,6 +226,8 @@ public class AddIngredientFragment extends Fragment {
         }
         return formattedString;
     }
+
+    //error shown when the ingredient text box is empty
     private boolean isIngredientOk(String ingredient) {
         // Check if the ingredient is null
         if (ingredient.isEmpty()) {
@@ -231,6 +239,7 @@ public class AddIngredientFragment extends Fragment {
         }
     }
 
+    // Method that makes the call to the API for the autocomplete
     private void fetchIngredients(String query,Set<String> intolerances)  {
         SpoonacularApiService service = ServiceLocator.getInstance().getSpoonacularApiService();
         Call<List<Ingredient>> ingredientsResponseCall = service
@@ -256,6 +265,7 @@ public class AddIngredientFragment extends Fragment {
         });
     }
 
+    // Getting the result from the fetch, from the API
     private void onApiResult(List<Ingredient> results)  {
         if(results != null) {
             autocompleteIngredients.clear();

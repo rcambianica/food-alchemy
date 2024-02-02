@@ -34,12 +34,11 @@ import it.unimib.food_alchemy.util.SharedPreferencesUtil;
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 public class FridgeFragment extends Fragment {
-
     private static final String TAG = FridgeFragment.class.getSimpleName();
     private FragmentFridgeBinding fragmentFridgeBinding;
     private List<Ingredient> ingredientList;
 
-    //serve per recuperare un ingrediente eliminato per sbaglio con lo swipe a sinistra
+    // Used to undo a deleted ingredient
     private Ingredient deletedIngredient = null;
     private FridgeItemsRecyclerViewAdapter fridgeItemsRecyclerViewAdapter;
     private RecipeViewModel recipeViewModel;
@@ -86,12 +85,16 @@ public class FridgeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Initialise the RecyclerView for the fridge items
         RecyclerView recyclerViewIngredients = fragmentFridgeBinding.recyclerviewFridgeItems;
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(requireContext(),
                 LinearLayoutManager.VERTICAL, false);
 
+        // Set up the adapter
         fridgeItemsRecyclerViewAdapter =
                 new FridgeItemsRecyclerViewAdapter(ingredientList, new FridgeItemsRecyclerViewAdapter.OnItemClickListener() {
+
+                    // Click listener to select the fridge item for a future search
                     @Override
                     public void onIngredientsItemClick(Ingredient ingredient) {
                         ingredient.setSelected(!ingredient.isSelected());
@@ -101,12 +104,15 @@ public class FridgeFragment extends Fragment {
         recyclerViewIngredients.setLayoutManager(layoutManager);
         recyclerViewIngredients.setAdapter(fridgeItemsRecyclerViewAdapter);
 
+        // Initialize the ItemTouchHelper for handling swipe gestures
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(recyclerViewIngredients);
 
+        // Used to check if it's the first loading of fridge items
         boolean isFirstLoading = sharedPreferencesUtil.readBooleanData(Constants.SHARED_PREFERENCES_FILE_NAME,
                 Constants.SHARED_PREFERENCES_FRIDGE_ITEMS_FIRST_LOADING);
 
+        // Observe the LiveData for fridge items
         recipeViewModel.getFridgeItems(isFirstLoading).observe(getViewLifecycleOwner(),
                 result -> {
                         if(result.isSuccess())  {
@@ -126,16 +132,18 @@ public class FridgeFragment extends Fragment {
                         }
                 });
 
-
+        // Navigation to the AddIngredientFragment by clicking the addIngredientButton
         fragmentFridgeBinding.addIngredientButton.setOnClickListener(v -> Navigation.findNavController(requireView()).navigate(R.id.action_fridgeFragment_to_addIngredientFragment));
     }
 
+    // Callback for handling swipe gestures on RecyclerView items
     ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
         @Override
         public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
             return false;
         }
 
+        // Deleting the item from the fridge by swiping left, and show a Snackbar to undo the elimination
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
             int pos = viewHolder.getBindingAdapterPosition();
@@ -150,6 +158,7 @@ public class FridgeFragment extends Fragment {
             }).show();
         }
 
+        // Adding a color to the bottom of the item to understand the status (ex: out of date, color red)
         @Override
         public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
 

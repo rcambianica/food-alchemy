@@ -37,8 +37,6 @@ import it.unimib.food_alchemy.util.SharedPreferencesUtil;
 
 
 public class HomeFragment extends Fragment {
-
-
     private final boolean[] buttonState = {false, false, false, false};
     private static final String TAG = HomeFragment.class.getSimpleName();
     private FragmentHomeBinding fragmentHomeBinding;
@@ -75,7 +73,6 @@ public class HomeFragment extends Fragment {
         recipeViewModel.setOffset(ran);
     }
 
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -84,6 +81,7 @@ public class HomeFragment extends Fragment {
         return fragmentHomeBinding.getRoot();
     }
 
+    // Method to toggle the state of buttons based on user interaction
     private void toggleButtonChecked(final int clickedButton) {
         Button[] buttons = {
                 fragmentHomeBinding.bottoneMainCourse,
@@ -111,13 +109,15 @@ public class HomeFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-
         super.onViewCreated(view, savedInstanceState);
 
+        // Retrieve diet and intolerances from shared preferences
         String diet;
         Set<String> intolerances;
         diet = sharedPreferencesUtil.readStringData(SHARED_PREFERENCES_FILE_NAME, SHARED_PREFERENCES_DIET);
         intolerances = sharedPreferencesUtil.readStringSetData(SHARED_PREFERENCES_FILE_NAME, SHARED_PREFERENCES_INTOLERANCES);
+
+        // Setting the random dish suggested on the initial home page
         recipeViewModel.getRandomRecipe(diet, intolerances).observe(getViewLifecycleOwner(),
                 result -> {
                     if (result != null) {
@@ -141,15 +141,18 @@ public class HomeFragment extends Fragment {
                     }
                 });
 
-
+        // Opening the RecipeFragment by clicking the suggested dish
         fragmentHomeBinding.dayImage.setOnClickListener(v -> {
             HomeFragmentDirections.ActionHomeFragmentToRecipeFragment action =
                     HomeFragmentDirections.actionHomeFragmentToRecipeFragment(randomRecipes.get(ran));
             Navigation.findNavController(view).navigate(action);
         });
 
+        // Going to the SearchFragment by clicking the searchButton
         fragmentHomeBinding.searchButton.setOnClickListener(v ->
                 Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_searchActivity));
+
+        // Adding the onClick to every button in the discovery with the right "type" for the incoming call for the API
         fragmentHomeBinding.bottoneMainCourse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
