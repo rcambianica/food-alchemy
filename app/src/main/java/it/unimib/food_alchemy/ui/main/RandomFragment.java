@@ -131,27 +131,17 @@ public class RandomFragment extends Fragment {
         randomRecipesRecyclerView.setAdapter(recipesRecyclerViewAdapter);
         randomRecipesRecyclerView.setLayoutManager(layoutManager);
 
-        fragmentRandomBinding.progressBar.setVisibility(View.VISIBLE);
 
         recipeViewModel.getByTypeRecipes(diet, intolerances, type).observe(getViewLifecycleOwner(),
                 result -> {
-                    Log.d(TAG, "visibleItemCount" +visibleItemCount);
                     visibleItemCount = layoutManager.getChildCount();
-                    if(visibleItemCount==0){
-                        recipeViewModel.fetchRecipesScroll(null, diet, intolerances, null, type);
-                    }
 
                     if (result != null) {
-                        Log.d(TAG, "5");
                         if (result.isSuccess()) {
-                            Log.d(TAG, "6");
                             RecipesResponse recipesResponse = ((Result.RecipesResponseSuccess) result).getData();
                             List<Recipe> fetchedRecipes = recipesResponse.getRecipesList();
-                            Log.d(TAG, fetchedRecipes.toString());
                             if (!recipeViewModel.isLoading()) {
-                                Log.d(TAG, "7");
                                 if (recipeViewModel.isFirstLoading()) {
-                                    Log.d(TAG, "8");
                                     recipeViewModel.setTotalResults(((RecipeApiResponse) recipesResponse).getTotalResults());
                                     recipeViewModel.setFirstLoading(false);
                                     this.recipeList.addAll(fetchedRecipes);
@@ -159,53 +149,30 @@ public class RandomFragment extends Fragment {
                                     recipesRecyclerViewAdapter.notifyItemRangeInserted(0,
                                             this.recipeList.size());
                                 } else {
-                                    Log.d(TAG, "9");
                                     recipeList.clear();
                                     recipeList.addAll(fetchedRecipes);
                                     recipesRecyclerViewAdapter.notifyDataSetChanged();
                                 }
-                                fragmentRandomBinding.progressBar.setVisibility(View.GONE);
                             } else {
-                                Log.d(TAG, "10");
                                 recipeViewModel.setLoading(false);
                                 recipeViewModel.setCurrentResults(recipeList.size());
-
-                                totalItemCount = layoutManager.getItemCount();
-                                lastVisibleItem = layoutManager.findLastVisibleItemPosition();
-                                visibleItemCount = layoutManager.getChildCount();
-
                                 int initialSize = recipeList.size();
 
-                                Log.d(TAG, "total item count" +totalItemCount);
-                                        Log.d(TAG, "lastVisibleItem" +lastVisibleItem);
-                                                Log.d(TAG, "visibleItemCount" +visibleItemCount);
-                                                        Log.d(TAG, "lunghezza lista" +recipeList.size());
-
                                 for (int i = 0; i < recipeList.size(); i++) {
-                                    Log.d(TAG, "lunghezza lista" +recipeList.size());
                                     if (recipeList.get(i) == null) {
                                         recipeList.remove(recipeList.get(i));
                                     }
                                 }
-                                int startIndex = recipeViewModel.getOffset();
 
-                                Log.d(TAG, "fetch " +fetchedRecipes.size());
-
-
-                                for (int i = 0; i < fetchedRecipes.size(); i++) {
-                                    Log.d(TAG, "entraaaaaaaaaaa qua");
-                                    recipeList.add(fetchedRecipes.get(i));
-                                }
+                                recipeList.addAll(fetchedRecipes);
                                 recipesRecyclerViewAdapter.notifyItemRangeInserted(initialSize, recipeList.size());
                             }
                         } else {
-                            Log.d(TAG, "1");
                             ErrorMessagesUtil errorMessagesUtil =
                                     new ErrorMessagesUtil(requireActivity().getApplication());
                             Snackbar.make(view, errorMessagesUtil.
                                             getErrorMessage(((Result.Error) result).getMessage()),
                                     Snackbar.LENGTH_SHORT).show();
-                            fragmentRandomBinding.progressBar.setVisibility(View.GONE);
                         }
                     }
                 });
@@ -216,10 +183,8 @@ public class RandomFragment extends Fragment {
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 boolean isConnected = isConnected();
-                Log.d(TAG, "entra");
 
                 if (isConnected) {
-                    Log.d(TAG, "1");
                     recipeViewModel.getTotalResults();
                     totalItemCount = layoutManager.getItemCount();
                     lastVisibleItem = layoutManager.findLastVisibleItemPosition();
@@ -231,12 +196,10 @@ public class RandomFragment extends Fragment {
                             ) &&
                                     recipeViewModel.getRecipesResponseLiveData().getValue() != null
                     ) {
-                        Log.d(TAG, "2");
                         MutableLiveData<Result> recipesListMutableLiveData = recipeViewModel.getRecipesResponseLiveData();
 
                         if (recipesListMutableLiveData.getValue() != null &&
                                 recipesListMutableLiveData.getValue().isSuccess()) {
-                            Log.d(TAG, "3");
 
                             recipeViewModel.setLoading(true);
                             recipeList.add(null);

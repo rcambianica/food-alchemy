@@ -22,6 +22,8 @@ public interface IRecipesRepository {
 
     void updateRecipe(Recipe recipe);
 
+    void deleteAllRecipes();
+
     void deleteFavoriteRecipes();
 
     /**

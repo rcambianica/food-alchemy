@@ -1,13 +1,17 @@
 package it.unimib.food_alchemy.ui.preferences;
 
+import static it.unimib.food_alchemy.util.Constants.APPETIZER;
 import static it.unimib.food_alchemy.util.Constants.DAIRY;
+import static it.unimib.food_alchemy.util.Constants.DESSERT;
 import static it.unimib.food_alchemy.util.Constants.EGG;
 import static it.unimib.food_alchemy.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.food_alchemy.util.Constants.GLUTEN_FREE;
 import static it.unimib.food_alchemy.util.Constants.GRAIN;
 import static it.unimib.food_alchemy.util.Constants.ID_TOKEN;
+import static it.unimib.food_alchemy.util.Constants.MAIN_COURSE;
 import static it.unimib.food_alchemy.util.Constants.NO_DIET;
 import static it.unimib.food_alchemy.util.Constants.PEANUT;
+import static it.unimib.food_alchemy.util.Constants.RECIPES_NUMBER_PARAMETER;
 import static it.unimib.food_alchemy.util.Constants.SEA_FOOD;
 import static it.unimib.food_alchemy.util.Constants.SESAME;
 import static it.unimib.food_alchemy.util.Constants.SHARED_FRIDGE_ITEMS_FRIDGE;
@@ -17,6 +21,7 @@ import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_FRIDGE_IT
 import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_RECIPES_FIRST_LOADING;
 import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_INTOLERANCES;
 import static it.unimib.food_alchemy.util.Constants.SHELL_FISH;
+import static it.unimib.food_alchemy.util.Constants.SIDE_DISH;
 import static it.unimib.food_alchemy.util.Constants.SOY;
 import static it.unimib.food_alchemy.util.Constants.SULFITE;
 import static it.unimib.food_alchemy.util.Constants.TREE_NUT;
@@ -44,8 +49,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import it.unimib.food_alchemy.R;
+import it.unimib.food_alchemy.data.repository.recipes.IRecipesRepository;
 import it.unimib.food_alchemy.data.repository.user.IUserRepository;
 import it.unimib.food_alchemy.ui.auth.UserViewModelFactory;
+import it.unimib.food_alchemy.ui.main.RecipeViewModel;
+import it.unimib.food_alchemy.ui.main.RecipeViewModelFactory;
 import it.unimib.food_alchemy.util.DataEncryptionUtil;
 import it.unimib.food_alchemy.util.ServiceLocator;
 import it.unimib.food_alchemy.util.SharedPreferencesUtil;
@@ -73,6 +81,9 @@ public class PreferencesActivity extends AppCompatActivity {
     private CheckBox checkBoxWheat;
     private ConstraintLayout layout;
     private UserViewModel userViewModel;
+    private RecipeViewModel recipeViewModel;
+    private String diet;
+    private Set<String> intolerances;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,6 +105,11 @@ public class PreferencesActivity extends AppCompatActivity {
         checkBoxWheat = findViewById(R.id.checkbox_wheat);
 
         final Button buttonNext = findViewById(R.id.button_next);
+
+        IRecipesRepository recipesRepository = ServiceLocator.getInstance().
+                getRecipesRepository(getApplication());
+        recipeViewModel = new ViewModelProvider(this,
+                new RecipeViewModelFactory(recipesRepository)).get(RecipeViewModel.class);
 
         IUserRepository userRepository = ServiceLocator.getInstance().
                 getUserRepository(getApplication());
@@ -132,55 +148,58 @@ public class PreferencesActivity extends AppCompatActivity {
      */
     private void saveInformation() {
 
-        String diet = spinnerDiets.getSelectedItem().toString();
-        Set<String> intolerances = new HashSet<>();
+        String newDiet = spinnerDiets.getSelectedItem().toString();
+        Set<String> newIntolerances = new HashSet<>();
 
 
         if (checkBoxDairy.isChecked()) {
-            intolerances.add(DAIRY);
+            newIntolerances.add(DAIRY);
         }
         if (checkBoxGrain.isChecked()) {
-            intolerances.add(GRAIN);
+            newIntolerances.add(GRAIN);
         }
         if (checkBoxEgg.isChecked()) {
-            intolerances.add(EGG);
+            newIntolerances.add(EGG);
         }
         if (checkBoxPeanut.isChecked()) {
-            intolerances.add(PEANUT);
+            newIntolerances.add(PEANUT);
         }
         if (checkBoxSeaFood.isChecked()) {
-            intolerances.add(SEA_FOOD);
+            newIntolerances.add(SEA_FOOD);
         }
         if (checkBoxSesame.isChecked()) {
-            intolerances.add(SESAME);
+            newIntolerances.add(SESAME);
         }
         if (checkBoxShellFish.isChecked()) {
-            intolerances.add(SHELL_FISH);
+            newIntolerances.add(SHELL_FISH);
         }
         if (checkBoxSoy.isChecked()) {
-            intolerances.add(SOY);
+            newIntolerances.add(SOY);
         }
         if (checkBoxSulfite.isChecked()) {
-            intolerances.add(SULFITE);
+            newIntolerances.add(SULFITE);
         }
         if (checkBoxTreeNut.isChecked()) {
-            intolerances.add(TREE_NUT);
+            newIntolerances.add(TREE_NUT);
         }
         if (checkBoxWheat.isChecked()) {
-            intolerances.add(WHEAT);
+            newIntolerances.add(WHEAT);
         }
 
         SharedPreferencesUtil sharedPreferencesUtil = new SharedPreferencesUtil(getApplication());
         sharedPreferencesUtil.writeStringData(
-                SHARED_PREFERENCES_FILE_NAME, SHARED_PREFERENCES_DIET,diet);
+                SHARED_PREFERENCES_FILE_NAME, SHARED_PREFERENCES_DIET,newDiet);
 
         sharedPreferencesUtil.writeStringSetData(SHARED_PREFERENCES_FILE_NAME,
-                SHARED_PREFERENCES_INTOLERANCES, intolerances);
+                SHARED_PREFERENCES_INTOLERANCES, newIntolerances);
 
         sharedPreferencesUtil.writeBooleanData(SHARED_PREFERENCES_FILE_NAME,
                 SHARED_PREFERENCES_RECIPES_FIRST_LOADING, true);
         sharedPreferencesUtil.writeBooleanData(SHARED_PREFERENCES_FILE_NAME,
                 SHARED_PREFERENCES_FRIDGE_ITEMS_FIRST_LOADING,true);
+
+        diet = newDiet;
+        intolerances = newIntolerances;
 
         DataEncryptionUtil dataEncryptionUtil = new DataEncryptionUtil(getApplication());
 
@@ -192,7 +211,8 @@ public class PreferencesActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        userViewModel.saveUserPreferences(diet, intolerances, idToken);
+        userViewModel.saveUserPreferences(newDiet, newIntolerances, idToken);
+        firstCall();
     }
 
     /**
@@ -247,6 +267,15 @@ public class PreferencesActivity extends AppCompatActivity {
                 checkBoxWheat.setChecked(true);
             }
         }
+    }
+
+    private void firstCall(){
+        recipeViewModel.deleteAllRecipes();
+        recipeViewModel.fetchRecipesScroll(null, diet, intolerances, null, MAIN_COURSE);
+        recipeViewModel.fetchRecipesScroll(null, diet, intolerances, null, SIDE_DISH);
+        recipeViewModel.fetchRecipesScroll(null, diet, intolerances, null, DESSERT);
+        recipeViewModel.fetchRecipesScroll(null, diet, intolerances, null, APPETIZER);
+        recipeViewModel.setOffset(RECIPES_NUMBER_PARAMETER);
     }
     /**
      * Allows to get the position of a given diet in the string array

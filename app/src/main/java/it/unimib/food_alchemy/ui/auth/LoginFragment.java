@@ -1,15 +1,20 @@
 package it.unimib.food_alchemy.ui.auth;
 
+import static it.unimib.food_alchemy.util.Constants.APPETIZER;
+import static it.unimib.food_alchemy.util.Constants.DESSERT;
 import static it.unimib.food_alchemy.util.Constants.EMAIL_ADDRESS;
 import static it.unimib.food_alchemy.util.Constants.ENCRYPTED_DATA_FILE_NAME;
 import static it.unimib.food_alchemy.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.food_alchemy.util.Constants.ID_TOKEN;
 import static it.unimib.food_alchemy.util.Constants.INVALID_CREDENTIALS_ERROR;
 import static it.unimib.food_alchemy.util.Constants.INVALID_USER_ERROR;
+import static it.unimib.food_alchemy.util.Constants.MAIN_COURSE;
 import static it.unimib.food_alchemy.util.Constants.PASSWORD;
+import static it.unimib.food_alchemy.util.Constants.RECIPES_NUMBER_PARAMETER;
 import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_DIET;
 import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_INTOLERANCES;
+import static it.unimib.food_alchemy.util.Constants.SIDE_DISH;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -45,13 +50,17 @@ import org.apache.commons.validator.routines.EmailValidator;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Objects;
+import java.util.Set;
 
 import it.unimib.food_alchemy.R;
+import it.unimib.food_alchemy.data.repository.recipes.IRecipesRepository;
 import it.unimib.food_alchemy.data.repository.user.IUserRepository;
 import it.unimib.food_alchemy.databinding.FragmentLoginBinding;
 import it.unimib.food_alchemy.model.Result;
 import it.unimib.food_alchemy.model.User;
 import it.unimib.food_alchemy.ui.main.MainActivity;
+import it.unimib.food_alchemy.ui.main.RecipeViewModel;
+import it.unimib.food_alchemy.ui.main.RecipeViewModelFactory;
 import it.unimib.food_alchemy.ui.preferences.PreferencesActivity;
 import it.unimib.food_alchemy.util.DataEncryptionUtil;
 import it.unimib.food_alchemy.util.ServiceLocator;
@@ -73,6 +82,8 @@ public class LoginFragment extends Fragment {
     private SignInClient oneTapClient;
     private BeginSignInRequest signInRequest;
     private DataEncryptionUtil dataEncryptionUtil;
+    private Set<String> intolerances;
+    private String diet;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -172,10 +183,11 @@ public class LoginFragment extends Fragment {
             SharedPreferencesUtil sharedPreferencesUtil =
                     new SharedPreferencesUtil(requireActivity().getApplication());
 
-            if (sharedPreferencesUtil.readStringData(SHARED_PREFERENCES_FILE_NAME,
-                    SHARED_PREFERENCES_DIET) != null &&
-                    sharedPreferencesUtil.readStringSetData(SHARED_PREFERENCES_FILE_NAME,
-                            SHARED_PREFERENCES_INTOLERANCES) != null) {
+            diet = sharedPreferencesUtil.readStringData(SHARED_PREFERENCES_FILE_NAME,
+                    SHARED_PREFERENCES_DIET);
+            intolerances = sharedPreferencesUtil.readStringSetData(SHARED_PREFERENCES_FILE_NAME,
+                    SHARED_PREFERENCES_INTOLERANCES);
+            if (diet != null && intolerances != null) {
 
                 startActivityBasedOnCondition(MainActivity.class,
                         R.id.navigate_to_mainActivity);

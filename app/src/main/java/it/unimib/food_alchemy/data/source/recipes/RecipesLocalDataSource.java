@@ -176,7 +176,7 @@ public class RecipesLocalDataSource extends BaseRecipesLocalDataSource{
     }
 
     @Override
-    public void deleteAllRecipes() {
+    public void deleteAllRecipesLogout() {
         RecipeRoomDatabase.databaseWriteExecutor.execute(() -> {
             int recipesCounter = recipesDao.getAllRecipes().size();
             int recipesDeletedRecipes = recipesDao.deleteAllRecipes();
@@ -189,6 +189,20 @@ public class RecipesLocalDataSource extends BaseRecipesLocalDataSource{
             }
         });
     }
+
+    @Override
+    public void deleteAllRecipes() {
+        RecipeRoomDatabase.databaseWriteExecutor.execute(() -> {
+            int recipesCounter = recipesDao.getAllRecipes().size();
+            int recipesDeletedRecipes = recipesDao.deleteAllRecipes();
+
+            // It means that everything has been deleted
+            if (recipesCounter == recipesDeletedRecipes) {
+                recipesCallback.onSuccessDeletion();
+            }
+        });
+    }
+
 
     @Override
     public void getFridgeItems() {

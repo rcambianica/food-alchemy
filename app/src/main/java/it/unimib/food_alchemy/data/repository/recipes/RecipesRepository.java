@@ -96,6 +96,11 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
     }
 
     @Override
+    public void deleteAllRecipes() {
+        recipesLocalDataSource.deleteAllRecipes();
+    }
+
+    @Override
     public void deleteFavoriteRecipes() {
         recipesLocalDataSource.deleteFavoriteRecipes();
     }

@@ -21,6 +21,12 @@ public class Constants {
     public static final String TREE_NUT = "Tree Nut";
     public static final String WHEAT = "Wheat";
 
+    //Constants type dishes
+    public static final String MAIN_COURSE = "main course";
+    public static final String SIDE_DISH = "side dish";
+    public static final String DESSERT = "dessert";
+    public static final String APPETIZER = "appetizer";
+
 
 
     //Constants for SharedPreferences

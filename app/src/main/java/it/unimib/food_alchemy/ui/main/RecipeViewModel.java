@@ -121,6 +121,8 @@ public class RecipeViewModel extends ViewModel {
         recipesRepository.deleteFavoriteRecipes();
     }
 
+    public void deleteAllRecipes(){recipesRepository.deleteAllRecipes();}
+
     /**
      * Ingredients methods
      */
