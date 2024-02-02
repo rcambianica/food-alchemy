@@ -10,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -102,6 +103,7 @@ public class RandomFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        handleOnBackPressed();
 
         // Retrieve diet and intolerances from shared preferences
         String diet;
@@ -130,7 +132,6 @@ public class RandomFragment extends Fragment {
         });
         randomRecipesRecyclerView.setAdapter(recipesRecyclerViewAdapter);
         randomRecipesRecyclerView.setLayoutManager(layoutManager);
-
 
         recipeViewModel.getByTypeRecipes(diet, intolerances, type).observe(getViewLifecycleOwner(),
                 result -> {
@@ -252,4 +253,17 @@ public class RandomFragment extends Fragment {
         super.onDestroyView();
         fragmentRandomBinding = null;
     }
+
+    private void handleOnBackPressed() {
+        requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                recipeViewModel.getRecipesResponseLiveData().setValue(null);
+                if (isEnabled()) {
+                    remove();
+                    requireActivity().getOnBackPressedDispatcher().onBackPressed();
+                }
+            }
+        });
+    };
 }
