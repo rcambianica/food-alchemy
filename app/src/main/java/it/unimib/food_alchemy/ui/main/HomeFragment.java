@@ -124,27 +124,27 @@ public class HomeFragment extends Fragment {
                         if (result.isSuccess()) {
                             RecipesResponse recipesResponse = ((Result.RecipesResponseSuccess) result).getData();
                             randomRecipes = recipesResponse.getRecipesList();
-                            ran = 0;
-                            Glide.with(fragmentHomeBinding.dayImage.getContext())
-                                    .load(randomRecipes.get(ran).getImageUrl())
-                                    .placeholder(R.drawable.baseline_access_time_24)
-                                    .into(fragmentHomeBinding.dayImage);
-                            fragmentHomeBinding.dayTitle.setText(randomRecipes.get(ran).getTitle());
-
-                        } else {
-                            ErrorMessagesUtil errorMessagesUtil =
-                                    new ErrorMessagesUtil(requireActivity().getApplication());
-                            Snackbar.make(view, errorMessagesUtil.
-                                            getErrorMessage(((Result.Error) result).getMessage()),
-                                    Snackbar.LENGTH_SHORT).show();
+                            if (randomRecipes.size() != 0) {
+                                Glide.with(fragmentHomeBinding.dayImage.getContext())
+                                        .load(randomRecipes.get(0).getImageUrl())
+                                        .placeholder(R.drawable.baseline_access_time_24)
+                                        .into(fragmentHomeBinding.dayImage);
+                                fragmentHomeBinding.dayTitle.setText(randomRecipes.get(0).getTitle());
+                                return;
+                            }
                         }
                     }
+                    ErrorMessagesUtil errorMessagesUtil =
+                            new ErrorMessagesUtil(requireActivity().getApplication());
+                    Snackbar.make(view, errorMessagesUtil.
+                                    getErrorMessage(((Result.Error) result).getMessage()),
+                            Snackbar.LENGTH_SHORT).show();
                 });
 
         // Opening the RecipeFragment by clicking the suggested dish
         fragmentHomeBinding.dayImage.setOnClickListener(v -> {
             HomeFragmentDirections.ActionHomeFragmentToRecipeFragment action =
-                    HomeFragmentDirections.actionHomeFragmentToRecipeFragment(randomRecipes.get(ran));
+                    HomeFragmentDirections.actionHomeFragmentToRecipeFragment(randomRecipes.get(0));
             Navigation.findNavController(view).navigate(action);
         });
 

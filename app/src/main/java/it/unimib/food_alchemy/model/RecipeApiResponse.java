@@ -1,26 +1,14 @@
 package it.unimib.food_alchemy.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import androidx.annotation.NonNull;
-
-import com.google.gson.annotations.SerializedName;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-
-import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  *  Class to represent the API response of Spoonacular (https://api.spoonacular.com/)
  *  associated with the endpoint "recipes" - recipes/complexSearch.
  */
-public class RecipeApiResponse extends RecipesResponse{
-    private boolean fromRandom;
-
+public class RecipeApiResponse extends RecipesResponse {
     private int totalResults;
+    private boolean fromRandom;
     public RecipeApiResponse() {
         super();
     }
@@ -38,52 +26,18 @@ public class RecipeApiResponse extends RecipesResponse{
     public void setTotalResults(int totalResults) {
         this.totalResults = totalResults;
     }
+    public boolean isFromRandom() {
+        return fromRandom;
+    }
+    public void setFromRandom(boolean fromRandom) {
+        this.fromRandom = fromRandom;
+    }
 
     @Override
     public String toString() {
         return "RecipeApiResponse{" +
                 "totalResults=" + totalResults +
+                ", fromRandom=" + fromRandom +
                 '}';
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        super.writeToParcel(dest, flags);
-        dest.writeInt(this.totalResults);
-    }
-
-    public void readFromParcel(Parcel source) {
-        super.readFromParcel(source);
-        this.totalResults = source.readInt();
-    }
-
-    protected RecipeApiResponse(Parcel in) {
-        super(in);
-        this.totalResults = in.readInt();
-    }
-
-    public static final Creator<RecipeApiResponse> CREATOR = new Creator<RecipeApiResponse>() {
-        @Override
-        public RecipeApiResponse createFromParcel(Parcel source) {
-            return new RecipeApiResponse(source);
-        }
-
-        @Override
-        public RecipeApiResponse[] newArray(int size) {
-            return new RecipeApiResponse[size];
-        }
-    };
-
-    public boolean isFromRandom() {
-        return fromRandom;
-    }
-
-    public void setFromRandom(boolean fromRandom) {
-        this.fromRandom = fromRandom;
     }
 }
