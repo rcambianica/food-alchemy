@@ -52,9 +52,9 @@ public class RecipeViewModel extends ViewModel {
     }
 
 
-    public MutableLiveData<Result> getByTypeRecipes(String type) {
+    public MutableLiveData<Result> getByTypeRecipes(String diet, Set<String> intolerances, String type) {
 
-            fetchRecipesByType(type);
+            fetchRecipesByType(diet, intolerances, type);
 
         return recipesListLiveData;
     }
@@ -97,8 +97,8 @@ public class RecipeViewModel extends ViewModel {
         recipesListLiveData = recipesRepository.fetchRecipesLiveData(query, diet, intolerances, ingredients, type, offset);
     }
 
-    private void fetchRecipesByType(String type) {
-        recipesListLiveData = recipesRepository.fetchRecipesLiveDataByType(type, offset);
+    private void fetchRecipesByType(String diet, Set<String> intolerances, String type) {
+        recipesListLiveData = recipesRepository.fetchRecipesLiveDataByType(diet, intolerances, type, offset);
     }
 
     private void fetchRandomRecipe(String diet, Set<String> intolerances) {

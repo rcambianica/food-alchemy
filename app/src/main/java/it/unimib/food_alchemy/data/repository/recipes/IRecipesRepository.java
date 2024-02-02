@@ -16,7 +16,7 @@ public interface IRecipesRepository {
 
     void fetchRecipesScroll(String query, String diet, Set<String> intolerances, List<String> ingredients, String type, int offset);
 
-    MutableLiveData<Result> fetchRecipesLiveDataByType(String type, int offset);
+    MutableLiveData<Result> fetchRecipesLiveDataByType(String diet, Set<String> intolerances, String type, int offset);
 
     MutableLiveData<Result> getFavoriteRecipesLiveData();
 
