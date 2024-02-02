@@ -130,7 +130,6 @@ public class RandomFragment extends Fragment {
         randomRecipesRecyclerView.setAdapter(recipesRecyclerViewAdapter);
         randomRecipesRecyclerView.setLayoutManager(layoutManager);
 
-        fragmentRandomBinding.progressBar.setVisibility(View.VISIBLE);
 
         recipeViewModel.getByTypeRecipes(type).observe(getViewLifecycleOwner(),
                 result -> {
@@ -152,7 +151,6 @@ public class RandomFragment extends Fragment {
                                     recipeList.addAll(fetchedRecipes);
                                     recipesRecyclerViewAdapter.notifyDataSetChanged();
                                 }
-                                fragmentRandomBinding.progressBar.setVisibility(View.GONE);
                             } else {
                                 recipeViewModel.setLoading(false);
                                 recipeViewModel.setCurrentResults(recipeList.size());
@@ -177,7 +175,6 @@ public class RandomFragment extends Fragment {
                             Snackbar.make(view, errorMessagesUtil.
                                             getErrorMessage(((Result.Error) result).getMessage()),
                                     Snackbar.LENGTH_SHORT).show();
-                            fragmentRandomBinding.progressBar.setVisibility(View.GONE);
                         }
                     }
                 });

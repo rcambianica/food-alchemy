@@ -144,7 +144,7 @@ public class HomeFragment extends Fragment {
         // Opening the RecipeFragment by clicking the suggested dish
         fragmentHomeBinding.dayImage.setOnClickListener(v -> {
             HomeFragmentDirections.ActionHomeFragmentToRecipeFragment action =
-                    HomeFragmentDirections.actionHomeFragmentToRecipeFragment(randomRecipes.get(ran));
+                    HomeFragmentDirections.actionHomeFragmentToRecipeFragment(randomRecipes.get(0));
             Navigation.findNavController(view).navigate(action);
         });
 
