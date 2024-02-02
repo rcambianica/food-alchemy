@@ -88,7 +88,6 @@ public class RandomFragment extends Fragment {
                     getString(R.string.unexpected_error), Snackbar.LENGTH_SHORT).show();
         }
         recipeList = new ArrayList<>();
-        recipeViewModel.setOffset(0);
     }
 
     @Override
@@ -139,10 +138,10 @@ public class RandomFragment extends Fragment {
                         if (result.isSuccess()) {
                             RecipesResponse recipesResponse = ((Result.RecipesResponseSuccess) result).getData();
                             List<Recipe> fetchedRecipes = recipesResponse.getRecipesList();
-                            Log.d(TAG, fetchedRecipes.toString());
                             if (!recipeViewModel.isLoading()) {
                                 if (recipeViewModel.isFirstLoading()) {
                                     recipeViewModel.setTotalResults(((RecipeApiResponse) recipesResponse).getTotalResults());
+                                    Log.d(TAG, "total results" + recipeViewModel.getTotalResults());
                                     recipeViewModel.setFirstLoading(false);
                                     this.recipeList.addAll(fetchedRecipes);
 
@@ -166,7 +165,7 @@ public class RandomFragment extends Fragment {
                                     }
                                 }
                                 int startIndex = recipeViewModel.getOffset();
-
+                                Log.d(TAG, String.valueOf(startIndex));
                                 for (int i = startIndex; i < fetchedRecipes.size(); i++) {
                                     recipeList.add(fetchedRecipes.get(i));
                                 }

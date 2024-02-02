@@ -62,9 +62,7 @@ public class RecipeViewModel extends ViewModel {
     public MutableLiveData<Result> getRandomRecipe(String diet, Set<String> intolerances) {
         if(randomRecipeMutableLiveData == null) {
             fetchRandomRecipe(diet, intolerances);
-            Log.d("TEST", "getRandomRecipe view model in");
         }
-        Log.d("TEST", "getRandomRecipe view model out");
         return randomRecipeMutableLiveData;
     }
 
@@ -98,7 +96,7 @@ public class RecipeViewModel extends ViewModel {
     }
 
     private void fetchRecipesByType(String type) {
-        recipesListLiveData = recipesRepository.fetchRecipesLiveDataByType(type, offset);
+        recipesListLiveData = recipesRepository.fetchRecipesLiveDataByType(type);
     }
 
     private void fetchRandomRecipe(String diet, Set<String> intolerances) {

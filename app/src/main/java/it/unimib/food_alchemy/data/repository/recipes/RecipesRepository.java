@@ -72,7 +72,7 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
     }
 
     @Override
-    public MutableLiveData<Result> fetchRecipesLiveDataByType(String type, int offset){
+    public MutableLiveData<Result> fetchRecipesLiveDataByType(String type){
         recipesLocalDataSource.getRecipesByType(type);
 
         return allRecipesMutableLiveData;
@@ -152,9 +152,7 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
 
     @Override
     public void onSuccessFromLocal(RecipeApiResponse recipesApiResponse) {
-        Log.d("TEST", "0");
         if (recipesApiResponse.isFromRandom()) {
-            Log.d("TEST", "random");
             if (randomRecipesMutableLiveData.getValue() != null && randomRecipesMutableLiveData.getValue().isSuccess()) {
                 List<Recipe> recipesList = ((Result.RecipesResponseSuccess) randomRecipesMutableLiveData.getValue()).getData().getRecipesList();
                 recipesList.addAll(recipesApiResponse.getRecipesList());
@@ -166,10 +164,7 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
                 randomRecipesMutableLiveData.postValue(result);
             }
         } else {
-            Log.d("TEST", "1");
-                Log.d("TEST", "3");
                 Result.RecipesResponseSuccess result = new Result.RecipesResponseSuccess(recipesApiResponse);
-                Log.d(TAG, result.getData().toString());
                 allRecipesMutableLiveData.postValue(result);
         }
     }
