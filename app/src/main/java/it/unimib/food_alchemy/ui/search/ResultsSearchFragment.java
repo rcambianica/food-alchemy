@@ -131,6 +131,7 @@ public class ResultsSearchFragment extends Fragment {
                     if (result != null) {
                         if (result.isSuccess()) {
                             RecipesResponse recipesResponse = ((Result.RecipesResponseSuccess) result).getData();
+                            recipeViewModel.setTotalResults(((RecipeApiResponse) recipesResponse).getTotalResults());
                             List<Recipe> fetchedRecipes = recipesResponse.getRecipesList();
                             if (!recipeViewModel.isLoading()) {
                                 if (recipeViewModel.isFirstLoading()) {
@@ -191,8 +192,7 @@ public class ResultsSearchFragment extends Fragment {
                         MutableLiveData<Result> recipesListMutableLiveData = recipeViewModel.getRecipesResponseLiveData();
 
                         if (recipesListMutableLiveData.getValue() != null &&
-                                recipesListMutableLiveData.getValue().isSuccess()) {
-
+                                recipesListMutableLiveData.getValue().isSuccess() && recipeViewModel.getTotalResults()>totalItemCount) {
                             recipeViewModel.setLoading(true);
                             recipeList.add(null);
                             recipesRecyclerViewAdapter.notifyItemRangeInserted(recipeList.size(),

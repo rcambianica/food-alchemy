@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:padding="8dp"
+        android:padding="6dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -53,6 +53,8 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             app:endIconMode="clear_text"
+            android:paddingTop="12dp"
+            android:layout_marginStart="6dp"
             app:errorEnabled="true"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/recyclerview_ingredients_search"
@@ -61,14 +63,12 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/search_input_edit_text_ingredient"
-                android:layout_width="300dp"
+                android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_weight="1"
                 android:inputType="text"
                 android:hint="@string/search_here" />
         </com.google.android.material.textfield.TextInputLayout>
-
-
 
         <Button
             android:id="@+id/search_btn"
@@ -76,6 +76,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/searchView"
+            android:layout_marginEnd="6dp"
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

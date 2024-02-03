@@ -140,6 +140,7 @@ public class RandomFragment extends Fragment {
                     if (result != null) {
                         if (result.isSuccess()) {
                             RecipesResponse recipesResponse = ((Result.RecipesResponseSuccess) result).getData();
+                            recipeViewModel.setTotalResults(((RecipeApiResponse) recipesResponse).getTotalResults());
                             List<Recipe> fetchedRecipes = recipesResponse.getRecipesList();
                             if (!recipeViewModel.isLoading()) {
                                 if (recipeViewModel.isFirstLoading()) {
@@ -166,6 +167,7 @@ public class RandomFragment extends Fragment {
                                 }
 
                                 recipeList.addAll(fetchedRecipes);
+                                recipesRecyclerViewAdapter.notifyDataSetChanged();
                                 recipesRecyclerViewAdapter.notifyItemRangeInserted(initialSize, recipeList.size());
                             }
                         } else {

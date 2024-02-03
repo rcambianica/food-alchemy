@@ -76,7 +76,7 @@ public class RecipeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
 
-        // Setting title, ingredients, instructions and image to display them accordingly
+        // Getting information with safeArgs to set title, ingredients, instructions and image to display them accordingly
         Recipe recipe = RecipeFragmentArgs.fromBundle(getArguments()).getRecipe();
         List<String> strings = formatIngredients(recipe.getIngredients());
 
