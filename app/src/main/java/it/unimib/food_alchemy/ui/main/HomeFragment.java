@@ -127,7 +127,9 @@ public class HomeFragment extends Fragment {
                             if (randomRecipes.size() != 0) {
                                 Glide.with(fragmentHomeBinding.dayImage.getContext())
                                         .load(randomRecipes.get(0).getImageUrl())
-                                        .placeholder(R.drawable.baseline_access_time_24)
+                                        .fitCenter()
+                                        .placeholder(R.drawable.progress_activity)
+                                        .centerCrop()
                                         .into(fragmentHomeBinding.dayImage);
                                 fragmentHomeBinding.dayTitle.setText(randomRecipes.get(0).getTitle());
                                 return;

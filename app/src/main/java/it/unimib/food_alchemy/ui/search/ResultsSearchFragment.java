@@ -158,6 +158,7 @@ public class ResultsSearchFragment extends Fragment {
                                 }
 
                                 recipeList.addAll(fetchedRecipes);
+                                recipesRecyclerViewAdapter.notifyDataSetChanged();
                                 recipesRecyclerViewAdapter.notifyItemRangeInserted(initialSize, recipeList.size());
                             }
                         } else {

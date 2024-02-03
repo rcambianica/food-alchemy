@@ -59,7 +59,7 @@ public class RecipesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
         if(viewType == RECIPES_VIEW_TYPE)   {
             view = LayoutInflater.from(parent.getContext()).
-                    inflate(R.layout.recipes_home, parent, false);
+                     inflate(R.layout.recipes_home, parent, false);
             return new RecipesViewHolder(view);
         }   else {
             view = LayoutInflater.from(parent.getContext()).
@@ -105,7 +105,9 @@ public class RecipesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             textViewTitle.setText(recipe.getTitle());
             Glide.with(application)
                     .load(recipe.getImageUrl())
-                    .placeholder(R.drawable.baseline_access_time_24)
+                    .centerInside()
+                    .placeholder(R.drawable.progress_activity)
+                    .centerCrop()
                     .into(imageView);
         }
 
