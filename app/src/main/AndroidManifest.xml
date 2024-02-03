@@ -17,11 +17,15 @@
         tools:targetApi="31">
         <activity
             android:name=".ui.search.SearchActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.auth.AuthActivity"
             android:exported="true"
-            android:theme="@style/Theme.Food_alchemy">
+            android:theme="@style/Theme.Food_alchemy"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -31,12 +35,16 @@
         <activity
             android:name=".ui.preferences.PreferencesActivity"
             android:exported="true"
-            android:theme="@style/Theme.Food_alchemy" />
+            android:theme="@style/Theme.Food_alchemy"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.main.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.Food_alchemy"
-            android:windowSoftInputMode="adjustNothing"/>
+            android:windowSoftInputMode="adjustNothing"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
