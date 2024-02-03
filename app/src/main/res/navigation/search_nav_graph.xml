@@ -32,10 +32,17 @@
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim"
             app:popUpTo="@id/resultsSearchFragment"/>
+        <argument
+            android:name="parameters"
+            app:argType="it.unimib.food_alchemy.model.SearchParameters"/>
     </fragment>
     <fragment
         android:id="@+id/recipeFragment2"
         android:name="it.unimib.food_alchemy.ui.main.RecipeFragment"
         android:label="RecipeFragment"
-        tools:layout="@layout/fragment_recipe"/>
+        tools:layout="@layout/fragment_recipe">
+        <argument
+            android:name="recipe"
+            app:argType="it.unimib.food_alchemy.model.Recipe"/>
+    </fragment>
 </navigation>

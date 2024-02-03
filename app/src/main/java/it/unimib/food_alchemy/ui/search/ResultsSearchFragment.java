@@ -1,7 +1,7 @@
 package it.unimib.food_alchemy.ui.search;
 
-
 import static it.unimib.food_alchemy.util.Constants.RECIPES_NUMBER_PARAMETER;
+import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_DIET;
 import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_INTOLERANCES;
 
@@ -10,18 +10,23 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavBackStackEntry;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -31,12 +36,17 @@ import java.util.Set;
 import it.unimib.food_alchemy.R;
 import it.unimib.food_alchemy.adapter.RecipesRecyclerViewAdapter;
 import it.unimib.food_alchemy.data.repository.recipes.IRecipesRepository;
+import it.unimib.food_alchemy.databinding.FragmentRandomBinding;
 import it.unimib.food_alchemy.databinding.FragmentResultsSearchBinding;
 import it.unimib.food_alchemy.model.Recipe;
+import it.unimib.food_alchemy.model.RecipeApiResponse;
+import it.unimib.food_alchemy.model.RecipesResponse;
 import it.unimib.food_alchemy.model.Result;
-
+import it.unimib.food_alchemy.model.SearchParameters;
 import it.unimib.food_alchemy.ui.main.RecipeViewModel;
 import it.unimib.food_alchemy.ui.main.RecipeViewModelFactory;
+import it.unimib.food_alchemy.ui.search.ResultsSearchFragmentArgs;
+import it.unimib.food_alchemy.util.ErrorMessagesUtil;
 import it.unimib.food_alchemy.util.ServiceLocator;
 import it.unimib.food_alchemy.util.SharedPreferencesUtil;
 
@@ -47,11 +57,11 @@ public class ResultsSearchFragment extends Fragment {
     List<Recipe> recipeList;
     private RecipeViewModel recipeViewModel;
     private RecipesRecyclerViewAdapter recipesRecyclerViewAdapter;
-    private SharedPreferencesUtil sharedPreferencesUtil;
     private int totalItemCount; // Total number of recipes
     private int lastVisibleItem; // The position of the last visible recipe item
     private int visibleItemCount; // Number or total visible recipes items
     private final int threshold = 1;
+
     public ResultsSearchFragment() {
         // Required empty public constructor
     }
@@ -63,19 +73,19 @@ public class ResultsSearchFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sharedPreferencesUtil = new SharedPreferencesUtil(requireActivity().getApplication());
 
         IRecipesRepository recipesRepository =
                 ServiceLocator.getInstance().getRecipesRepository(requireActivity().getApplication());
 
-        if(recipesRepository != null)   {
+        if (recipesRepository != null) {
             recipeViewModel = new ViewModelProvider(requireActivity(),
                     new RecipeViewModelFactory(recipesRepository)).get(RecipeViewModel.class);
-        }   else {
+        } else {
             Snackbar.make(requireActivity().findViewById(android.R.id.content),
                     getString(R.string.unexpected_error), Snackbar.LENGTH_SHORT).show();
         }
         recipeList = new ArrayList<>();
+        recipeViewModel.setOffset(0);
     }
 
     @Override
@@ -87,76 +97,123 @@ public class ResultsSearchFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Set<String> intolerances;
-        intolerances = sharedPreferencesUtil.readStringSetData(SHARED_PREFERENCES_FILE_NAME, SHARED_PREFERENCES_INTOLERANCES);
+        handleOnBackPressed();
 
-        RecyclerView RecipesRecyclerView = view.findViewById(R.id.results_search_recyclerview);
+
+        // Set up RecyclerView and Adapter for displaying recipes
+        RecyclerView randomRecipesRecyclerView = view.findViewById(R.id.results_search_recyclerview);
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext(),
-                LinearLayoutManager.VERTICAL,false);
+                LinearLayoutManager.VERTICAL, false);
 
+        // Getting the parameters chosen into the search fragment
+        SearchParameters parameters = ResultsSearchFragmentArgs.fromBundle(getArguments()).getParameters();
 
-
+        // Setting up the Adapter
         recipesRecyclerViewAdapter = new RecipesRecyclerViewAdapter(requireActivity().getApplication(), recipeList, new RecipesRecyclerViewAdapter.OnItemClickListener() {
+
+            // Opening the recipe clicked
             @Override
             public void onRecipesItemClick(Recipe recipe) {
-
+                ResultsSearchFragmentDirections.ActionResultsSearchFragmentToRecipeFragment2 action =
+                        ResultsSearchFragmentDirections.actionResultsSearchFragmentToRecipeFragment2(recipe);
+                Navigation.findNavController(requireView()).navigate(action);
             }
         });
-        RecipesRecyclerView.setAdapter(recipesRecyclerViewAdapter);
-        RecipesRecyclerView.setLayoutManager(layoutManager);
+        randomRecipesRecyclerView.setAdapter(recipesRecyclerViewAdapter);
+        randomRecipesRecyclerView.setLayoutManager(layoutManager);
 
-        fragmentResultsSearchBinding.progressBar.setVisibility(View.VISIBLE);
+        recipeViewModel.getRecipes(null, parameters.getDiet(), parameters.getIntolerances(), parameters.getIngredients(), parameters.getType()).observe(getViewLifecycleOwner(),
+                result -> {
+                    visibleItemCount = layoutManager.getChildCount();
 
+                    if (result != null) {
+                        if (result.isSuccess()) {
+                            RecipesResponse recipesResponse = ((Result.RecipesResponseSuccess) result).getData();
+                            List<Recipe> fetchedRecipes = recipesResponse.getRecipesList();
+                            if (!recipeViewModel.isLoading()) {
+                                if (recipeViewModel.isFirstLoading()) {
+                                    recipeViewModel.setTotalResults(((RecipeApiResponse) recipesResponse).getTotalResults());
+                                    recipeViewModel.setFirstLoading(false);
+                                    this.recipeList.addAll(fetchedRecipes);
 
-        RecipesRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                                    recipesRecyclerViewAdapter.notifyItemRangeInserted(0,
+                                            this.recipeList.size());
+                                } else {
+                                    recipeList.clear();
+                                    recipeList.addAll(fetchedRecipes);
+                                    recipesRecyclerViewAdapter.notifyDataSetChanged();
+                                }
+                            } else {
+                                recipeViewModel.setLoading(false);
+                                recipeViewModel.setCurrentResults(recipeList.size());
+                                int initialSize = recipeList.size();
+
+                                for (int i = 0; i < recipeList.size(); i++) {
+                                    if (recipeList.get(i) == null) {
+                                        recipeList.remove(recipeList.get(i));
+                                    }
+                                }
+
+                                recipeList.addAll(fetchedRecipes);
+                                recipesRecyclerViewAdapter.notifyItemRangeInserted(initialSize, recipeList.size());
+                            }
+                        } else {
+                            ErrorMessagesUtil errorMessagesUtil =
+                                    new ErrorMessagesUtil(requireActivity().getApplication());
+                            Snackbar.make(view, errorMessagesUtil.
+                                            getErrorMessage(((Result.Error) result).getMessage()),
+                                    Snackbar.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+        // Adding the lazy loading logic by scrolling the recipes
+        randomRecipesRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView,dx,dy);
+                super.onScrolled(recyclerView, dx, dy);
                 boolean isConnected = isConnected();
 
-                if(isConnected && totalItemCount != recipeViewModel.getTotalResults())  {
+                if (isConnected) {
+                    recipeViewModel.getTotalResults();
                     totalItemCount = layoutManager.getItemCount();
                     lastVisibleItem = layoutManager.findLastVisibleItemPosition();
                     visibleItemCount = layoutManager.getChildCount();
 
-                    if(totalItemCount == visibleItemCount ||
+                    if (totalItemCount == visibleItemCount ||
                             (totalItemCount <= (lastVisibleItem + threshold) &&
                                     dy > 0 && !recipeViewModel.isLoading()
                             ) &&
-                                    recipeViewModel.getRecipesResponseLiveData().getValue() != null &&
-                                    recipeViewModel.getCurrentResults() != recipeViewModel.getTotalResults()
-                    )   {
+                                    recipeViewModel.getRecipesResponseLiveData().getValue() != null
+                    ) {
                         MutableLiveData<Result> recipesListMutableLiveData = recipeViewModel.getRecipesResponseLiveData();
 
-                        if(recipesListMutableLiveData.getValue() != null &&
-                                recipesListMutableLiveData.getValue().isSuccess())  {
+                        if (recipesListMutableLiveData.getValue() != null &&
+                                recipesListMutableLiveData.getValue().isSuccess()) {
 
                             recipeViewModel.setLoading(true);
                             recipeList.add(null);
                             recipesRecyclerViewAdapter.notifyItemRangeInserted(recipeList.size(),
                                     recipeList.size() + 1);
-
+                            //TODO: capire se è necessaria
+                            recipesRecyclerViewAdapter.notifyDataSetChanged();
                             int offset = recipeViewModel.getOffset() + RECIPES_NUMBER_PARAMETER;
                             recipeViewModel.setOffset(offset);
-                            //TODO sistema qui
-                            //recipeViewModel.fetchRecipes(null,null,intolerances,null,type);
+                            recipeViewModel.fetchRecipesScroll(null, parameters.getDiet(), parameters.getIntolerances(), parameters.getIngredients(), parameters.getType());
                         }
                     }
                 }
             }
         });
+
     }
 
-    /**
-     * Checks if the device is connected to Internet.
-     * See: https://developer.android.com/training/monitoring-device-state/connectivity-status-type#DetermineConnection
-     * @return true if the device is connected to Internet; false otherwise.
-     */
+    // Checks it the device is connected to internet, return true if it is connected, false otherwise
     private boolean isConnected() {
         ConnectivityManager cm =
-                (ConnectivityManager)requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                (ConnectivityManager) requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
@@ -168,9 +225,23 @@ public class ResultsSearchFragment extends Fragment {
         recipeViewModel.setFirstLoading(true);
         recipeViewModel.setLoading(false);
     }
+
     @Override
-    public void onDestroyView(){
+    public void onDestroyView() {
         super.onDestroyView();
         fragmentResultsSearchBinding = null;
     }
+
+    private void handleOnBackPressed() {
+        requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                recipeViewModel.getRecipesResponseLiveData().setValue(null);
+                if (isEnabled()) {
+                    remove();
+                    requireActivity().getOnBackPressedDispatcher().onBackPressed();
+                }
+            }
+        });
+    };
 }

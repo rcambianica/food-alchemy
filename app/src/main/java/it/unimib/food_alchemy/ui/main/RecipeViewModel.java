@@ -45,9 +45,8 @@ public class RecipeViewModel extends ViewModel {
      * @return The LiveData object associated with the recipes list.
      */
     public MutableLiveData<Result> getRecipes(String query, String diet, Set<String> intolerances, List<String> ingredients, String type) {
-        if(recipesListLiveData == null) {
-            fetchRecipes(query, diet, intolerances, ingredients,type);
-        }
+
+        fetchRecipes(query, diet, intolerances, ingredients, type);
         return recipesListLiveData;
     }
 

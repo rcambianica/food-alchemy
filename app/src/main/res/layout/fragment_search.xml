@@ -71,11 +71,11 @@
 
 
         <Button
+            android:id="@+id/search_btn"
             app:layout_constraintBottom_toTopOf="@id/recyclerview_ingredients_search"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/searchView"
-            android:id="@+id/search_btn"
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -212,14 +212,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/text_diet"
                 app:layout_constraintBottom_toTopOf="@id/text_intolerances">
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/no_diet"
-                    style="@style/Widget.Material3.Chip.Filter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="false"
-                    android:text="@string/gluten_free" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/gluten_free"
