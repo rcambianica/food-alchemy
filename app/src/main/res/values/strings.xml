@@ -97,7 +97,7 @@
     <string name="api_key_error">API Key not valid or maximum number of requests reached</string>
     <string name="unexpected_error">Unexpected error</string>
     <string name="logout">Logout</string>
-    <string name="suggested_dish">Let s try a new one!</string>
+    <string name="suggested_dish">Try a new one!</string>
     <string name="discovery">Discovery</string>
     <string name="main_dish">Main Dish</string>
     <string name="profile">Profile</string>
