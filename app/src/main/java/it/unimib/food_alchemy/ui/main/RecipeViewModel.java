@@ -127,7 +127,9 @@ public class RecipeViewModel extends ViewModel {
      */
 
     public MutableLiveData<Result> getFridgeItems(boolean firstLoading) {
+        if(fridgeItemsListLiveData == null) {
             fetchFridgeItems(firstLoading);
+        }
         return fridgeItemsListLiveData;
     }
 
