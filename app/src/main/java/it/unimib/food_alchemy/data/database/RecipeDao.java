@@ -54,7 +54,7 @@ public interface RecipeDao {
      * Query per la tabella degli ingredienti
      */
 
-    @Query("SELECT * FROM fridge_items")
+    @Query("SELECT * FROM fridge_items ORDER BY expiryDate")
     List<Ingredient> getAllFridgeItems();
 
     @Query("SELECT * FROM fridge_items WHERE id = :id")

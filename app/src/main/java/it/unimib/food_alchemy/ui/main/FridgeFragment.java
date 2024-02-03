@@ -2,6 +2,7 @@ package it.unimib.food_alchemy.ui.main;
 
 import android.graphics.Canvas;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import it.unimib.food_alchemy.R;
@@ -112,12 +115,19 @@ public class FridgeFragment extends Fragment {
         boolean isFirstLoading = sharedPreferencesUtil.readBooleanData(Constants.SHARED_PREFERENCES_FILE_NAME,
                 Constants.SHARED_PREFERENCES_FRIDGE_ITEMS_FIRST_LOADING);
 
+
         // Observe the LiveData for fridge items
         recipeViewModel.getFridgeItems(isFirstLoading).observe(getViewLifecycleOwner(),
                 result -> {
                         if(result.isSuccess())  {
                             ingredientList.clear();
                             ingredientList.addAll(((Result.IngredientsResponseSuccess)result).getData().getIngredientsList());
+                            Collections.sort(ingredientList, new Comparator<Ingredient>() {
+                                @Override
+                                public int compare(Ingredient ingrediente1, Ingredient ingrediente2) {
+                                    return ingrediente1.getExpiryDate().compareTo(ingrediente2.getExpiryDate());
+                                }
+                            });
                             fridgeItemsRecyclerViewAdapter.notifyDataSetChanged();
                             if (isFirstLoading) {
                                 sharedPreferencesUtil.writeBooleanData(Constants.SHARED_PREFERENCES_FILE_NAME,
@@ -153,7 +163,7 @@ public class FridgeFragment extends Fragment {
             fridgeItemsRecyclerViewAdapter.notifyDataSetChanged();
             Snackbar.make(requireView(),deletedIngredient.getTitle(),Snackbar.LENGTH_LONG).setAction("Undo", view -> {
                 ingredientList.add(pos,deletedIngredient);
-                fridgeItemsRecyclerViewAdapter.notifyItemInserted(pos);
+                fridgeItemsRecyclerViewAdapter.notifyItemRemoved(pos);
                 recipeViewModel.insertFridgeItem(deletedIngredient);
             }).show();
         }
