@@ -104,8 +104,6 @@ public class ResultsSearchFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        handleOnBackPressed();
-
 
         // Set up RecyclerView and Adapter for displaying recipes
         RecyclerView randomRecipesRecyclerView = view.findViewById(R.id.results_search_recyclerview);
@@ -126,7 +124,6 @@ public class ResultsSearchFragment extends Fragment {
             // Opening the recipe clicked
             @Override
             public void onRecipesItemClick(Recipe recipe) {
-                recipeViewModel.setOffset(0);
                 ResultsSearchFragmentDirections.ActionResultsSearchFragmentToRecipeFragment2 action =
                         ResultsSearchFragmentDirections.actionResultsSearchFragmentToRecipeFragment2(recipe);
                 Navigation.findNavController(requireView()).navigate(action);
@@ -143,7 +140,6 @@ public class ResultsSearchFragment extends Fragment {
         recipeViewModel.getRecipes(null, parameters.getDiet(), parameters.getIntolerances(), parameters.getIngredients(), parameters.getType()).observe(getViewLifecycleOwner(),
                 result -> {
                     visibleItemCount = layoutManager.getChildCount();
-
                     if (result != null && savedListPosition == RecyclerView.NO_POSITION) {
                         if (result.isSuccess()) {
                             RecipesResponse recipesResponse = ((Result.RecipesResponseSuccess) result).getData();
@@ -241,6 +237,7 @@ public class ResultsSearchFragment extends Fragment {
         super.onDestroy();
         recipeViewModel.setFirstLoading(true);
         recipeViewModel.setLoading(false);
+        recipeViewModel.getRecipesResponseLiveData().setValue(null);
     }
 
     @Override
@@ -249,17 +246,4 @@ public class ResultsSearchFragment extends Fragment {
         fragmentResultsSearchBinding = null;
     }
 
-
-    private void handleOnBackPressed() {
-        requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                recipeViewModel.getRecipesResponseLiveData().setValue(null);
-                if (isEnabled()) {
-                    remove();
-                    requireActivity().getOnBackPressedDispatcher().onBackPressed();
-                }
-            }
-        });
-    };
 }

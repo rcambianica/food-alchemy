@@ -107,7 +107,7 @@ public class RandomFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        handleOnBackPressed();
+        //handleOnBackPressed();
 
         // Retrieve diet and intolerances from shared preferences
         String diet;
@@ -262,6 +262,7 @@ public class RandomFragment extends Fragment {
         super.onDestroy();
         recipeViewModel.setFirstLoading(true);
         recipeViewModel.setLoading(false);
+        recipeViewModel.getRecipesResponseLiveData().setValue(null);
     }
 
     @Override
