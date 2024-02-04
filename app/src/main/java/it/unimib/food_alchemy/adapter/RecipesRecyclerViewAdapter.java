@@ -114,7 +114,7 @@ public class RecipesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         @Override
         public void onClick(View view) {
             if (onItemClickListener != null) {
-                int position = getAdapterPosition();
+                int position = getBindingAdapterPosition();
 
                 if (position != RecyclerView.NO_POSITION) {
                     onItemClickListener.onRecipesItemClick(recipeList.get(position));

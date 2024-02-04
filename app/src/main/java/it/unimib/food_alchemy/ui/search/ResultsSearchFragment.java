@@ -63,6 +63,10 @@ public class ResultsSearchFragment extends Fragment {
     private int visibleItemCount; // Number or total visible recipes items
     private final int threshold = 1;
 
+    // Remember scroll position
+    private int savedListPosition = RecyclerView.NO_POSITION;
+    private int savedPositionOffset = 0;
+
     public ResultsSearchFragment() {
         // Required empty public constructor
     }
@@ -111,6 +115,11 @@ public class ResultsSearchFragment extends Fragment {
         // Getting the parameters chosen into the search fragment
         SearchParameters parameters = ResultsSearchFragmentArgs.fromBundle(getArguments()).getParameters();
 
+        // Restore to last viewed recipe (if necessary)
+        if (savedListPosition != RecyclerView.NO_POSITION) {
+            layoutManager.scrollToPositionWithOffset(savedListPosition, savedPositionOffset);
+        }
+
         // Setting up the Adapter
         recipesRecyclerViewAdapter = new RecipesRecyclerViewAdapter(requireActivity().getApplication(), recipeList, new RecipesRecyclerViewAdapter.OnItemClickListener() {
 
@@ -121,6 +130,11 @@ public class ResultsSearchFragment extends Fragment {
                 ResultsSearchFragmentDirections.ActionResultsSearchFragmentToRecipeFragment2 action =
                         ResultsSearchFragmentDirections.actionResultsSearchFragmentToRecipeFragment2(recipe);
                 Navigation.findNavController(requireView()).navigate(action);
+
+                // Save the last visible recipe
+                // to be able to restore the position after coming back
+                savedListPosition = layoutManager.findFirstVisibleItemPosition();
+                savedPositionOffset = layoutManager.findViewByPosition(savedListPosition).getTop();
             }
         });
         randomRecipesRecyclerView.setAdapter(recipesRecyclerViewAdapter);
@@ -130,7 +144,7 @@ public class ResultsSearchFragment extends Fragment {
                 result -> {
                     visibleItemCount = layoutManager.getChildCount();
 
-                    if (result != null) {
+                    if (result != null && savedListPosition == RecyclerView.NO_POSITION) {
                         if (result.isSuccess()) {
                             RecipesResponse recipesResponse = ((Result.RecipesResponseSuccess) result).getData();
                             recipeViewModel.setTotalResults(((RecipeApiResponse) recipesResponse).getTotalResults());
@@ -196,6 +210,7 @@ public class ResultsSearchFragment extends Fragment {
 
                         if (recipesListMutableLiveData.getValue() != null &&
                                 recipesListMutableLiveData.getValue().isSuccess() && recipeViewModel.getTotalResults()>totalItemCount) {
+                            savedListPosition = RecyclerView.NO_POSITION;
                             recipeViewModel.setLoading(true);
                             recipeList.add(null);
                             recipesRecyclerViewAdapter.notifyItemRangeInserted(recipeList.size(),

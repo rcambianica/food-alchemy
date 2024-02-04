@@ -14,7 +14,7 @@ import it.unimib.food_alchemy.model.Recipe;
 
 @Dao
 public interface RecipeDao {
-    @Query("SELECT * FROM recipes")
+    @Query("SELECT * FROM recipes ORDER BY id")
     List<Recipe> getAllRecipes();
 
     @Query("SELECT * FROM recipes WHERE type LIKE '%' || :type || '%'")
