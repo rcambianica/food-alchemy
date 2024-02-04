@@ -104,7 +104,7 @@ public class ResultsSearchFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        //handleOnBackPressed();
+        handleOnBackPressed();
 
 
         // Set up RecyclerView and Adapter for displaying recipes
@@ -195,7 +195,6 @@ public class ResultsSearchFragment extends Fragment {
                 boolean isConnected = isConnected();
 
                 if (isConnected) {
-                    recipeViewModel.getTotalResults();
                     totalItemCount = layoutManager.getItemCount();
                     lastVisibleItem = layoutManager.findLastVisibleItemPosition();
                     visibleItemCount = layoutManager.getChildCount();
