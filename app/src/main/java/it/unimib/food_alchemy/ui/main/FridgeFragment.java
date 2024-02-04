@@ -159,16 +159,12 @@ public class FridgeFragment extends Fragment {
             int pos = viewHolder.getBindingAdapterPosition();
             recipeViewModel.deleteFridgeItem(ingredientList.get(pos));
             deletedIngredient = new Ingredient(ingredientList.get(pos).getId(),ingredientList.get(pos).getTitle(), ingredientList.get(pos).getExpiryDate(),false);
-            ingredientList.remove(pos);
-            fridgeItemsRecyclerViewAdapter.notifyDataSetChanged();
             Snackbar.make(requireView(),deletedIngredient.getTitle(),Snackbar.LENGTH_LONG).setAction("Undo", view -> {
                 ingredientList.add(pos,deletedIngredient);
-                fridgeItemsRecyclerViewAdapter.notifyItemRemoved(pos);
                 recipeViewModel.insertFridgeItem(deletedIngredient);
             }).show();
         }
 
-        // Adding a color to the bottom of the item to understand the status (ex: out of date, color red)
         @Override
         public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
 

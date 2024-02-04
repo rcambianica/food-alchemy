@@ -86,9 +86,8 @@ public class FridgeItemsRecyclerViewAdapter extends
         public void bind (Ingredient ingredient)    {
             textViewTitle.setText(ingredient.getTitle());
             textViewDate.setText(formatDate(ingredient.getExpiryDate()));
-            /*
-              colora il background dell'elemento se è scaduto o in scadenza
-              **/
+
+            //colora il background dell'elemento se è scaduto o in scadenza
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 int expiryDays = Integer.parseInt(ingredient.getExpiryDate()) - Integer.parseInt(getCurrentDate());
                 if(expiryDays <= 0)  {
@@ -98,6 +97,8 @@ public class FridgeItemsRecyclerViewAdapter extends
                 else if(expiryDays < 4)    {
                     flag_view.setVisibility(View.VISIBLE);
                     flag_view.setBackgroundColor(Color.parseColor("#FFD700"));
+                }   else {
+                    flag_view.setVisibility(View.INVISIBLE);
                 }
             }
             setImageViewSelectedFridgeItem(ingredientsList.get(getAdapterPosition()).isSelected());

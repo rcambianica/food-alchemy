@@ -6,7 +6,6 @@ import static it.unimib.food_alchemy.util.Constants.LAST_UPDATE;
 import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.food_alchemy.util.Constants.UNEXPECTED_ERROR;
 
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -206,16 +205,12 @@ public class RecipesLocalDataSource extends BaseRecipesLocalDataSource{
 
     @Override
     public void getFridgeItems() {
-        RecipeRoomDatabase.databaseWriteExecutor.execute(() -> {
-            recipesCallback.onSuccessFromLocal(recipesDao.getAllFridgeItems());
-        });
+        RecipeRoomDatabase.databaseWriteExecutor.execute(() -> recipesCallback.onSuccessFromLocal(recipesDao.getAllFridgeItems()));
     }
 
     @Override
     public void getFridgeItemsSelected() {
-        RecipeRoomDatabase.databaseWriteExecutor.execute(() -> {
-            recipesCallback.onFridgeItemsStatusChanged(recipesDao.getFridgeItemsSelected());
-        });
+        RecipeRoomDatabase.databaseWriteExecutor.execute(() -> recipesCallback.onFridgeItemsStatusChanged(recipesDao.getFridgeItemsSelected()));
     }
 
     @Override
@@ -240,7 +235,6 @@ public class RecipesLocalDataSource extends BaseRecipesLocalDataSource{
 
             // It means that everything has been deleted
             if (fridgeItemsCounter == deletedFridgeItems) {
-                List<Ingredient> emptyList = new ArrayList<>();
                 recipesCallback.onSuccessFromLocal(recipesDao.getAllFridgeItems());
             }
         });
@@ -264,10 +258,7 @@ public class RecipesLocalDataSource extends BaseRecipesLocalDataSource{
     public void insertFridgeItems(List<Ingredient> ingredientsList) {
         RecipeRoomDatabase.databaseWriteExecutor.execute(() -> {
             if (ingredientsList != null) {
-
                 recipesDao.insertIngredientsList(ingredientsList);
-                //RecipeApiResponse recipesApiResponse = new RecipeApiResponse();
-                //recipesApiResponse.setRecipeList(ingredientsList);
                 recipesCallback.onSuccessSynchronization();
             }
         });
@@ -282,6 +273,7 @@ public class RecipesLocalDataSource extends BaseRecipesLocalDataSource{
                 for(int pos = 0; pos < allIngredients.size(); pos++)   {
                     if(allIngredients.get(pos).getId() == ingredient.getId())    {
                         allIngredients.remove(pos);
+                        break;
                     }
                 }
                 recipesCallback.onSuccessFromLocal(allIngredients);

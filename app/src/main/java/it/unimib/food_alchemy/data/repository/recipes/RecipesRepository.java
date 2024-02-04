@@ -312,7 +312,6 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
     public void onSuccessFromCloudReadingFridgeItems(List<Ingredient> ingredients) {
         // Fridge Items got from Realtime Database the first time
         if (ingredients != null) {
-
             recipesLocalDataSource.insertFridgeItems(ingredients);
             allFridgeItemsMutableLiveData.postValue(new Result.IngredientsResponseSuccess(new IngredientsResponse(ingredients)));
         }
