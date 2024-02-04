@@ -39,6 +39,7 @@
     <string name="error_retrieving_recipes">Unable to contact the server. Please try again later</string>
 
     <!--ADD AN INGREDIENT-->
+    <string name="error_ingredient_null">Choose one suggested ingredient!</string>
     <string name="error_ingredient_message">The ingredient cannot be null!</string>
     <string name="error_ingredient_present">the ingredient is already present in the fridge</string>
 
