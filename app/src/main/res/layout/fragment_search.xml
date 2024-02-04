@@ -47,11 +47,12 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/searchView"
-            android:layout_width="300dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:endIconMode="clear_text"
             android:paddingTop="14dp"
             android:layout_marginStart="6dp"
+            android:layout_marginEnd="2dp"
             app:errorEnabled="true"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/recyclerview_ingredients_search"

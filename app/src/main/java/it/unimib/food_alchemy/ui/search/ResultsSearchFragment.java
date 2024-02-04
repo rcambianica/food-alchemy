@@ -21,6 +21,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -99,7 +100,7 @@ public class ResultsSearchFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        handleOnBackPressed();
+        //handleOnBackPressed();
 
 
         // Set up RecyclerView and Adapter for displaying recipes
@@ -116,6 +117,7 @@ public class ResultsSearchFragment extends Fragment {
             // Opening the recipe clicked
             @Override
             public void onRecipesItemClick(Recipe recipe) {
+                recipeViewModel.setOffset(0);
                 ResultsSearchFragmentDirections.ActionResultsSearchFragmentToRecipeFragment2 action =
                         ResultsSearchFragmentDirections.actionResultsSearchFragmentToRecipeFragment2(recipe);
                 Navigation.findNavController(requireView()).navigate(action);
@@ -232,6 +234,7 @@ public class ResultsSearchFragment extends Fragment {
         super.onDestroyView();
         fragmentResultsSearchBinding = null;
     }
+
 
     private void handleOnBackPressed() {
         requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
