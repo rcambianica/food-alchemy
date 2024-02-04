@@ -39,6 +39,8 @@ import it.unimib.food_alchemy.data.repository.recipes.IRecipesRepository;
 import it.unimib.food_alchemy.data.service.SpoonacularApiService;
 import it.unimib.food_alchemy.databinding.FragmentAddIngredientBinding;
 import it.unimib.food_alchemy.model.Ingredient;
+import it.unimib.food_alchemy.model.Result;
+import it.unimib.food_alchemy.util.Constants;
 import it.unimib.food_alchemy.util.ServiceLocator;
 import it.unimib.food_alchemy.util.SharedPreferencesUtil;
 import retrofit2.Call;
@@ -57,6 +59,7 @@ public class AddIngredientFragment extends Fragment {
     private List<Ingredient> autocompleteIngredients;
     private Ingredient ingredientToAdd;
     private IngredientsRecyclerViewAdapter ingredientsRecyclerViewAdapter;
+    private boolean isFirstLoading;
     public AddIngredientFragment()  {
         // Required empty public constructor
     }
@@ -95,6 +98,8 @@ public class AddIngredientFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        isFirstLoading = sharedPreferencesUtil.readBooleanData(Constants.SHARED_PREFERENCES_FILE_NAME,
+                Constants.SHARED_PREFERENCES_FRIDGE_ITEMS_FIRST_LOADING);
         // Initialize the RecyclerView
         RecyclerView recyclerViewIngredients = fragmentAddIngredientBinding.recyclerviewIngredients;
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(requireContext(),
@@ -127,7 +132,7 @@ public class AddIngredientFragment extends Fragment {
         fragmentAddIngredientBinding.textInputEditTextIngredient.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+                fragmentAddIngredientBinding.textInputLayoutIngredient.setError(null);
             }
 
             @Override
@@ -147,7 +152,7 @@ public class AddIngredientFragment extends Fragment {
         fragmentAddIngredientBinding.saveButton.setOnClickListener(v -> {
             String ingredientName = fragmentAddIngredientBinding.textInputEditTextIngredient.getText().toString().trim();
             String expiryDate = formatDate(fragmentAddIngredientBinding.spinnerButton.getText().toString());
-            if(isIngredientOk(ingredientName))  {
+            if(isIngredientOk(ingredientToAdd))  {
                 ingredientToAdd.setExpiryDate(expiryDate);
                 recipeViewModel.insertFridgeItem(ingredientToAdd);
                 Navigation.findNavController(requireView()).navigateUp();
@@ -228,15 +233,21 @@ public class AddIngredientFragment extends Fragment {
     }
 
     //error shown when the ingredient text box is empty
-    private boolean isIngredientOk(String ingredient) {
+    private boolean isIngredientOk(Ingredient ingredientToAdd) {
         // Check if the ingredient is null
-        if (ingredient.isEmpty()) {
+        List<Ingredient> fridgeItems = new ArrayList<>(((Result.IngredientsResponseSuccess)recipeViewModel.getFridgeItems(isFirstLoading).getValue()).getData().getIngredientsList());
+        if (ingredientToAdd.getTitle().isEmpty()) {
             fragmentAddIngredientBinding.textInputLayoutIngredient.setError(getString(R.string.error_ingredient_message));
             return false;
         } else {
-            fragmentAddIngredientBinding.textInputLayoutIngredient.setError(null);
-            return true;
+                for(Ingredient ingredient : fridgeItems){
+                    if(ingredient.getId() == ingredientToAdd.getId()) {
+                            fragmentAddIngredientBinding.textInputLayoutIngredient.setError(getString(R.string.error_ingredient_present));
+                            return false;
+                    }
+                }
         }
+        return true;
     }
 
     // Method that makes the call to the API for the autocomplete
