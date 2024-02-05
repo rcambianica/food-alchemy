@@ -107,13 +107,10 @@ public class AddIngredientFragment extends Fragment {
 
         // Set up the adapter for the autocomplete
         ingredientsRecyclerViewAdapter =
-                new IngredientsRecyclerViewAdapter(autocompleteIngredients, new IngredientsRecyclerViewAdapter.OnItemClickListener() {
-                    @Override
-                    public void onIngredientsItemClick(Ingredient ingredient) {
-                        fragmentAddIngredientBinding.textInputEditTextIngredient.setText(ingredient.getTitle());
-                        fragmentAddIngredientBinding.recyclerviewIngredients.setVisibility(View.GONE);
-                        ingredientToAdd = ingredient;
-                    }
+                new IngredientsRecyclerViewAdapter(autocompleteIngredients, ingredient -> {
+                    fragmentAddIngredientBinding.textInputEditTextIngredient.setText(ingredient.getTitle());
+                    fragmentAddIngredientBinding.recyclerviewIngredients.setVisibility(View.GONE);
+                    ingredientToAdd = ingredient;
                 });
         recyclerViewIngredients.setLayoutManager(layoutManager);
         recyclerViewIngredients.setAdapter(ingredientsRecyclerViewAdapter);
@@ -124,9 +121,7 @@ public class AddIngredientFragment extends Fragment {
         // Setting up the date picker with  today's date the showing the date chooser
         fragmentAddIngredientBinding.spinnerButton.setText(getTodaysDate());
         fragmentAddIngredientBinding.spinnerButton.setOnClickListener(v -> datePickerDialog.show());
-        fragmentAddIngredientBinding.returnButton.setOnClickListener(v -> {
-            Navigation.findNavController(requireView()).navigateUp();
-        });
+        fragmentAddIngredientBinding.returnButton.setOnClickListener(v -> Navigation.findNavController(requireView()).navigateUp());
 
         Set<String> intolerances = sharedPreferencesUtil.readStringSetData(SHARED_PREFERENCES_FILE_NAME, SHARED_PREFERENCES_INTOLERANCES);
         fragmentAddIngredientBinding.textInputEditTextIngredient.addTextChangedListener(new TextWatcher() {

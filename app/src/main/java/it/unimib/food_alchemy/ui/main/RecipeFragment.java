@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavBackStackEntry;
 import androidx.navigation.Navigation;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +31,6 @@ import it.unimib.food_alchemy.model.Ingredient;
 import it.unimib.food_alchemy.model.InstructionStep;
 import it.unimib.food_alchemy.model.Recipe;
 import it.unimib.food_alchemy.model.Result;
-import it.unimib.food_alchemy.util.Constants;
 import it.unimib.food_alchemy.util.ErrorMessagesUtil;
 import it.unimib.food_alchemy.util.ServiceLocator;
 

@@ -81,7 +81,6 @@ public class FavoritesFragment extends Fragment {
         SharedPreferencesUtil sharedPreferencesUtil =
                 new SharedPreferencesUtil(requireActivity().getApplication());
 
-        //TODO probabilmente da togliere
         boolean isFirstLoading = sharedPreferencesUtil.readBooleanData(Constants.SHARED_PREFERENCES_FILE_NAME,
                 Constants.SHARED_PREFERENCES_RECIPES_FIRST_LOADING);
 
@@ -110,8 +109,6 @@ public class FavoritesFragment extends Fragment {
                                     getErrorMessage(((Result.Error)result).getMessage()),
                             Snackbar.LENGTH_SHORT).show();
                 }
-            }else{
-
             }
         });
     }

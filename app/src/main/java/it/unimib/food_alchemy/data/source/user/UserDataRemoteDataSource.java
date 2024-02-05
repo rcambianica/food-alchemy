@@ -1,10 +1,7 @@
 package it.unimib.food_alchemy.data.source.user;
 
 import static it.unimib.food_alchemy.util.Constants.FIREBASE_FAVORITE_RECIPES_COLLECTION;
-import static it.unimib.food_alchemy.util.Constants.FIREBASE_FRIDGE_ITEMS_COLLECTION;
 import static it.unimib.food_alchemy.util.Constants.FIREBASE_USERS_COLLECTION;
-import static it.unimib.food_alchemy.util.Constants.SHARED_FRIDGE_ITEMS_FILE_NAME;
-import static it.unimib.food_alchemy.util.Constants.SHARED_FRIDGE_ITEMS_FRIDGE;
 import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_DIET;
 import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_INTOLERANCES;
@@ -23,12 +20,10 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import it.unimib.food_alchemy.model.Ingredient;
 import it.unimib.food_alchemy.model.Recipe;
 import it.unimib.food_alchemy.model.User;
 import it.unimib.food_alchemy.util.SharedPreferencesUtil;
@@ -133,27 +128,5 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource{
 
         databaseReference.child(FIREBASE_USERS_COLLECTION).child(idToken).
                 child(SHARED_PREFERENCES_INTOLERANCES).setValue(new ArrayList<>(intolerances));
-    }
-
-    @Override
-    public void getUserFridgeItems(String idToken) {
-        databaseReference.child(FIREBASE_USERS_COLLECTION).child(idToken).
-                child(FIREBASE_FRIDGE_ITEMS_COLLECTION).get().addOnCompleteListener(task -> {
-                    if (!task.isSuccessful()) {
-                        Log.d(TAG, "Error getting data", task.getException());
-                        userResponseCallback.onFailureFromRemoteDatabase(Objects.requireNonNull(task.getException()).getLocalizedMessage());
-                    }
-                    else {
-                        Log.d(TAG, "Successful ingredients read: " + task.getResult().getValue());
-
-                        List<Ingredient> ingredientList = new ArrayList<>();
-                        for(DataSnapshot ds : task.getResult().getChildren()) {
-                            Ingredient ingredient = ds.getValue(Ingredient.class);
-                            ingredientList.add(ingredient);
-                        }
-
-                        userResponseCallback.onSuccessFromGettingUserFridgeItems(ingredientList);
-                    }
-                });
     }
 }

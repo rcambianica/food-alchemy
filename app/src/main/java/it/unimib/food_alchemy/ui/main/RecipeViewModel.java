@@ -207,9 +207,5 @@ public class RecipeViewModel extends ViewModel {
     public MutableLiveData<Result> getRecipesResponseLiveData() {
         return recipesListLiveData;
     }
-
-    public MutableLiveData<Result> getRandomRecipeListLiveData() {
-        return randomRecipeMutableLiveData;
-    }
 }
 

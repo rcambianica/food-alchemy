@@ -10,7 +10,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -21,7 +20,6 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -107,7 +105,6 @@ public class RandomFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        //handleOnBackPressed();
 
         // Retrieve diet and intolerances from shared preferences
         String diet;
@@ -202,7 +199,6 @@ public class RandomFragment extends Fragment {
                 boolean isConnected = isConnected();
 
                 if (isConnected) {
-                    recipeViewModel.getTotalResults();
                     totalItemCount = layoutManager.getItemCount();
                     lastVisibleItem = layoutManager.findLastVisibleItemPosition();
                     visibleItemCount = layoutManager.getChildCount();
@@ -222,7 +218,6 @@ public class RandomFragment extends Fragment {
                             recipeList.add(null);
                             recipesRecyclerViewAdapter.notifyItemRangeInserted(recipeList.size(),
                                     recipeList.size() + 1);
-                            //TODO: capire se è necessaria
                             recipesRecyclerViewAdapter.notifyDataSetChanged();
                             int offset = recipeViewModel.getOffset() + RECIPES_NUMBER_PARAMETER;
                             recipeViewModel.setOffset(offset);
@@ -270,17 +265,4 @@ public class RandomFragment extends Fragment {
         super.onDestroyView();
         fragmentRandomBinding = null;
     }
-
-    private void handleOnBackPressed() {
-        requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                recipeViewModel.getRecipesResponseLiveData().setValue(null);
-                if (isEnabled()) {
-                    remove();
-                    requireActivity().getOnBackPressedDispatcher().onBackPressed();
-                }
-            }
-        });
-    };
 }

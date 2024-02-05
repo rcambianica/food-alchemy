@@ -2,7 +2,6 @@ package it.unimib.food_alchemy.ui.main;
 
 import android.graphics.Canvas;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,15 +93,11 @@ public class FridgeFragment extends Fragment {
                 LinearLayoutManager.VERTICAL, false);
 
         // Set up the adapter
+        // Click listener to select the fridge item for a future search
         fridgeItemsRecyclerViewAdapter =
-                new FridgeItemsRecyclerViewAdapter(ingredientList, new FridgeItemsRecyclerViewAdapter.OnItemClickListener() {
-
-                    // Click listener to select the fridge item for a future search
-                    @Override
-                    public void onIngredientsItemClick(Ingredient ingredient) {
-                        ingredient.setSelected(!ingredient.isSelected());
-                        recipeViewModel.updateFridgeItem(ingredient);
-                    }
+                new FridgeItemsRecyclerViewAdapter(ingredientList, ingredient -> {
+                    ingredient.setSelected(!ingredient.isSelected());
+                    recipeViewModel.updateFridgeItem(ingredient);
                 });
         recyclerViewIngredients.setLayoutManager(layoutManager);
         recyclerViewIngredients.setAdapter(fridgeItemsRecyclerViewAdapter);
@@ -129,12 +124,7 @@ public class FridgeFragment extends Fragment {
                                     } else if (ingredientList != null) {
                                         fragmentFridgeBinding.noFridgeItem.setVisibility(View.GONE);
                                     }
-                                    Collections.sort(ingredientList, new Comparator<Ingredient>() {
-                                        @Override
-                                        public int compare(Ingredient ingrediente1, Ingredient ingrediente2) {
-                                            return ingrediente1.getExpiryDate().compareTo(ingrediente2.getExpiryDate());
-                                        }
-                                    });
+                                    Collections.sort(ingredientList, (ingrediente1, ingrediente2) -> ingrediente1.getExpiryDate().compareTo(ingrediente2.getExpiryDate()));
                                     fridgeItemsRecyclerViewAdapter.notifyDataSetChanged();
                                     if (isFirstLoading) {
                                         sharedPreferencesUtil.writeBooleanData(Constants.SHARED_PREFERENCES_FILE_NAME,
@@ -147,8 +137,6 @@ public class FridgeFragment extends Fragment {
                                                     getErrorMessage(((Result.Error)result).getMessage()),
                                             Snackbar.LENGTH_SHORT).show();
                                 }
-                        }else{
-                            //fragmentFridgeBinding.noFridgeItem.setVisibility(View.VISIBLE);
                         }
                 });
 

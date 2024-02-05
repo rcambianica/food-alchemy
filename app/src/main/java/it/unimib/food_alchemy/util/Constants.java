@@ -1,7 +1,6 @@
 package it.unimib.food_alchemy.util;
 
 public class Constants {
-    public static final String APP_DATA_FILE = "app_data.txt";
 
     //Constants for Spooncular.org
     public static final String NO_DIET = "No Diet";
@@ -36,13 +35,6 @@ public class Constants {
     public static final String SHARED_PREFERENCES_RECIPES_FIRST_LOADING = "recipes_first_loading";
     public static final String SHARED_PREFERENCES_FRIDGE_ITEMS_FIRST_LOADING = "fridge_items_first_loading";
 
-    //Constants for SharedFridgeItems
-    public static final String SHARED_FRIDGE_ITEMS_FILE_NAME = "it.unimib.food_alchemy.fridge_items";
-    public static final String SHARED_FRIDGE_ITEMS_FRIDGE = "fridge";
-    public static final String SHARED_FRIGDE_ITEMS_EXPIRY_DATE = "expiryDate";
-    public static final String SHARED_FRIDGE_ITEMS_TITLE = "title";
-    public static final String SHARED_FRIDGE_ITEMS_FIRST_LOADING = "first_loading";
-
     // Constants for EncryptedSharedPreferences
     public static final String ENCRYPTED_SHARED_PREFERENCES_FILE_NAME = "it.unimib.food_alchemy.encrypted_preferences";
     public static final String NAME = "name";
@@ -55,12 +47,9 @@ public class Constants {
 
     //Constants for Spoonacular (https://api.spoonacular.com)
     public static final String SPOONACULAR_API_BASE_URL = "https://api.spoonacular.com/";
-    public static final String RECIPES_ENDPOINT = "recipes/complexSearch";
-    public static final String RECIPES_QUERY_PARAMETER = "query";
     public static final int RECIPES_NUMBER_PARAMETER = 10;
 
     public static final String LAST_UPDATE = "last_update";
-    public static final int FRESH_TIMEOUT = 60*60*1000;
 
     // Constants for Room database
     public static final String RECIPES_DATABASE_NAME = "recipes_db";

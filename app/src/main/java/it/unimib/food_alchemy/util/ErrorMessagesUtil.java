@@ -9,7 +9,7 @@ import it.unimib.food_alchemy.R;
 
 public class ErrorMessagesUtil {
 
-    private Application application;
+    private final Application application;
 
     public ErrorMessagesUtil(Application application) {
         this.application = application;

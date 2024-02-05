@@ -5,8 +5,6 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
 
 public class IngredientsResponse implements Parcelable {

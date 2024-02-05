@@ -1,43 +1,32 @@
 package it.unimib.food_alchemy.ui.search;
 
 import static it.unimib.food_alchemy.util.Constants.RECIPES_NUMBER_PARAMETER;
-import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_DIET;
-import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_FILE_NAME;
-import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_INTOLERANCES;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavBackStackEntry;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import it.unimib.food_alchemy.R;
 import it.unimib.food_alchemy.adapter.RecipesRecyclerViewAdapter;
 import it.unimib.food_alchemy.data.repository.recipes.IRecipesRepository;
-import it.unimib.food_alchemy.databinding.FragmentRandomBinding;
 import it.unimib.food_alchemy.databinding.FragmentResultsSearchBinding;
 import it.unimib.food_alchemy.model.Recipe;
 import it.unimib.food_alchemy.model.RecipeApiResponse;
@@ -46,10 +35,8 @@ import it.unimib.food_alchemy.model.Result;
 import it.unimib.food_alchemy.model.SearchParameters;
 import it.unimib.food_alchemy.ui.main.RecipeViewModel;
 import it.unimib.food_alchemy.ui.main.RecipeViewModelFactory;
-import it.unimib.food_alchemy.ui.search.ResultsSearchFragmentArgs;
 import it.unimib.food_alchemy.util.ErrorMessagesUtil;
 import it.unimib.food_alchemy.util.ServiceLocator;
-import it.unimib.food_alchemy.util.SharedPreferencesUtil;
 
 public class ResultsSearchFragment extends Fragment {
 
@@ -119,20 +106,16 @@ public class ResultsSearchFragment extends Fragment {
         }
 
         // Setting up the Adapter
-        recipesRecyclerViewAdapter = new RecipesRecyclerViewAdapter(requireActivity().getApplication(), recipeList, new RecipesRecyclerViewAdapter.OnItemClickListener() {
+        // Opening the recipe clicked
+        recipesRecyclerViewAdapter = new RecipesRecyclerViewAdapter(requireActivity().getApplication(), recipeList, recipe -> {
+            ResultsSearchFragmentDirections.ActionResultsSearchFragmentToRecipeFragment2 action =
+                    ResultsSearchFragmentDirections.actionResultsSearchFragmentToRecipeFragment2(recipe);
+            Navigation.findNavController(requireView()).navigate(action);
 
-            // Opening the recipe clicked
-            @Override
-            public void onRecipesItemClick(Recipe recipe) {
-                ResultsSearchFragmentDirections.ActionResultsSearchFragmentToRecipeFragment2 action =
-                        ResultsSearchFragmentDirections.actionResultsSearchFragmentToRecipeFragment2(recipe);
-                Navigation.findNavController(requireView()).navigate(action);
-
-                // Save the last visible recipe
-                // to be able to restore the position after coming back
-                savedListPosition = layoutManager.findFirstVisibleItemPosition();
-                savedPositionOffset = layoutManager.findViewByPosition(savedListPosition).getTop();
-            }
+            // Save the last visible recipe
+            // to be able to restore the position after coming back
+            savedListPosition = layoutManager.findFirstVisibleItemPosition();
+            savedPositionOffset = layoutManager.findViewByPosition(savedListPosition).getTop();
         });
         randomRecipesRecyclerView.setAdapter(recipesRecyclerViewAdapter);
         randomRecipesRecyclerView.setLayoutManager(layoutManager);

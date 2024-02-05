@@ -3,17 +3,12 @@ package it.unimib.food_alchemy.data.source.recipes;
 import static it.unimib.food_alchemy.util.Constants.API_KEY_ERROR;
 import static it.unimib.food_alchemy.util.Constants.RECIPES_NUMBER_PARAMETER;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import it.unimib.food_alchemy.data.service.SpoonacularApiService;
-import it.unimib.food_alchemy.model.Ingredient;
-import it.unimib.food_alchemy.model.IngredientsResponse;
 import it.unimib.food_alchemy.model.RecipeApiResponse;
 import it.unimib.food_alchemy.util.ServiceLocator;
 import retrofit2.Call;
@@ -49,7 +44,6 @@ public class RecipesRemoteDataSource extends BaseRecipesRemoteDataSource{
             @Override
             public void onResponse(@NonNull Call<RecipeApiResponse> call, @NonNull Response<RecipeApiResponse> response) {
                 if(response.body() != null && response.isSuccessful())  {
-                    Log.d("TEST", "" + response.body().isFromRandom());
                     recipesCallback.onSuccessFromRemote(response.body());
                 } else {
                     recipesCallback.onFailureFromRemote(new Exception(API_KEY_ERROR));
@@ -64,13 +58,7 @@ public class RecipesRemoteDataSource extends BaseRecipesRemoteDataSource{
     }
 
     @Override
-    public void getRecipesByType(String type, int offset) {
-
-    }
-
-    @Override
     public void getRecipeOfTheDay(String diet, Set<String> intolerances) {
-        Log.d("TEST", "getRecipeOfTheDay remotedatasource");
         Call<RecipeApiResponse> recipeResponseCall = recipesApiService
                 .searchRecipes(null, null, null, null, null, "random", null, 1, true, true, true, apiKey);
 

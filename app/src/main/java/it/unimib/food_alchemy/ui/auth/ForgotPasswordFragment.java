@@ -32,8 +32,7 @@ public class ForgotPasswordFragment extends Fragment {
     }
 
     public static ForgotPasswordFragment newInstance() {
-        ForgotPasswordFragment fragment = new ForgotPasswordFragment();
-        return fragment;
+        return new ForgotPasswordFragment();
     }
 
     @Override
@@ -76,9 +75,7 @@ public class ForgotPasswordFragment extends Fragment {
             }
         });
 
-        fragmentForgotPasswordBinding.buttonReturnLogin.setOnClickListener(v -> {
-            Navigation.findNavController(requireView()).navigateUp();
-        });
+        fragmentForgotPasswordBinding.buttonReturnLogin.setOnClickListener(v -> Navigation.findNavController(requireView()).navigateUp());
     }
 
     /**

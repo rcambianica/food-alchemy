@@ -1,10 +1,8 @@
 package it.unimib.food_alchemy.data.source.user;
 
-import java.util.List;
 import java.util.Set;
 
 import it.unimib.food_alchemy.data.repository.user.UserResponseCallback;
-import it.unimib.food_alchemy.model.Ingredient;
 import it.unimib.food_alchemy.model.User;
 
 /**
@@ -21,6 +19,5 @@ public abstract class BaseUserDataRemoteDataSource {
     public abstract void getUserFavoriteRecipes(String idToken);
     public abstract void getUserPreferences(String idToken);
     public abstract void saveUserPreferences(String diet, Set<String> intolerances, String idToken);
-    public abstract void getUserFridgeItems(String idToken);
 }
 

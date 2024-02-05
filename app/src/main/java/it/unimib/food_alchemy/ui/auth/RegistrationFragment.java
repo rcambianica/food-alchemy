@@ -10,24 +10,16 @@ import static it.unimib.food_alchemy.util.Constants.PASSWORD;
 import static it.unimib.food_alchemy.util.Constants.USER_COLLISION_ERROR;
 import static it.unimib.food_alchemy.util.Constants.WEAK_PASSWORD_ERROR;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
-
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -40,9 +32,7 @@ import it.unimib.food_alchemy.R;
 import it.unimib.food_alchemy.databinding.FragmentRegistrationBinding;
 import it.unimib.food_alchemy.model.Result;
 import it.unimib.food_alchemy.model.User;
-import it.unimib.food_alchemy.ui.preferences.PreferencesActivity;
 import it.unimib.food_alchemy.util.DataEncryptionUtil;
-import it.unimib.food_alchemy.util.SharedPreferencesUtil;
 
 /**
  * A simple {@link Fragment} subclass.

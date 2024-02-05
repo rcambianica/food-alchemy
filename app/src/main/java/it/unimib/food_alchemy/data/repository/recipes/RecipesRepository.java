@@ -1,20 +1,13 @@
 package it.unimib.food_alchemy.data.repository.recipes;
 
-import static it.unimib.food_alchemy.util.Constants.FRESH_TIMEOUT;
-
 import android.util.Log;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.bumptech.glide.Glide;
-
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import it.unimib.food_alchemy.R;
 import it.unimib.food_alchemy.data.source.recipes.BaseFavoriteRecipesDataSource;
 import it.unimib.food_alchemy.data.source.recipes.BaseRecipesLocalDataSource;
 import it.unimib.food_alchemy.data.source.recipes.BaseRecipesRemoteDataSource;
@@ -74,9 +67,6 @@ public class RecipesRepository implements IRecipesRepository, RecipesCallback {
     @Override
     public MutableLiveData<Result> fetchRecipesLiveDataByType(String diet, Set<String> intolerances, String type, int offset){
         recipesLocalDataSource.getRecipesByType(type);
-
-        //recipesRemoteDataSource.getRecipes(null, diet, intolerances,null, type, offset);
-
         return allRecipesMutableLiveData;
     }
 

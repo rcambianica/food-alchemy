@@ -4,7 +4,6 @@ import static it.unimib.food_alchemy.util.Constants.DAIRY;
 import static it.unimib.food_alchemy.util.Constants.EGG;
 import static it.unimib.food_alchemy.util.Constants.GLUTEN_FREE;
 import static it.unimib.food_alchemy.util.Constants.GRAIN;
-import static it.unimib.food_alchemy.util.Constants.NO_DIET;
 import static it.unimib.food_alchemy.util.Constants.PEANUT;
 import static it.unimib.food_alchemy.util.Constants.SEA_FOOD;
 import static it.unimib.food_alchemy.util.Constants.SESAME;
@@ -24,14 +23,9 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -55,7 +49,6 @@ import it.unimib.food_alchemy.data.repository.recipes.IRecipesRepository;
 import it.unimib.food_alchemy.data.service.SpoonacularApiService;
 import it.unimib.food_alchemy.databinding.FragmentSearchBinding;
 import it.unimib.food_alchemy.model.Ingredient;
-import it.unimib.food_alchemy.model.Recipe;
 import it.unimib.food_alchemy.model.Result;
 import it.unimib.food_alchemy.model.SearchParameters;
 import it.unimib.food_alchemy.ui.main.MainActivity;
@@ -69,7 +62,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SearchFragment extends Fragment {
-    private final static String TAG = SearchFragment.class.getSimpleName().toString();
+    private final static String TAG = SearchFragment.class.getSimpleName();
     private FragmentSearchBinding fragmentSearchBinding;
     private RecipeViewModel recipeViewModel;
     private List<Ingredient> selectedFridgeItems;
@@ -128,36 +121,27 @@ public class SearchFragment extends Fragment {
 
         // Set up the adapter for the autocomplete
         ingredientsRecyclerViewAdapter =
-                new IngredientsRecyclerViewAdapter(autocompleteIngredients, new IngredientsRecyclerViewAdapter.OnItemClickListener() {
-                    @Override
-                    public void onIngredientsItemClick(Ingredient ingredient) {
-                        //TODO da vedere se si vuole con o senza
-                        //fragmentSearchBinding.searchInputEditTextIngredient.setText(ingredient.getTitle());
-                        fragmentSearchBinding.searchInputEditTextIngredient.setText("");
-                        fragmentSearchBinding.recyclerviewIngredientsSearch.setVisibility(View.GONE);
-                        ingredientList.add(ingredient);
-                        Log.d(TAG, ingredientList.toString());
-                        // Adding a chip accordingly with the item clicked on the RecyclerView
-                        Chip chip = new Chip(requireContext());
-                        chip.setText(ingredient.getTitle());
-                        chip.setCloseIconVisible(true);
-                        chip.setOnCloseIconClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                ingredient.setSelected(false);
+                new IngredientsRecyclerViewAdapter(autocompleteIngredients, ingredient -> {
+                    fragmentSearchBinding.searchInputEditTextIngredient.setText("");
+                    fragmentSearchBinding.recyclerviewIngredientsSearch.setVisibility(View.GONE);
+                    ingredientList.add(ingredient);
+                    // Adding a chip accordingly with the item clicked on the RecyclerView
+                    Chip chip = new Chip(requireContext());
+                    chip.setText(ingredient.getTitle());
+                    chip.setCloseIconVisible(true);
+                    chip.setOnCloseIconClickListener(view1 -> {
+                        ingredient.setSelected(false);
 
-                                fragmentSearchBinding.chipIngredients.removeView(view);
-                                // Remove the specific chip from the ChipGroup
-                                Chip chipToRemove = findChipToRemove(ingredient); // Implement findChipToRemove method
-                                if (chipToRemove != null) {
-                                    fragmentSearchBinding.chipIngredients.removeView(chipToRemove);
-                                }
+                        fragmentSearchBinding.chipIngredients.removeView(view1);
+                        // Remove the specific chip from the ChipGroup
+                        Chip chipToRemove = findChipToRemove(ingredient); // Implement findChipToRemove method
+                        if (chipToRemove != null) {
+                            fragmentSearchBinding.chipIngredients.removeView(chipToRemove);
+                        }
 
-                                ingredientList.remove(ingredient);
-                            }
-                        });
-                        fragmentSearchBinding.chipIngredients.addView(chip);
-                    }
+                        ingredientList.remove(ingredient);
+                    });
+                    fragmentSearchBinding.chipIngredients.addView(chip);
                 });
         recyclerViewIngredients.setLayoutManager(layoutManager);
         recyclerViewIngredients.setAdapter(ingredientsRecyclerViewAdapter);
@@ -193,14 +177,11 @@ public class SearchFragment extends Fragment {
                         Chip chip = new Chip(requireContext());
                         chip.setText(ingredient.getTitle());
                         chip.setCloseIconVisible(true);
-                        chip.setOnCloseIconClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                ingredient.setSelected(false);
-                                recipeViewModel.updateSelectedFridgeItem(ingredient);
-                                fragmentSearchBinding.chipIngredients.removeAllViews();
-                                selectedFridgeItems.remove(ingredient);
-                            }
+                        chip.setOnCloseIconClickListener(view12 -> {
+                            ingredient.setSelected(false);
+                            recipeViewModel.updateSelectedFridgeItem(ingredient);
+                            fragmentSearchBinding.chipIngredients.removeAllViews();
+                            selectedFridgeItems.remove(ingredient);
                         });
                         fragmentSearchBinding.chipIngredients.addView(chip);
                     }
@@ -218,14 +199,11 @@ public class SearchFragment extends Fragment {
         setViewsChecked();
 
         // Going back to the main activity with the return button
-        fragmentSearchBinding.returnButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(requireContext(), MainActivity.class);
-                startActivity(intent);
-                requireActivity().finish();
+        fragmentSearchBinding.returnButton.setOnClickListener(view13 -> {
+            Intent intent = new Intent(requireContext(), MainActivity.class);
+            startActivity(intent);
+            requireActivity().finish();
 
-            }
         });
         fragmentSearchBinding.searchBtn.setOnClickListener(v -> {
             selectedFridgeItems.addAll(ingredientList);
@@ -235,7 +213,6 @@ public class SearchFragment extends Fragment {
             }
 
 
-            //recipeViewModel.fetchRecipesScroll(null, getDiet(), getIntolerances(),ingredients,getType());
             SearchParameters parameters = new SearchParameters(getDiet(),getIntolerances(),ingredients,getType());
             SearchFragmentDirections.ActionSearchFragmentToResultsSearchFragment action =
                     SearchFragmentDirections.actionSearchFragmentToResultsSearchFragment(parameters);
@@ -311,8 +288,6 @@ public class SearchFragment extends Fragment {
         if(results != null) {
             autocompleteIngredients.clear();
             autocompleteIngredients.addAll(results);
-        } else {
-            Log.d(TAG, "Lista nulla");
         }
         ingredientsRecyclerViewAdapter.notifyDataSetChanged();
     }

@@ -3,11 +3,9 @@ package it.unimib.food_alchemy.ui.auth;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import java.util.List;
 import java.util.Set;
 
 import it.unimib.food_alchemy.data.repository.user.IUserRepository;
-import it.unimib.food_alchemy.model.Ingredient;
 import it.unimib.food_alchemy.model.Result;
 import it.unimib.food_alchemy.model.User;
 
@@ -17,8 +15,6 @@ public class UserViewModel extends ViewModel {
     private MutableLiveData<Result> userMutableLiveData;
     private MutableLiveData<Result> userFavoriteRecipesMutableLiveData;
     private MutableLiveData<Result> resetPassword;
-    //TODO CAPIRE SE SERVE
-    //private MutableLiveData<Result> userFridgeItemsMutableLiveData;
     private MutableLiveData<Result> userPreferencesMutableLiveData;
     private boolean authenticationError;
 

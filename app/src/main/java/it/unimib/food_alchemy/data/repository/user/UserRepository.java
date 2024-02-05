@@ -19,9 +19,6 @@ import it.unimib.food_alchemy.data.source.user.BaseUserDataRemoteDataSource;
  * Repository class to get the user information.
  */
 public class UserRepository implements IUserRepository, UserResponseCallback, RecipesCallback {
-
-    private static final String TAG = UserRepository.class.getSimpleName();
-
     private final BaseUserAuthenticationRemoteDataSource userRemoteDataSource;
     private final BaseUserDataRemoteDataSource userDataRemoteDataSource;
     private final BaseRecipesLocalDataSource recipesLocalDataSource;
@@ -29,8 +26,6 @@ public class UserRepository implements IUserRepository, UserResponseCallback, Re
     private final MutableLiveData<Result> userFavoriteRecipesMutableLiveData;
     private final MutableLiveData<Result> userPreferencesMutableLiveData;
     private final MutableLiveData<Result> resetPassword;
-    //TODO capire se si possono togliere
-    private final MutableLiveData<Result> userFridgeItemsMutableLiveData;
 
     public UserRepository(BaseUserAuthenticationRemoteDataSource userRemoteDataSource,
                           BaseUserDataRemoteDataSource userDataRemoteDataSource,
@@ -42,7 +37,6 @@ public class UserRepository implements IUserRepository, UserResponseCallback, Re
         this.userPreferencesMutableLiveData = new MutableLiveData<>();
         this.userFavoriteRecipesMutableLiveData = new MutableLiveData<>();
         this.resetPassword = new MutableLiveData<>();
-        this.userFridgeItemsMutableLiveData = new MutableLiveData<>();
         this.userRemoteDataSource.setUserResponseCallback(this);
         this.userDataRemoteDataSource.setUserResponseCallback(this);
         this.recipesLocalDataSource.setRecipesCallback(this);

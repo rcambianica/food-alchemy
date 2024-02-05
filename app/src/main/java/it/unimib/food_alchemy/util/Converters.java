@@ -2,17 +2,14 @@ package it.unimib.food_alchemy.util;
 
 import androidx.room.TypeConverter;
 
-import com.google.firebase.analytics.connector.AnalyticsConnector;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-import java.math.BigDecimal;
 import java.util.List;
 
 import it.unimib.food_alchemy.model.AnalyzedInstruction;
 import it.unimib.food_alchemy.model.Ingredient;
-import it.unimib.food_alchemy.model.InstructionStep;
 
 public class Converters {
     @TypeConverter

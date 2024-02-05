@@ -55,7 +55,7 @@ public class RecipesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = null;
+        View view;
 
         if(viewType == RECIPES_VIEW_TYPE)   {
             view = LayoutInflater.from(parent.getContext()).

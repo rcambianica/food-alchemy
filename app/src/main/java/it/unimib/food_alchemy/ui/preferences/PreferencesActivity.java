@@ -14,7 +14,6 @@ import static it.unimib.food_alchemy.util.Constants.PEANUT;
 import static it.unimib.food_alchemy.util.Constants.RECIPES_NUMBER_PARAMETER;
 import static it.unimib.food_alchemy.util.Constants.SEA_FOOD;
 import static it.unimib.food_alchemy.util.Constants.SESAME;
-import static it.unimib.food_alchemy.util.Constants.SHARED_FRIDGE_ITEMS_FRIDGE;
 import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_DIET;
 import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.food_alchemy.util.Constants.SHARED_PREFERENCES_FRIDGE_ITEMS_FIRST_LOADING;

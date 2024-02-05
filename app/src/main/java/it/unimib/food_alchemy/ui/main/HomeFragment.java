@@ -25,12 +25,10 @@ import java.util.Set;
 
 import it.unimib.food_alchemy.R;
 import it.unimib.food_alchemy.data.repository.recipes.IRecipesRepository;
-import it.unimib.food_alchemy.data.service.SpoonacularApiService;
 import it.unimib.food_alchemy.databinding.FragmentHomeBinding;
 import it.unimib.food_alchemy.model.Recipe;
 import it.unimib.food_alchemy.model.RecipesResponse;
 import it.unimib.food_alchemy.model.Result;
-import it.unimib.food_alchemy.util.Constants;
 import it.unimib.food_alchemy.util.ErrorMessagesUtil;
 import it.unimib.food_alchemy.util.ServiceLocator;
 import it.unimib.food_alchemy.util.SharedPreferencesUtil;
