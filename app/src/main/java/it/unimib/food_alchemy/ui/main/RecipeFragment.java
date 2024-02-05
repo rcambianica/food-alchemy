@@ -81,7 +81,9 @@ public class RecipeFragment extends Fragment {
         // Using Glide library to manage the API
         Glide.with(fragmentRecipeBinding.imageRecipe.getContext())
                 .load(recipe.getImageUrl())
-                .placeholder(R.drawable.baseline_access_time_24)
+                .centerInside()
+                .placeholder(R.drawable.progress_activity)
+                .centerCrop()
                 .into(fragmentRecipeBinding.imageRecipe);
         fragmentRecipeBinding.bigTitle.setText(recipe.getTitle());
         fragmentRecipeBinding.quantity.setText(strings.get(0));

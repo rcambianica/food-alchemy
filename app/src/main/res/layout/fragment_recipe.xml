@@ -160,7 +160,6 @@
        android:layout_height="wrap_content"
        android:clickable="true"
        android:contentDescription="@string/search_here"
-       android:src="@android:drawable/star_off"
        app:layout_constraintBottom_toBottomOf="parent"
        app:layout_constraintEnd_toEndOf="parent"
        app:layout_constraintHorizontal_bias="0.95"

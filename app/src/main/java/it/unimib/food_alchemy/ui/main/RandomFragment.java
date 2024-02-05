@@ -219,7 +219,9 @@ public class RandomFragment extends Fragment {
                             recipesRecyclerViewAdapter.notifyItemRangeInserted(recipeList.size(),
                                     recipeList.size() + 1);
                             recipesRecyclerViewAdapter.notifyDataSetChanged();
-                            int offset = recipeViewModel.getOffset() + RECIPES_NUMBER_PARAMETER;
+
+                            // Correctly setting the offset based on the number of recipes already seen
+                            int offset = (lastVisibleItem/10)*10 + RECIPES_NUMBER_PARAMETER;
                             recipeViewModel.setOffset(offset);
                             recipeViewModel.fetchRecipesScroll(null, diet, intolerances, null, type);
                         }
