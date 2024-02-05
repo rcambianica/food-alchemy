@@ -119,26 +119,30 @@ public class FridgeFragment extends Fragment {
         // Observe the LiveData for fridge items
         recipeViewModel.getFridgeItems(isFirstLoading).observe(getViewLifecycleOwner(),
                 result -> {
-                        if(result.isSuccess())  {
-                            ingredientList.clear();
-                            ingredientList.addAll(((Result.IngredientsResponseSuccess)result).getData().getIngredientsList());
-                            Collections.sort(ingredientList, new Comparator<Ingredient>() {
-                                @Override
-                                public int compare(Ingredient ingrediente1, Ingredient ingrediente2) {
-                                    return ingrediente1.getExpiryDate().compareTo(ingrediente2.getExpiryDate());
+                        if(result != null){
+                                if(result.isSuccess())  {
+                                    ingredientList.clear();
+                                    ingredientList.addAll(((Result.IngredientsResponseSuccess)result).getData().getIngredientsList());
+                                    Collections.sort(ingredientList, new Comparator<Ingredient>() {
+                                        @Override
+                                        public int compare(Ingredient ingrediente1, Ingredient ingrediente2) {
+                                            return ingrediente1.getExpiryDate().compareTo(ingrediente2.getExpiryDate());
+                                        }
+                                    });
+                                    fridgeItemsRecyclerViewAdapter.notifyDataSetChanged();
+                                    if (isFirstLoading) {
+                                        sharedPreferencesUtil.writeBooleanData(Constants.SHARED_PREFERENCES_FILE_NAME,
+                                                Constants.SHARED_PREFERENCES_FRIDGE_ITEMS_FIRST_LOADING, false);
+                                    }
+                                } else {
+                                    ErrorMessagesUtil errorMessagesUtil =
+                                            new ErrorMessagesUtil(requireActivity().getApplication());
+                                    Snackbar.make(view, errorMessagesUtil.
+                                                    getErrorMessage(((Result.Error)result).getMessage()),
+                                            Snackbar.LENGTH_SHORT).show();
                                 }
-                            });
-                            fridgeItemsRecyclerViewAdapter.notifyDataSetChanged();
-                            if (isFirstLoading) {
-                                sharedPreferencesUtil.writeBooleanData(Constants.SHARED_PREFERENCES_FILE_NAME,
-                                        Constants.SHARED_PREFERENCES_FRIDGE_ITEMS_FIRST_LOADING, false);
-                            }
-                        } else {
-                            ErrorMessagesUtil errorMessagesUtil =
-                                    new ErrorMessagesUtil(requireActivity().getApplication());
-                            Snackbar.make(view, errorMessagesUtil.
-                                            getErrorMessage(((Result.Error)result).getMessage()),
-                                    Snackbar.LENGTH_SHORT).show();
+                        }else{
+                            fragmentFridgeBinding.noFridgeItem.setVisibility(View.VISIBLE);
                         }
                 });
 
@@ -181,8 +185,14 @@ public class FridgeFragment extends Fragment {
     };
 
     @Override
+    public void onDestroy(){
+        super.onDestroy();
+
+    }
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
+        fragmentFridgeBinding.noFridgeItem.setVisibility(View.GONE);
         fragmentFridgeBinding = null;
     }
 }

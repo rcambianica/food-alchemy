@@ -7,16 +7,29 @@
     android:layout_height="match_parent"
     tools:context=".ui.search.SearchActivity">
 
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        style="?android:attr/progressBarStyle"
+    <ImageView
+        android:id="@+id/error_image"
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
+        android:layout_marginTop="100dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"
+        android:src="@drawable/undraw_not_found_re_bh2e"
+        app:layout_constraintBottom_toTopOf="@id/text_nothing_found" />
+    <TextView
+        android:id="@+id/text_nothing_found"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="30sp"
         android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
+        android:text="@string/nothing_found"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/results_search_recyclerview" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/error_image"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/results_search_recyclerview"
         android:layout_width="match_parent"

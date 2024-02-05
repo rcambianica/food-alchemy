@@ -103,6 +103,8 @@ public class FavoritesFragment extends Fragment {
                                     getErrorMessage(((Result.Error)result).getMessage()),
                             Snackbar.LENGTH_SHORT).show();
                 }
+            }else{
+
             }
         });
     }

@@ -46,6 +46,7 @@
     <!--SEARCH-->
     <string name="search_here">Search Here</string>
     <string name="search">Search</string>
+    <string name="nothing_found">Nothing found, try again</string>
     <!--CHIPCATEGORIES-->
     <string name="categories">Categories</string>
     <string name="main_course">Main Course</string>
@@ -119,4 +120,6 @@
     <string name="fragment_add_ingredient">fragment_add_ingredient</string>
     <string name="return_to_home">Return to home</string>
     <string name="recipe_image">recipe image</string>
+    <string name="no_favorites_item">Add new favorites recipes!</string>
+    <string name="no_fridge_item">Add new ingredients!</string>
 </resources>
