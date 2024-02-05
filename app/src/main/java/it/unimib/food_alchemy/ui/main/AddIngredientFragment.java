@@ -84,7 +84,7 @@ public class AddIngredientFragment extends Fragment {
         }
         sharedPreferencesUtil = new SharedPreferencesUtil(getActivity().getApplication());
         autocompleteIngredients = new ArrayList<>();
-        ingredientToAdd = new Ingredient();
+        ingredientToAdd = null;
     }
 
     @Override
@@ -234,18 +234,23 @@ public class AddIngredientFragment extends Fragment {
 
     //error shown when the ingredient text box is empty
     private boolean isIngredientOk(Ingredient ingredientToAdd) {
+        if (ingredientToAdd == null) {
+            fragmentAddIngredientBinding.textInputLayoutIngredient.setError(getString(R.string.error_ingredient_null));
+            return false;
+        }
+
         // Check if the ingredient is null
         List<Ingredient> fridgeItems = new ArrayList<>(((Result.IngredientsResponseSuccess)recipeViewModel.getFridgeItems(isFirstLoading).getValue()).getData().getIngredientsList());
-        if (ingredientToAdd.getTitle().isEmpty()) {
+        if(ingredientToAdd.getTitle().isEmpty()){
             fragmentAddIngredientBinding.textInputLayoutIngredient.setError(getString(R.string.error_ingredient_message));
             return false;
-        } else {
-                for(Ingredient ingredient : fridgeItems){
-                    if(ingredient.getId() == ingredientToAdd.getId()) {
-                            fragmentAddIngredientBinding.textInputLayoutIngredient.setError(getString(R.string.error_ingredient_present));
-                            return false;
-                    }
+        }else{
+            for(Ingredient ingredient : fridgeItems){
+                if(ingredient.getId() == ingredientToAdd.getId()) {
+                    fragmentAddIngredientBinding.textInputLayoutIngredient.setError(getString(R.string.error_ingredient_present));
+                    return false;
                 }
+            }
         }
         return true;
     }

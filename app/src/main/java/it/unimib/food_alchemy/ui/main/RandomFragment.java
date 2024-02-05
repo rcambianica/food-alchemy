@@ -58,6 +58,10 @@ public class RandomFragment extends Fragment {
     private int visibleItemCount; // Number or total visible recipes items
     private final int threshold = 1;
 
+    // Remember scroll position
+    private int savedListPosition = RecyclerView.NO_POSITION;
+    private int savedPositionOffset = 0;
+
     public RandomFragment() {
         // Required empty public constructor
     }
@@ -103,7 +107,7 @@ public class RandomFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        handleOnBackPressed();
+        //handleOnBackPressed();
 
         // Retrieve diet and intolerances from shared preferences
         String diet;
@@ -115,6 +119,11 @@ public class RandomFragment extends Fragment {
         RecyclerView randomRecipesRecyclerView = view.findViewById(R.id.results_search_recyclerview);
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext(),
                 LinearLayoutManager.VERTICAL, false);
+
+        // Restore to last viewed recipe (if necessary)
+        if (savedListPosition != RecyclerView.NO_POSITION) {
+            layoutManager.scrollToPositionWithOffset(savedListPosition, savedPositionOffset);
+        }
 
         // Getting the type from the discovery button previously clicked
         String type = RandomFragmentArgs.fromBundle(getArguments()).getType();
@@ -128,6 +137,11 @@ public class RandomFragment extends Fragment {
                 RandomFragmentDirections.ActionRandomFragmentToRecipeFragment action =
                         RandomFragmentDirections.actionRandomFragmentToRecipeFragment(recipe);
                 Navigation.findNavController(requireView()).navigate(action);
+
+                // Save the last visible recipe
+                // to be able to restore the position after coming back
+                savedListPosition = layoutManager.findFirstVisibleItemPosition();
+                savedPositionOffset = layoutManager.findViewByPosition(savedListPosition).getTop();
             }
         });
         randomRecipesRecyclerView.setAdapter(recipesRecyclerViewAdapter);
@@ -137,7 +151,7 @@ public class RandomFragment extends Fragment {
                 result -> {
                     visibleItemCount = layoutManager.getChildCount();
 
-                    if (result != null) {
+                    if (result != null && savedListPosition == RecyclerView.NO_POSITION) {
                         if (result.isSuccess()) {
                             RecipesResponse recipesResponse = ((Result.RecipesResponseSuccess) result).getData();
                             recipeViewModel.setTotalResults(((RecipeApiResponse) recipesResponse).getTotalResults());
@@ -203,7 +217,7 @@ public class RandomFragment extends Fragment {
 
                         if (recipesListMutableLiveData.getValue() != null &&
                                 recipesListMutableLiveData.getValue().isSuccess()) {
-
+                            savedListPosition = RecyclerView.NO_POSITION;
                             recipeViewModel.setLoading(true);
                             recipeList.add(null);
                             recipesRecyclerViewAdapter.notifyItemRangeInserted(recipeList.size(),
@@ -248,6 +262,7 @@ public class RandomFragment extends Fragment {
         super.onDestroy();
         recipeViewModel.setFirstLoading(true);
         recipeViewModel.setLoading(false);
+        recipeViewModel.getRecipesResponseLiveData().setValue(null);
     }
 
     @Override
