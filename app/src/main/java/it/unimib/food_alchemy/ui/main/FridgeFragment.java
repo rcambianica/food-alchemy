@@ -123,6 +123,12 @@ public class FridgeFragment extends Fragment {
                                 if(result.isSuccess())  {
                                     ingredientList.clear();
                                     ingredientList.addAll(((Result.IngredientsResponseSuccess)result).getData().getIngredientsList());
+
+                                    if(ingredientList.isEmpty()){
+                                        fragmentFridgeBinding.noFridgeItem.setVisibility(View.VISIBLE);
+                                    } else if (ingredientList != null) {
+                                        fragmentFridgeBinding.noFridgeItem.setVisibility(View.GONE);
+                                    }
                                     Collections.sort(ingredientList, new Comparator<Ingredient>() {
                                         @Override
                                         public int compare(Ingredient ingrediente1, Ingredient ingrediente2) {
@@ -142,9 +148,10 @@ public class FridgeFragment extends Fragment {
                                             Snackbar.LENGTH_SHORT).show();
                                 }
                         }else{
-                            fragmentFridgeBinding.noFridgeItem.setVisibility(View.VISIBLE);
+                            //fragmentFridgeBinding.noFridgeItem.setVisibility(View.VISIBLE);
                         }
                 });
+
 
         // Navigation to the AddIngredientFragment by clicking the addIngredientButton
         fragmentFridgeBinding.addIngredientButton.setOnClickListener(v -> Navigation.findNavController(requireView()).navigate(R.id.action_fridgeFragment_to_addIngredientFragment));
@@ -164,6 +171,7 @@ public class FridgeFragment extends Fragment {
             recipeViewModel.deleteFridgeItem(ingredientList.get(pos));
             deletedIngredient = new Ingredient(ingredientList.get(pos).getId(),ingredientList.get(pos).getTitle(), ingredientList.get(pos).getExpiryDate(),false);
             Snackbar.make(requireView(),deletedIngredient.getTitle(),Snackbar.LENGTH_LONG).setAction("Undo", view -> {
+                fragmentFridgeBinding.noFridgeItem.setVisibility(View.GONE);
                 ingredientList.add(pos,deletedIngredient);
                 recipeViewModel.insertFridgeItem(deletedIngredient);
             }).show();

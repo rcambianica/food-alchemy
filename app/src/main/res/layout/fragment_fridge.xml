@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:textSize="30sp"
         android:visibility="gone"
-        android:text="@string/nothing_found"
+        android:text="@string/no_fridge_item"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
