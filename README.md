@@ -1,4 +1,4 @@
-# Food Alchemy
+# GRUPPO MAJO - Food Alchemy
 ## Group members
 - Cambianica Riccardo 865877
 - Dolan Radu 866267
