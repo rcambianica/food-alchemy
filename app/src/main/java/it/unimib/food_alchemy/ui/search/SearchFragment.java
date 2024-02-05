@@ -188,6 +188,7 @@ public class SearchFragment extends Fragment {
                 if(result.isSuccess())  {
                     selectedFridgeItems.clear();
                     selectedFridgeItems.addAll(((Result.IngredientsResponseSuccess)result).getData().getIngredientsList());
+                    selectedFridgeItems.addAll(ingredientList);
                     for(Ingredient ingredient: selectedFridgeItems) {
                         Chip chip = new Chip(requireContext());
                         chip.setText(ingredient.getTitle());
