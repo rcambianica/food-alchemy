@@ -62,7 +62,7 @@ public class ForgotPasswordFragment extends Fragment {
                 userViewModel.forgotPassword(email).observe(getViewLifecycleOwner(), result -> {
                     if(result != null)  {
                         if(result.isSuccess())  {
-                            Snackbar.make(requireActivity().findViewById(android.R.id.content), "Email sent successfully, check your inbox!", Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(requireActivity().findViewById(android.R.id.content), "Email sent successfully, if you are registered check your inbox!", Snackbar.LENGTH_SHORT).show();
                         }else {
                             Snackbar.make(view,
                                     requireActivity().getString(R.string.unexpected_error),
