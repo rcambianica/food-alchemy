@@ -92,6 +92,13 @@ public class FavoritesFragment extends Fragment {
                     recipesList.clear();
                     recipesList.addAll(((Result.RecipesResponseSuccess)result).getData().getRecipesList());
                     favoritesRecyclerViewAdapter.notifyDataSetChanged();
+
+                    if(recipesList.isEmpty()){
+                        fragmentFavoritesBinding.noFavoriteRecipe.setVisibility(View.VISIBLE);
+                    } else if (recipesList != null) {
+                        fragmentFavoritesBinding.noFavoriteRecipe.setVisibility(View.GONE);
+                    }
+
                     if (isFirstLoading) {
                         sharedPreferencesUtil.writeBooleanData(Constants.SHARED_PREFERENCES_FILE_NAME,
                                 Constants.SHARED_PREFERENCES_RECIPES_FIRST_LOADING, false);
@@ -112,6 +119,7 @@ public class FavoritesFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        fragmentFavoritesBinding.noFavoriteRecipe.setVisibility(View.GONE);
         fragmentFavoritesBinding = null;
     }
 }

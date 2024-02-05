@@ -120,6 +120,6 @@
     <string name="fragment_add_ingredient">fragment_add_ingredient</string>
     <string name="return_to_home">Return to home</string>
     <string name="recipe_image">recipe image</string>
-    <string name="no_favorites_item">Add new favorites recipes!</string>
+    <string name="no_favorites_item">Add new favorite recipes!</string>
     <string name="no_fridge_item">Add new ingredients!</string>
 </resources>
