@@ -140,10 +140,6 @@ public class ResultsSearchFragment extends Fragment {
         recipeViewModel.getRecipes(null, parameters.getDiet(), parameters.getIntolerances(), parameters.getIngredients(), parameters.getType()).observe(getViewLifecycleOwner(),
                 result -> {
                     visibleItemCount = layoutManager.getChildCount();
-                    if(recipeViewModel.getTotalResults() == 0){
-                    fragmentResultsSearchBinding.errorImage.setVisibility(View.VISIBLE);
-                    fragmentResultsSearchBinding.textNothingFound.setVisibility(View.VISIBLE);
-                    }
                     if (result != null && savedListPosition == RecyclerView.NO_POSITION) {
                         if (result.isSuccess()) {
                             RecipesResponse recipesResponse = ((Result.RecipesResponseSuccess) result).getData();
@@ -154,6 +150,11 @@ public class ResultsSearchFragment extends Fragment {
                                     recipeViewModel.setTotalResults(((RecipeApiResponse) recipesResponse).getTotalResults());
                                     recipeViewModel.setFirstLoading(false);
                                     this.recipeList.addAll(fetchedRecipes);
+
+                                    if(recipeViewModel.getTotalResults() == 0){
+                                        fragmentResultsSearchBinding.errorImage.setVisibility(View.VISIBLE);
+                                        fragmentResultsSearchBinding.textNothingFound.setVisibility(View.VISIBLE);
+                                    }
 
                                     recipesRecyclerViewAdapter.notifyItemRangeInserted(0,
                                             this.recipeList.size());
@@ -242,13 +243,14 @@ public class ResultsSearchFragment extends Fragment {
         recipeViewModel.setFirstLoading(true);
         recipeViewModel.setLoading(false);
         recipeViewModel.getRecipesResponseLiveData().setValue(null);
-        fragmentResultsSearchBinding.errorImage.setVisibility(View.GONE);
-        fragmentResultsSearchBinding.textNothingFound.setVisibility(View.GONE);
+
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        fragmentResultsSearchBinding.errorImage.setVisibility(View.GONE);
+        fragmentResultsSearchBinding.textNothingFound.setVisibility(View.GONE);
         fragmentResultsSearchBinding = null;
     }
 
