@@ -150,7 +150,6 @@ public class AddIngredientFragment extends Fragment {
 
         // Save the selected ingredient to the fridge
         fragmentAddIngredientBinding.saveButton.setOnClickListener(v -> {
-            String ingredientName = fragmentAddIngredientBinding.textInputEditTextIngredient.getText().toString().trim();
             String expiryDate = formatDate(fragmentAddIngredientBinding.spinnerButton.getText().toString());
             if(isIngredientOk(ingredientToAdd))  {
                 ingredientToAdd.setExpiryDate(expiryDate);
